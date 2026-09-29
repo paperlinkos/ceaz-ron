@@ -170,7 +170,8 @@ export function getCachedLocalTargets(): Target[] {
     const data = localStorage.getItem(LOCAL_TARGETS_KEY);
     if (!data) return getDefaultInitialTargets();
     const parsed: Target[] = JSON.parse(data);
-    return mergeTargetsWithDefaults(parsed);
+    const cleaned = parsed.filter((t) => !(t.level === 'zone' && t.target === 40000));
+    return mergeTargetsWithDefaults(cleaned);
   } catch {
     return getDefaultInitialTargets();
   }
@@ -420,10 +421,6 @@ export function getDefaultInitialTargets(): Target[] {
   }));
 }
 
-/**
- * Merges custom targets with the baseline official targets.
- * Guarantees that EVERY group and church has its exact PDF target, while preserving custom overrides.
- */
 export function mergeTargetsWithDefaults(customTargets: Target[]): Target[] {
   const defaults = getDefaultInitialTargets();
   const map = new Map<string, Target>();
@@ -433,9 +430,12 @@ export function mergeTargetsWithDefaults(customTargets: Target[]): Target[] {
     map.set(`${def.level}_${def.organizationId}`, def);
   }
 
-  // 2. Overlay any custom target saved by an admin, but filter out corrupted identical defaults (e.g. all churches = 250 or all groups = 1000)
+  // 2. Overlay any custom target saved by an admin, but filter out legacy 40000 target entries
   for (const custom of customTargets) {
     if (custom.status === 'active' && custom.target > 0) {
+      if (custom.target === 40000 || (custom.level === 'zone' && custom.target < 50000)) {
+        continue;
+      }
       map.set(`${custom.level}_${custom.organizationId}`, custom);
     }
   }

@@ -26,7 +26,13 @@ export function getLocalEventConfig(): EventConfig {
   try {
     const raw = localStorage.getItem(LOCAL_EVENT_KEY);
     if (raw) {
-      return JSON.parse(raw);
+      const parsed: EventConfig = JSON.parse(raw);
+      if (parsed.target === 40000 || !parsed.target) {
+        parsed.target = DEFAULT_EVENT_CONFIG.target;
+        parsed.announcements = DEFAULT_EVENT_CONFIG.announcements;
+        setLocalEventConfig(parsed);
+      }
+      return parsed;
     }
   } catch (err) {
     console.warn('Failed to parse local event config:', err);
@@ -51,6 +57,11 @@ export async function getEventConfig(eventId: string = DEFAULT_EVENT_CONFIG.id):
 
     if (snap.exists()) {
       const data = snap.data() as EventConfig;
+      if (data.target === 40000) {
+        data.target = DEFAULT_EVENT_CONFIG.target;
+        data.announcements = DEFAULT_EVENT_CONFIG.announcements;
+        await setDoc(docRef, data, { merge: true });
+      }
       setLocalEventConfig(data);
       return data;
     } else {
