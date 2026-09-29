@@ -518,8 +518,8 @@ export const LeaderSoulEntryView: React.FC = () => {
           <form onSubmit={handleSingleSubmit} className="record-form">
             {/* GROUP & CHURCH TARGET SELECTORS (For Group & Zonal Admins) */}
             {(isGroupAdmin || isZonalAdmin) && (
-              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '12px', border: '1px solid #1e3a2f', marginBottom: '20px' }}>
-                <h4 style={{ fontSize: '0.85rem', color: '#FFD700', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0', marginBottom: '20px' }}>
+                <h4 style={{ fontSize: '0.85rem', color: '#065f46', margin: '0 0 12px 0', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 800 }}>
                   🎯 Target Organizational Assignment
                 </h4>
                 <div style={{ display: 'grid', gridTemplateColumns: isZonalAdmin ? '1fr 1fr' : '1fr', gap: '12px' }}>
@@ -532,10 +532,10 @@ export const LeaderSoulEntryView: React.FC = () => {
                           value={selectedGroupId}
                           onChange={(e) => handleGroupChange(e.target.value)}
                           className="form-input"
-                          style={{ paddingLeft: '40px', appearance: 'auto' }}
+                          style={{ paddingLeft: '40px', appearance: 'auto', background: '#ffffff', color: '#0f172a', border: '1px solid #cbd5e1' }}
                         >
                           {availableGroups.map((g) => (
-                            <option key={g.id} value={g.id} style={{ background: '#0d1f18', color: '#fff' }}>
+                            <option key={g.id} value={g.id}>
                               {g.name} ({g.code})
                             </option>
                           ))}
@@ -552,10 +552,10 @@ export const LeaderSoulEntryView: React.FC = () => {
                         value={selectedChurchId}
                         onChange={(e) => setSelectedChurchId(e.target.value)}
                         className="form-input"
-                        style={{ paddingLeft: '40px', appearance: 'auto' }}
+                        style={{ paddingLeft: '40px', appearance: 'auto', background: '#ffffff', color: '#0f172a', border: '1px solid #cbd5e1' }}
                       >
                         {getChurchesForGroup(selectedGroupId).map((c) => (
-                          <option key={c.id} value={c.id} style={{ background: '#0d1f18', color: '#fff' }}>
+                          <option key={c.id} value={c.id}>
                             {c.name} ({c.code})
                           </option>
                         ))}
@@ -697,32 +697,32 @@ export const LeaderSoulEntryView: React.FC = () => {
           {/* TEMPLATE DOWNLOAD BOX */}
           <div
             style={{
-              background: 'rgba(0, 135, 81, 0.1)',
-              border: '1px solid rgba(0, 135, 81, 0.4)',
+              background: 'linear-gradient(135deg, rgba(0, 135, 81, 0.06) 0%, rgba(0, 135, 81, 0.02) 100%)',
+              border: '1px solid rgba(0, 135, 81, 0.25)',
               borderRadius: '12px',
               padding: '16px',
               marginBottom: '20px',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#FFD700', fontWeight: 'bold', fontSize: '0.95rem' }}>
-                <Download size={18} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#065f46', fontWeight: 800, fontSize: '0.95rem' }}>
+                <Download size={18} className="text-green-accent" />
                 <span>CUSTOMIZED CSV IMPORT TEMPLATES</span>
               </div>
-              <span style={{ fontSize: '0.72rem', color: '#00d68f', background: 'rgba(0, 135, 81, 0.2)', padding: '2px 8px', borderRadius: '10px', fontWeight: 800 }}>
+              <span style={{ fontSize: '0.72rem', color: '#047857', background: 'rgba(0, 135, 81, 0.12)', border: '1px solid rgba(0, 135, 81, 0.2)', padding: '3px 10px', borderRadius: '12px', fontWeight: 700 }}>
                 ✨ Pre-named with Church & Group Titles
               </span>
             </div>
 
-            <p style={{ fontSize: '0.82rem', color: '#e2e8f0', margin: '0 0 14px 0', lineHeight: '1.4' }}>
+            <p style={{ fontSize: '0.84rem', color: '#334155', margin: '0 0 14px 0', lineHeight: '1.5' }}>
               Download pre-titled CSV templates customized specifically with your Church or Group names in the file title and columns.
               When uploaded, the system will automatically recognize the organization name from the title!
             </p>
 
             {/* Interactive Template Customizer Selector (Scoped by Role) */}
-            <div style={{ display: 'grid', gridTemplateColumns: isZonalAdmin ? '1fr 1fr' : '1fr', gap: '12px', marginBottom: '14px', background: 'rgba(0, 0, 0, 0.2)', padding: '12px', borderRadius: '10px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isZonalAdmin ? '1fr 1fr' : '1fr', gap: '12px', marginBottom: '14px', background: '#ffffff', padding: '14px', borderRadius: '10px', border: '1px solid #e2e8f0', boxShadow: '0 1px 3px rgba(0,0,0,0.03)' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 800, color: '#94a3b8', marginBottom: '4px' }}>
+                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#475569', marginBottom: '6px', letterSpacing: '0.03em' }}>
                   {isChurchAdmin ? 'YOUR CHURCH TEMPLATE:' : isGroupAdmin ? 'SELECT CHURCH IN YOUR GROUP:' : 'SELECT CHURCH FOR TEMPLATE:'}
                 </label>
                 <select
@@ -734,7 +734,7 @@ export const LeaderSoulEntryView: React.FC = () => {
                   }}
                   disabled={isChurchAdmin}
                   className="form-input"
-                  style={{ fontSize: '0.82rem', padding: '6px 10px', height: '36px', background: '#0d1f18', color: '#ffffff', opacity: isChurchAdmin ? 0.8 : 1 }}
+                  style={{ fontSize: '0.84rem', padding: '8px 12px', height: '40px', background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1', borderRadius: '8px', opacity: isChurchAdmin ? 0.8 : 1 }}
                 >
                   {(isGroupAdmin
                     ? DEFAULT_CHURCHES.filter((c) => c.groupId === (soulWinnerProfile?.groupId || bulkTargetGroupId))
@@ -751,14 +751,14 @@ export const LeaderSoulEntryView: React.FC = () => {
 
               {isZonalAdmin && (
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 800, color: '#94a3b8', marginBottom: '4px' }}>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#475569', marginBottom: '6px', letterSpacing: '0.03em' }}>
                     SELECT GROUP FOR TEMPLATE:
                   </label>
                   <select
                     value={templateSelectedGroupId}
                     onChange={(e) => setTemplateSelectedGroupId(e.target.value)}
                     className="form-input"
-                    style={{ fontSize: '0.82rem', padding: '6px 10px', height: '36px', background: '#0d1f18', color: '#ffffff' }}
+                    style={{ fontSize: '0.84rem', padding: '8px 12px', height: '40px', background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1', borderRadius: '8px' }}
                   >
                     {availableGroups.map((g) => (
                       <option key={g.id} value={g.id}>
@@ -904,12 +904,12 @@ export const LeaderSoulEntryView: React.FC = () => {
 
           {/* BULK TARGET CHURCH / OVERRIDE SELECTOR */}
           {(isGroupAdmin || isZonalAdmin) && (
-            <div style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '12px', border: '1px solid #1e3a2f', marginBottom: '20px' }}>
+            <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '12px', border: '1px solid #e2e8f0', marginBottom: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <h4 style={{ fontSize: '0.85rem', color: '#FFD700', margin: 0, textTransform: 'uppercase' }}>
+                <h4 style={{ fontSize: '0.85rem', color: '#065f46', margin: 0, textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.03em' }}>
                   🎯 Target Church for Upload Batch
                 </h4>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#94a3b8', cursor: 'pointer' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#475569', cursor: 'pointer' }}>
                   <input
                     type="checkbox"
                     checked={overrideChurch}
@@ -927,10 +927,10 @@ export const LeaderSoulEntryView: React.FC = () => {
                       value={bulkTargetGroupId}
                       onChange={(e) => handleBulkGroupChange(e.target.value)}
                       className="form-input"
-                      style={{ paddingLeft: '14px', appearance: 'auto' }}
+                      style={{ paddingLeft: '14px', appearance: 'auto', background: '#ffffff', color: '#0f172a', border: '1px solid #cbd5e1' }}
                     >
                       {availableGroups.map((g) => (
-                        <option key={g.id} value={g.id} style={{ background: '#0d1f18', color: '#fff' }}>
+                        <option key={g.id} value={g.id}>
                           {g.name}
                         </option>
                       ))}
@@ -943,10 +943,10 @@ export const LeaderSoulEntryView: React.FC = () => {
                     value={bulkTargetChurchId}
                     onChange={(e) => setBulkTargetChurchId(e.target.value)}
                     className="form-input"
-                    style={{ paddingLeft: '14px', appearance: 'auto' }}
+                    style={{ paddingLeft: '14px', appearance: 'auto', background: '#ffffff', color: '#0f172a', border: '1px solid #cbd5e1' }}
                   >
                     {getChurchesForGroup(bulkTargetGroupId).map((c) => (
-                      <option key={c.id} value={c.id} style={{ background: '#0d1f18', color: '#fff' }}>
+                      <option key={c.id} value={c.id}>
                         {c.name}
                       </option>
                     ))}
@@ -964,7 +964,7 @@ export const LeaderSoulEntryView: React.FC = () => {
               accept=".csv,.txt"
               onChange={handleFileUpload}
               className="form-input"
-              style={{ padding: '8px 12px', background: '#0d1f18' }}
+              style={{ padding: '8px 12px', background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1', cursor: 'pointer' }}
             />
           </div>
 
@@ -1016,10 +1016,10 @@ export const LeaderSoulEntryView: React.FC = () => {
                 </div>
               </div>
 
-              <div style={{ maxHeight: '300px', overflowY: 'auto', border: '1px solid #1e3a2f', borderRadius: '8px' }}>
+              <div style={{ maxHeight: '300px', overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem', textAlign: 'left' }}>
                   <thead>
-                    <tr style={{ background: '#142920', color: '#FFD700', borderBottom: '1px solid #1e3a2f' }}>
+                    <tr style={{ background: '#008751', color: '#ffffff' }}>
                       <th style={{ padding: '8px 12px' }}>#</th>
                       <th style={{ padding: '8px 12px' }}>STATUS</th>
                       <th style={{ padding: '8px 12px' }}>NAME</th>
@@ -1033,22 +1033,22 @@ export const LeaderSoulEntryView: React.FC = () => {
                       <tr
                         key={row.rowIndex}
                         style={{
-                          borderBottom: '1px solid #1e3a2f',
-                          background: row.isValid ? 'transparent' : 'rgba(239, 68, 68, 0.1)',
+                          borderBottom: '1px solid #e2e8f0',
+                          background: row.isValid ? 'transparent' : 'rgba(239, 68, 68, 0.08)',
                         }}
                       >
-                        <td style={{ padding: '8px 12px', color: '#94a3b8' }}>{row.rowIndex}</td>
+                        <td style={{ padding: '8px 12px', color: '#64748b' }}>{row.rowIndex}</td>
                         <td style={{ padding: '8px 12px' }}>
                           {row.isValid ? (
-                            <span style={{ color: '#4ade80', fontWeight: 'bold' }}>✓ Valid</span>
+                            <span style={{ color: '#059669', fontWeight: 'bold' }}>✓ Valid</span>
                           ) : (
-                            <span style={{ color: '#ef4444', fontWeight: 'bold' }}>✗ {row.error}</span>
+                            <span style={{ color: '#dc2626', fontWeight: 'bold' }}>✗ {row.error}</span>
                           )}
                         </td>
-                        <td style={{ padding: '8px 12px', color: '#ffffff', fontWeight: 'bold' }}>{row.name}</td>
-                        <td style={{ padding: '8px 12px', color: '#cbd5e1' }}>{row.phone}</td>
-                        <td style={{ padding: '8px 12px', color: '#cbd5e1' }}>{row.location}</td>
-                        <td style={{ padding: '8px 12px', color: '#FFD700' }}>
+                        <td style={{ padding: '8px 12px', color: '#0f172a', fontWeight: 'bold' }}>{row.name}</td>
+                        <td style={{ padding: '8px 12px', color: '#334155' }}>{row.phone}</td>
+                        <td style={{ padding: '8px 12px', color: '#334155' }}>{row.location}</td>
+                        <td style={{ padding: '8px 12px', color: '#059669', fontWeight: 600 }}>
                           {row.churchName || DEFAULT_CHURCHES.find((c) => c.id === bulkTargetChurchId)?.name || 'Default'}
                         </td>
                       </tr>
@@ -1084,7 +1084,7 @@ export const LeaderSoulEntryView: React.FC = () => {
               <FileText size={20} className="text-green-accent" />
               <span>RECORDED SOULS HISTORY</span>
             </h3>
-            <span style={{ fontSize: '0.85rem', color: '#FFD700', fontWeight: 'bold' }}>
+            <span style={{ fontSize: '0.85rem', color: '#008751', fontWeight: 800 }}>
               TOTAL RECORDED: {records.length} SOULS
             </span>
           </div>
@@ -1095,10 +1095,10 @@ export const LeaderSoulEntryView: React.FC = () => {
               <p>No souls recorded yet in this session.</p>
             </div>
           ) : (
-            <div style={{ maxHeight: '400px', overflowY: 'auto', border: '1px solid #1e3a2f', borderRadius: '8px' }}>
+            <div style={{ maxHeight: '400px', overflowY: 'auto', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem', textAlign: 'left' }}>
                 <thead>
-                  <tr style={{ background: '#142920', color: '#FFD700', borderBottom: '1px solid #1e3a2f' }}>
+                  <tr style={{ background: '#008751', color: '#ffffff' }}>
                     <th style={{ padding: '10px 14px' }}>NAME</th>
                     <th style={{ padding: '10px 14px' }}>PHONE</th>
                     <th style={{ padding: '10px 14px' }}>LOCATION</th>
@@ -1108,12 +1108,12 @@ export const LeaderSoulEntryView: React.FC = () => {
                 </thead>
                 <tbody>
                   {records.map((r) => (
-                    <tr key={r.id} style={{ borderBottom: '1px solid #1e3a2f' }}>
-                      <td style={{ padding: '10px 14px', color: '#ffffff', fontWeight: 'bold' }}>{r.name}</td>
-                      <td style={{ padding: '10px 14px', color: '#cbd5e1' }}>{r.phone}</td>
-                      <td style={{ padding: '10px 14px', color: '#cbd5e1' }}>{r.location}</td>
-                      <td style={{ padding: '10px 14px', color: '#4ade80' }}>{r.churchName || 'Church'}</td>
-                      <td style={{ padding: '10px 14px', color: '#94a3b8' }}>
+                    <tr key={r.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                      <td style={{ padding: '10px 14px', color: '#0f172a', fontWeight: 'bold' }}>{r.name}</td>
+                      <td style={{ padding: '10px 14px', color: '#334155' }}>{r.phone}</td>
+                      <td style={{ padding: '10px 14px', color: '#334155' }}>{r.location}</td>
+                      <td style={{ padding: '10px 14px', color: '#059669', fontWeight: 600 }}>{r.churchName || 'Church'}</td>
+                      <td style={{ padding: '10px 14px', color: '#64748b' }}>
                         {new Date(r.createdAt).toLocaleDateString()}
                       </td>
                     </tr>

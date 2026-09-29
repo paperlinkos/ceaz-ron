@@ -459,7 +459,7 @@ export const ChurchHomeView: React.FC<ChurchHomeViewProps> = ({ onNavigate }) =>
                 onClick={() => onNavigate('race')}
                 className="role-quick-link-btn"
               >
-                <span>View Full Upward Race (20 Groups)</span>
+                <span>View Full Upward Race (24 Groups)</span>
                 <ChevronRight size={16} />
               </button>
             </div>

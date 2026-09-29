@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { User, Phone, LogOut, Shield, CheckCircle2, Building2, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { DEFAULT_CHURCHES } from '../../services/organizationService';
+import { DEFAULT_CHURCHES, DEFAULT_GROUPS, getGroups, getChurches } from '../../services/organizationService';
 
 interface AccountViewProps {
   onOpenAuth: () => void;
@@ -14,6 +14,28 @@ export const AccountView: React.FC<AccountViewProps> = ({ onOpenAuth }) => {
     isAuthenticated,
     logout,
   } = useAuth();
+
+  const [counts, setCounts] = useState({
+    groups: DEFAULT_GROUPS.length,
+    churches: DEFAULT_CHURCHES.length,
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    Promise.all([getGroups(), getChurches()])
+      .then(([gList, cList]) => {
+        if (isMounted) {
+          setCounts({
+            groups: gList.filter((g) => g.status === 'active').length || DEFAULT_GROUPS.length,
+            churches: cList.filter((c) => c.status === 'active').length || DEFAULT_CHURCHES.length,
+          });
+        }
+      })
+      .catch(() => {});
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   if (!isAuthenticated || !userProfile) {
     return (
@@ -155,7 +177,7 @@ export const AccountView: React.FC<AccountViewProps> = ({ onOpenAuth }) => {
           {(userProfile.role === 'zoneManager' || userProfile.role === 'superAdmin') && (
             <div className="hierarchy-node node-highlight">
               <span className="node-label">JURISDICTION:</span>
-              <span className="node-value">All 20 Groups & 98 Churches in Abuja Zone 1</span>
+              <span className="node-value">All {counts.groups} Groups & {counts.churches} Churches in Abuja Zone 1</span>
             </div>
           )}
         </div>

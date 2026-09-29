@@ -247,7 +247,7 @@ export const GroupHomeView: React.FC<GroupHomeViewProps> = ({ onNavigate }) => {
                 <span className="tile-lbl">UPWARD RACE STANDING</span>
                 <span className="tile-val">
                   #{activeGroupRank}{' '}
-                  <span className="tile-sub">of 20 Groups</span>
+                  <span className="tile-sub">of 24 Groups</span>
                 </span>
               </div>
             </div>

@@ -298,12 +298,6 @@ export const OrganizationManager: React.FC = () => {
           Churches ({churches.length})
         </button>
         <button
-          onClick={() => { setActiveTab('pcfs'); setError(''); setSuccess(''); }}
-          className={`subtab-btn ${activeTab === 'pcfs' ? 'subtab-active' : ''}`}
-        >
-          PCFs ({pcfs.length})
-        </button>
-        <button
           onClick={() => { setActiveTab('search'); setError(''); setSuccess(''); }}
           className={`subtab-btn ${activeTab === 'search' ? 'subtab-active' : ''}`}
         >
@@ -493,34 +487,30 @@ export const OrganizationManager: React.FC = () => {
                                               </button>
                                             </div>
 
-                                            {cExpanded && (
+                                            {cExpanded && childPcfs.length > 0 && (
                                               <div className="tree-children-container">
-                                                {childPcfs.length === 0 ? (
-                                                  <div className="tree-empty-hint">No PCFs under this Church.</div>
-                                                ) : (
-                                                  childPcfs.map((p) => (
-                                                    <div key={p.id} className="tree-node tree-pcf-node">
-                                                      <span className="bullet-dot">•</span>
-                                                      <span className="node-title">PCF: {p.name} ({p.code})</span>
-                                                      <span className={`status-pill status-${p.status}`}>{p.status}</span>
-                                                      <button
-                                                        type="button"
-                                                        onClick={() =>
-                                                          setDeactivateModal({
-                                                            isOpen: true,
-                                                            type: 'pcf',
-                                                            id: p.id,
-                                                            name: p.name,
-                                                            currentStatus: p.status,
-                                                          })
-                                                        }
-                                                        className="btn-xs btn-text"
-                                                      >
-                                                        {p.status === 'active' ? 'Deactivate' : 'Reactivate'}
-                                                      </button>
-                                                    </div>
-                                                  ))
-                                                )}
+                                                {childPcfs.map((p) => (
+                                                  <div key={p.id} className="tree-node tree-pcf-node">
+                                                    <span className="bullet-dot">•</span>
+                                                    <span className="node-title">PCF: {p.name} ({p.code})</span>
+                                                    <span className={`status-pill status-${p.status}`}>{p.status}</span>
+                                                    <button
+                                                      type="button"
+                                                      onClick={() =>
+                                                        setDeactivateModal({
+                                                          isOpen: true,
+                                                          type: 'pcf',
+                                                          id: p.id,
+                                                          name: p.name,
+                                                          currentStatus: p.status,
+                                                        })
+                                                      }
+                                                      className="btn-xs btn-text"
+                                                    >
+                                                      {p.status === 'active' ? 'Deactivate' : 'Reactivate'}
+                                                    </button>
+                                                  </div>
+                                                ))}
                                               </div>
                                             )}
                                           </div>

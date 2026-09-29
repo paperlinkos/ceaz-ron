@@ -266,7 +266,7 @@ export const DevRoleSwitcher: React.FC = () => {
               }}
             >
               <Building2 size={14} />
-              <span>Group Coordinator Accounts (20 Groups)</span>
+              <span>Group Coordinator Accounts ({DEFAULT_GROUPS.length} Groups)</span>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginBottom: '8px' }}>
@@ -297,7 +297,7 @@ export const DevRoleSwitcher: React.FC = () => {
               })}
             </div>
 
-            {/* Select any of all 20 groups */}
+            {/* Select any of all 24 groups */}
             <select
               value={role === 'groupManager' ? soulWinnerProfile?.groupId || '' : ''}
               onChange={(e) => {
@@ -317,7 +317,7 @@ export const DevRoleSwitcher: React.FC = () => {
                 cursor: 'pointer',
               }}
             >
-              <option value="">Select from all 20 Groups...</option>
+              <option value="">Select from all {DEFAULT_GROUPS.length} Groups...</option>
               {DEFAULT_GROUPS.map((g) => (
                 <option key={g.id} value={g.id}>
                   {g.name} ({g.code})

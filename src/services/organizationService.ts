@@ -42,7 +42,6 @@ export const DEFAULT_GROUPS: Group[] = [
   { id: 'grp-wealthy-place', zoneId: 'zone-abuja-1', name: 'Wealthy Place Church', code: 'GRP-WLP', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'grp-city-church', zoneId: 'zone-abuja-1', name: 'CE Abuja City Church', code: 'GRP-CCC', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'grp-teens-church', zoneId: 'zone-abuja-1', name: 'Teens Church Group', code: 'GRP-TCG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
-  { id: 'grp-standalone', zoneId: 'zone-abuja-1', name: 'Standalone Churches', code: 'GRP-STA', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
 ];
 
 export const DEFAULT_CHURCHES: Church[] = [
@@ -215,10 +214,6 @@ export const DEFAULT_CHURCHES: Church[] = [
   // Teens Church Group
   { id: 'ch-teens-church', groupId: 'grp-teens-church', name: 'Teens Church', code: 'CH-TCG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
 
-  // Zonal Church Group
-  { id: 'ch-service-1', groupId: 'grp-zonal-church', name: 'Service 1', code: 'CH-SVC1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
-  { id: 'ch-service-2', groupId: 'grp-zonal-church', name: 'Service 2', code: 'CH-SVC2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
-
   // Byazhin Church
   { id: 'ch-ce-byazhin', groupId: 'grp-byazhin', name: 'CE Byazhin', code: 'CH-BYZ', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
 
@@ -242,7 +237,8 @@ function getLocalOrgCache(): LocalOrgCache {
     }
     const parsed: LocalOrgCache = JSON.parse(raw);
     if (!parsed.zones || parsed.zones.length === 0) parsed.zones = DEFAULT_ZONES;
-    if (!parsed.groups || parsed.groups.length === 0) parsed.groups = DEFAULT_GROUPS;
+    parsed.groups = (parsed.groups || []).filter((g) => g.id !== 'grp-standalone');
+    if (parsed.groups.length === 0) parsed.groups = DEFAULT_GROUPS;
     if (!parsed.churches || parsed.churches.length === 0) parsed.churches = DEFAULT_CHURCHES;
     if (!parsed.pcfs) parsed.pcfs = [];
     return parsed;
@@ -336,10 +332,12 @@ export async function updateZoneStatus(zoneId: string, status: EntityStatus, act
 export function mergeGroupsWithDefaults(customGroups: Group[]): Group[] {
   const map = new Map<string, Group>();
   for (const g of DEFAULT_GROUPS) {
-    map.set(g.id, g);
+    if (g.id !== 'grp-standalone') {
+      map.set(g.id, g);
+    }
   }
   for (const g of customGroups) {
-    if (g.status === 'active') {
+    if (g.status === 'active' && g.id !== 'grp-standalone') {
       map.set(g.id, { ...map.get(g.id), ...g });
     }
   }

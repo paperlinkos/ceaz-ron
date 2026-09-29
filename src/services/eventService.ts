@@ -92,7 +92,12 @@ export function subscribeToEventConfig(
       docRef,
       (snapshot) => {
         if (snapshot.exists()) {
-          const data = snapshot.data() as EventConfig;
+          const raw = snapshot.data() as EventConfig;
+          // Guard: never let a stale/legacy 40000 target override the correct 50000
+          const data: EventConfig = {
+            ...raw,
+            target: (raw.target != null && raw.target >= 50000) ? raw.target : 50000,
+          };
           setLocalEventConfig(data);
           onUpdate(data);
         } else {

@@ -550,27 +550,6 @@ export const TargetManagementView: React.FC = () => {
           </button>
           <button
             type="button"
-            onClick={() => { setActiveTab('pcfs'); setError(null); setSuccessMsg(null); }}
-            style={{
-              padding: '8px 16px',
-              fontSize: '0.82rem',
-              fontWeight: '700',
-              borderRadius: '7px',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              background: activeTab === 'pcfs' ? '#0f172a' : 'transparent',
-              color: activeTab === 'pcfs' ? '#ffffff' : '#475569',
-              boxShadow: activeTab === 'pcfs' ? '0 1px 3px rgba(15,23,42,0.12)' : 'none',
-              transition: 'all 0.15s ease',
-            }}
-          >
-            PCFs TARGETS ({pcfs.length})
-          </button>
-          <button
-            type="button"
             onClick={() => { setActiveTab('single'); setError(null); setSuccessMsg(null); }}
             style={{
               padding: '8px 16px',

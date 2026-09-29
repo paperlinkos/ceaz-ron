@@ -218,9 +218,8 @@ export const OFFICIAL_TARGET_MAP: { orgId: string; level: 'zone' | 'group' | 'ch
   { orgId: 'grp-wealthy-place', level: 'group', target: 1000 },
   { orgId: 'grp-city-church', level: 'group', target: 1500 },
   { orgId: 'grp-teens-church', level: 'group', target: 1500 },
-  { orgId: 'grp-standalone', level: 'group', target: 0 },
 
-  // Churches (98 Churches)
+  // Churches (127 Churches)
   // Zonal Church Group
   { orgId: 'ch-service-1', level: 'church', target: 3500 },
   { orgId: 'ch-service-2', level: 'church', target: 3500 },

@@ -104,7 +104,7 @@ export const LiveUpdatesTicker: React.FC<LiveUpdatesTickerProps> = ({
           type: 'countdown',
           badge: 'TIME TO GO',
           badgeColor: '#0ea5e9',
-          text: `Reach Out Nigeria 2026 kicks off in ${timeStr}! Abuja Zone 1 preparing 98 Churches across 20 Groups.`,
+          text: `Reach Out Nigeria 2026 kicks off in ${timeStr}! Abuja Zone 1 preparing 127 Churches across 24 Groups.`,
           highlight: timeStr,
           icon: 'clock',
         });
@@ -124,7 +124,7 @@ export const LiveUpdatesTicker: React.FC<LiveUpdatesTickerProps> = ({
           type: 'countdown',
           badge: 'LIVE IMMINENT',
           badgeColor: '#f59e0b',
-          text: `Reach Out Nigeria Day has arrived! Zone launching live into the field across all 20 Groups!`,
+          text: `Reach Out Nigeria Day has arrived! Zone launching live into the field across all 24 Groups!`,
           icon: 'clock',
         });
       }
@@ -134,7 +134,7 @@ export const LiveUpdatesTicker: React.FC<LiveUpdatesTickerProps> = ({
         type: 'countdown',
         badge: 'CAMPAIGN LIVE',
         badgeColor: '#ef4444',
-        text: `REACH OUT NIGERIA IS LIVE! Abuja Zone 1 recording souls in real-time across all 98 Churches!`,
+        text: `REACH OUT NIGERIA IS LIVE! Abuja Zone 1 recording souls in real-time across all 127 Churches!`,
         highlight: 'LIVE NOW',
         icon: 'clock',
       });
@@ -265,9 +265,9 @@ export const LiveUpdatesTicker: React.FC<LiveUpdatesTickerProps> = ({
         items.push({
           id: 'group-ready',
           type: 'group',
-          badge: '20 GROUPS COMPETING',
+          badge: '24 GROUPS COMPETING',
           badgeColor: '#008751',
-          text: `All 20 Groups in Abuja Zone 1 are activated and ready for Reach Out Nigeria Upward Race!`,
+          text: `All 24 Groups in Abuja Zone 1 are activated and ready for Reach Out Nigeria Upward Race!`,
           icon: 'layers',
         });
       }
@@ -305,9 +305,9 @@ export const LiveUpdatesTicker: React.FC<LiveUpdatesTickerProps> = ({
         items.push({
           id: 'church-ready-all',
           type: 'church',
-          badge: '98 CHURCHES READY',
+          badge: '127 CHURCHES READY',
           badgeColor: '#059669',
-          text: `98 Churches in Abuja Zone 1 primed for field recording across all 20 Groups.`,
+          text: `127 Churches in Abuja Zone 1 primed for field recording across all 24 Groups.`,
           icon: 'church',
         });
       }

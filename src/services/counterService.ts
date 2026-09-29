@@ -71,7 +71,11 @@ export function subscribeToZonalCounter(
       // Determine Zonal Target (from custom target if configured, else default 50,000)
       const targetsList = await currentTargets;
       const zoneTargetObj = targetsList.find((t) => t.level === 'zone' && t.status === 'active' && t.target >= 50000);
-      const activeZoneTarget = zoneTargetObj ? zoneTargetObj.target : (zonalTarget >= 50000 ? zonalTarget : 50000);
+      // Absolute floor: zonalTarget can NEVER be below 50,000
+      const activeZoneTarget = Math.max(
+        50000,
+        zoneTargetObj ? zoneTargetObj.target : (zonalTarget >= 50000 ? zonalTarget : 50000)
+      );
 
       const zoneProgress = calculateOrganizationProgress({
         organizationId: 'zone',
