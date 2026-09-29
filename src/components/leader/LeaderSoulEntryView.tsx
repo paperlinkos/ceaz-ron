@@ -403,7 +403,7 @@ export const LeaderSoulEntryView: React.FC = () => {
     }
   };
 
-  const isChurchAdmin = role === 'churchManager' || role === 'pcfLeader';
+  const isChurchAdmin = role === 'churchManager';
   const isGroupAdmin = role === 'groupManager';
   const isZonalAdmin = role === 'zoneManager' || role === 'superAdmin';
 

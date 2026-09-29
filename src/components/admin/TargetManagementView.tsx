@@ -19,15 +19,15 @@ import {
   getOfficialTarget,
   resetTargetsToOfficialDefaults,
 } from '../../services/targetService';
-import { getGroups, getChurches, getPCFs } from '../../services/organizationService';
+import { getGroups, getChurches } from '../../services/organizationService';
 import { getAllLocalRecords } from '../../services/indexedDbService';
 import { REACH_OUT_NIGERIA_EVENT } from '../../config/eventConfig';
 import { useEventConfig } from '../../hooks/useEventConfig';
 import type { Target, TargetLevel, TargetFormData } from '../../types/target';
-import type { Group, Church, PCF } from '../../types/organization';
+import type { Group, Church } from '../../types/organization';
 import type { SoulWinningRecord } from '../../types/record';
 
-type ActiveMatrixTab = 'groups' | 'churches' | 'pcfs' | 'single';
+type ActiveMatrixTab = 'groups' | 'churches' | 'single';
 
 export const TargetManagementView: React.FC = () => {
   const { userProfile, role } = useAuth();
@@ -38,13 +38,11 @@ export const TargetManagementView: React.FC = () => {
   const [targets, setTargets] = useState<Target[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   const [churches, setChurches] = useState<Church[]>([]);
-  const [pcfs, setPcfs] = useState<PCF[]>([]);
   const [records, setRecords] = useState<SoulWinningRecord[]>([]);
 
   // Draft inputs for fast inline editing
   const [groupDrafts, setGroupDrafts] = useState<Record<string, number>>({});
   const [churchDrafts, setChurchDrafts] = useState<Record<string, number>>({});
-  const [pcfDrafts, setPcfDrafts] = useState<Record<string, number>>({});
 
   // Single target state
   const [singleLevel, setSingleLevel] = useState<TargetLevel>('zone');
@@ -55,7 +53,6 @@ export const TargetManagementView: React.FC = () => {
   const [groupSearch, setGroupSearch] = useState<string>('');
   const [churchSearch, setChurchSearch] = useState<string>('');
   const [selectedGroupFilter, setSelectedGroupFilter] = useState<string>('all');
-  const [pcfChurchFilter, setPcfChurchFilter] = useState<string>('all');
 
   // UI state
   const [loading, setLoading] = useState<boolean>(true);
@@ -67,17 +64,15 @@ export const TargetManagementView: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [tList, gList, cList, pList, rList] = await Promise.all([
+      const [tList, gList, cList, rList] = await Promise.all([
         getTargets(),
         getGroups(),
         getChurches(),
-        getPCFs(),
         getAllLocalRecords(),
       ]);
       setTargets(tList);
       setGroups(gList);
       setChurches(cList);
-      setPcfs(pList);
       setRecords(rList);
 
       // Populate initial drafts from active targets or official PDF targets
@@ -96,13 +91,6 @@ export const TargetManagementView: React.FC = () => {
         cDrafts[c.id] = found ? found.target : (official ?? 100);
       });
       setChurchDrafts(cDrafts);
-
-      const pDrafts: Record<string, number> = {};
-      pList.forEach((p) => {
-        const found = tList.find((t) => t.level === 'pcf' && t.organizationId === p.id && t.status === 'active');
-        pDrafts[p.id] = found ? found.target : 50;
-      });
-      setPcfDrafts(pDrafts);
 
       // Pre-fill single form
       const existingZone = tList.find((t) => t.level === 'zone' && t.status === 'active');
@@ -139,16 +127,6 @@ export const TargetManagementView: React.FC = () => {
     return map;
   }, [records]);
 
-  const pcfSoulsWon = useMemo(() => {
-    const map: Record<string, number> = {};
-    records.forEach((r) => {
-      if (r.pcfId) {
-        map[r.pcfId] = (map[r.pcfId] || 0) + 1;
-      }
-    });
-    return map;
-  }, [records]);
-
   // Summaries
   const zonalTargetGoal = useMemo(() => {
     const zoneTarget = targets.find((t) => t.level === 'zone' && t.status === 'active');
@@ -180,11 +158,6 @@ export const TargetManagementView: React.FC = () => {
       if (churches.length > 0) {
         setSingleOrgId(churches[0].id);
         setSingleTargetInput((churchDrafts[churches[0].id] || 250).toString());
-      }
-    } else if (lvl === 'pcf') {
-      if (pcfs.length > 0) {
-        setSingleOrgId(pcfs[0].id);
-        setSingleTargetInput((pcfDrafts[pcfs[0].id] || 50).toString());
       }
     }
   };
@@ -300,8 +273,6 @@ export const TargetManagementView: React.FC = () => {
         setGroupDrafts((prev) => ({ ...prev, [singleOrgId]: num }));
       } else if (singleLevel === 'church') {
         setChurchDrafts((prev) => ({ ...prev, [singleOrgId]: num }));
-      } else if (singleLevel === 'pcf') {
-        setPcfDrafts((prev) => ({ ...prev, [singleOrgId]: num }));
       }
 
       setSuccessMsg(`Saved target of ${num.toLocaleString()} souls for ${singleLevel.toUpperCase()}.`);
@@ -339,7 +310,7 @@ export const TargetManagementView: React.FC = () => {
       });
       setChurchDrafts(cDrafts);
 
-      setSuccessMsg(`Successfully restored all 24 Groups and 129 Churches to their official targets from the PDF document! Total: ${totalChurchTargetAllocated.toLocaleString()} souls.`);
+      setSuccessMsg(`Successfully restored all 24 Groups and 127 Churches to their official targets from the PDF document! Total: ${totalChurchTargetAllocated.toLocaleString()} souls.`);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       setError(msg);
@@ -417,10 +388,6 @@ export const TargetManagementView: React.FC = () => {
     return matchesGroup && matchesSearch;
   });
 
-  const filteredPcfs = pcfs.filter((p) => {
-    return pcfChurchFilter === 'all' || p.churchId === pcfChurchFilter;
-  });
-
   return (
     <div className="account-card" style={{ maxWidth: '1150px', margin: '0 auto', background: '#ffffff', border: '1px solid #e2e8f0' }}>
       {/* Header */}
@@ -433,7 +400,7 @@ export const TargetManagementView: React.FC = () => {
             TARGET CONFIGURATION MATRIX
           </h2>
           <p className="form-lead" style={{ color: '#64748b', margin: '3px 0 0 0', fontSize: '0.85rem' }}>
-            Manage target soul-winning goals for the Zone, Groups, Churches, and PCFs with live progress tracking and bulk editing.
+            Manage target soul-winning goals for the Zone, Groups, and Churches with live progress tracking and bulk editing.
           </p>
         </div>
       </div>
@@ -1001,146 +968,8 @@ export const TargetManagementView: React.FC = () => {
             </table>
           </div>
         </div>
-      ) : activeTab === 'pcfs' ? (
-        /* ================= TAB 3: PCF TARGET MATRIX ================= */
-        <div>
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '16px' }}>
-            <Filter size={16} style={{ color: '#64748b' }} />
-            <select
-              value={pcfChurchFilter}
-              onChange={(e) => setPcfChurchFilter(e.target.value)}
-              style={{
-                maxWidth: '300px',
-                padding: '8px 12px',
-                borderRadius: '8px',
-                border: '1px solid #cbd5e1',
-                background: '#ffffff',
-                color: '#0f172a',
-                fontSize: '0.86rem',
-              }}
-            >
-              <option value="all">All Churches ({pcfs.length} PCFs)</option>
-              {churches.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div style={{ overflowX: 'auto', border: '1px solid #e2e8f0', borderRadius: '10px', background: '#ffffff' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ background: '#f8fafc', color: '#475569', borderBottom: '1px solid #e2e8f0' }}>
-                  <th style={{ padding: '12px 16px', fontSize: '0.72rem', fontWeight: '700', letterSpacing: '0.04em' }}>PCF NAME & CODE</th>
-                  <th style={{ padding: '12px 16px', fontSize: '0.72rem', fontWeight: '700', letterSpacing: '0.04em' }}>CHURCH</th>
-                  <th style={{ padding: '12px 16px', fontSize: '0.72rem', fontWeight: '700', letterSpacing: '0.04em' }}>SOULS WON</th>
-                  <th style={{ padding: '12px 16px', fontSize: '0.72rem', fontWeight: '700', letterSpacing: '0.04em' }}>TARGET GOAL (SOULS)</th>
-                  <th style={{ padding: '12px 16px', fontSize: '0.72rem', fontWeight: '700', letterSpacing: '0.04em' }}>PROGRESS</th>
-                  <th style={{ padding: '12px 16px', fontSize: '0.72rem', fontWeight: '700', letterSpacing: '0.04em', textAlign: 'center' }}>ACTION</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredPcfs.map((p) => {
-                  const currentTarget = pcfDrafts[p.id] || 0;
-                  const actual = pcfSoulsWon[p.id] || 0;
-                  const pct = currentTarget > 0 ? Math.round((actual / currentTarget) * 100) : 0;
-                  const parentChurch = churches.find((c) => c.id === p.churchId);
-                  const isSaved = savedRowIds[p.id];
-                  const mStyle = getMilestoneProgressStyle(pct);
-
-                  return (
-                    <tr key={p.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                      <td style={{ padding: '12px 16px' }}>
-                        <div style={{ fontWeight: '800', color: '#0f172a', fontSize: '0.92rem' }}>{p.name}</div>
-                        <span style={{ fontSize: '0.75rem', color: '#64748b' }}>Code: {p.code}</span>
-                      </td>
-
-                      <td style={{ padding: '12px 16px', color: '#334155', fontWeight: '600' }}>
-                        {parentChurch?.name || 'Unassigned'}
-                      </td>
-
-                      <td style={{ padding: '12px 16px', color: '#0f172a', fontWeight: '800' }}>
-                        {actual.toLocaleString()}
-                      </td>
-
-                      <td style={{ padding: '12px 16px' }}>
-                        <input
-                          type="number"
-                          min="1"
-                          step="1"
-                          value={currentTarget}
-                          onChange={(e) => {
-                            const val = parseInt(e.target.value, 10) || 0;
-                            setPcfDrafts((prev) => ({ ...prev, [p.id]: val }));
-                          }}
-                          style={{
-                            maxWidth: '120px',
-                            padding: '6px 10px',
-                            fontWeight: '700',
-                            color: '#0f172a',
-                            background: '#ffffff',
-                            border: '1px solid #cbd5e1',
-                            borderRadius: '6px',
-                            fontSize: '0.88rem',
-                          }}
-                        />
-                      </td>
-
-                      {/* Milestone progression colors only */}
-                      <td style={{ padding: '12px 16px' }}>
-                        <span
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '4px',
-                            padding: '4px 10px',
-                            borderRadius: '16px',
-                            fontSize: '0.78rem',
-                            fontWeight: '800',
-                            background: mStyle.background,
-                            color: mStyle.color,
-                            border: mStyle.border,
-                          }}
-                        >
-                          {mStyle.badge && <span style={{ fontSize: '0.85rem' }}>{mStyle.badge}</span>}
-                          <span>{pct}%</span>
-                        </span>
-                      </td>
-
-                      <td style={{ padding: '12px 16px', textAlign: 'center' }}>
-                        <button
-                          type="button"
-                          onClick={() => handleSaveSingleRow('pcf', p.id, currentTarget)}
-                          style={{
-                            padding: '6px 14px',
-                            fontSize: '0.78rem',
-                            fontWeight: '700',
-                            borderRadius: '6px',
-                            border: '1px solid',
-                            borderColor: isSaved ? '#0f172a' : '#cbd5e1',
-                            background: isSaved ? '#0f172a' : '#ffffff',
-                            color: isSaved ? '#ffffff' : '#0f172a',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '4px',
-                            transition: 'all 0.15s ease',
-                          }}
-                        >
-                          {isSaved ? <Check size={14} /> : <Save size={14} />}
-                          <span>{isSaved ? 'Saved' : 'Save'}</span>
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
       ) : (
-        /* ================= TAB 4: QUICK SINGLE SETTER (MONOCHROME) ================= */
+        /* ================= TAB 3: QUICK SINGLE SETTER (MONOCHROME) ================= */
         <div style={{ maxWidth: '600px', margin: '0 auto', background: '#f8fafc', padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
           <h3 style={{ color: '#0f172a', fontSize: '1.1rem', marginBottom: '16px', fontWeight: '800' }}>
             SET INDIVIDUAL TARGET
@@ -1164,7 +993,6 @@ export const TargetManagementView: React.FC = () => {
                 <option value="zone">ZONE (Zonal Campaign Overall)</option>
                 <option value="group">GROUP LEVEL</option>
                 <option value="church">CHURCH LEVEL</option>
-                <option value="pcf">PCF LEVEL</option>
               </select>
             </div>
 
@@ -1180,8 +1008,6 @@ export const TargetManagementView: React.FC = () => {
                       setSingleTargetInput((groupDrafts[id] || 1000).toString());
                     } else if (singleLevel === 'church') {
                       setSingleTargetInput((churchDrafts[id] || 250).toString());
-                    } else if (singleLevel === 'pcf') {
-                      setSingleTargetInput((pcfDrafts[id] || 50).toString());
                     }
                   }}
                   style={{
@@ -1204,12 +1030,6 @@ export const TargetManagementView: React.FC = () => {
                     churches.map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
-                      </option>
-                    ))}
-                  {singleLevel === 'pcf' &&
-                    pcfs.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
                       </option>
                     ))}
                 </select>

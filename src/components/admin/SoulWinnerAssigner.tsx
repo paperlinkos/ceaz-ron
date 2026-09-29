@@ -6,11 +6,9 @@ import {
   getZones,
   getGroups,
   getChurches,
-  getPCFs,
-  resolvePCFHierarchy,
 } from '../../services/organizationService';
 import { assignSoulWinnerHierarchy } from '../../services/userService';
-import type { Zone, Group, Church, PCF } from '../../types/organization';
+import type { Zone, Group, Church } from '../../types/organization';
 import type { UserProfile } from '../../types/auth';
 
 export const SoulWinnerAssigner: React.FC = () => {
@@ -18,14 +16,12 @@ export const SoulWinnerAssigner: React.FC = () => {
   const [zones, setZones] = useState<Zone[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   const [churches, setChurches] = useState<Church[]>([]);
-  const [pcfs, setPcfs] = useState<PCF[]>([]);
 
   // Selection state
   const [selectedUserId, setSelectedUserId] = useState<string>('');
   const [selectedZoneId, setSelectedZoneId] = useState<string>('');
   const [selectedGroupId, setSelectedGroupId] = useState<string>('');
   const [selectedChurchId, setSelectedChurchId] = useState<string>('');
-  const [selectedPcfId, setSelectedPcfId] = useState<string>('');
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
@@ -33,16 +29,14 @@ export const SoulWinnerAssigner: React.FC = () => {
 
   const loadAll = async () => {
     try {
-      const [zList, gList, cList, pList] = await Promise.all([
+      const [zList, gList, cList] = await Promise.all([
         getZones(),
         getGroups(),
         getChurches(),
-        getPCFs(),
       ]);
       setZones(zList);
       setGroups(gList);
       setChurches(cList);
-      setPcfs(pList);
 
       if (navigator.onLine) {
         const snap = await getDocs(collection(db, 'users'));
@@ -60,7 +54,6 @@ export const SoulWinnerAssigner: React.FC = () => {
 
   const availableGroups = groups.filter((g) => g.zoneId === selectedZoneId);
   const availableChurches = churches.filter((c) => c.groupId === selectedGroupId);
-  const availablePcfs = pcfs.filter((p) => p.churchId === selectedChurchId);
 
   const pendingUsers = users.filter((u) => u.status === 'pendingAssignment');
 
@@ -73,34 +66,39 @@ export const SoulWinnerAssigner: React.FC = () => {
       setError('Please select a Soul Winner to assign.');
       return;
     }
-    if (!selectedPcfId) {
-      setError('Please complete the hierarchy selection down to PCF.');
+    if (!selectedChurchId) {
+      setError('Please complete the hierarchy selection down to Church.');
+      return;
+    }
+
+    const church = churches.find((c) => c.id === selectedChurchId);
+    const group = groups.find((g) => g.id === (church?.groupId || selectedGroupId));
+    const zone = zones.find((z) => z.id === (group?.zoneId || selectedZoneId)) || zones[0];
+
+    if (!church || !group) {
+      setError('Selected Church or Group could not be resolved.');
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      const { pcf, church, group, zone } = await resolvePCFHierarchy(selectedPcfId);
-
       await assignSoulWinnerHierarchy(selectedUserId, {
-        pcfId: pcf.id,
         churchId: church.id,
         groupId: group.id,
-        zoneId: zone.id,
-        pcfName: pcf.name,
+        zoneId: zone ? zone.id : 'zone-abuja-1',
         churchName: church.name,
         groupName: group.name,
-        zoneName: zone.name,
+        zoneName: zone ? zone.name : 'Abuja Zone 1',
       });
 
       const assignedUser = users.find((u) => u.id === selectedUserId);
       setSuccess(
-        `Successfully assigned ${assignedUser?.name || 'Soul Winner'} to ${pcf.name} (${church.name}, ${group.name}, ${zone.name})!`
+        `Successfully assigned ${assignedUser?.name || 'Soul Winner'} to ${church.name} (${group.name}, ${zone?.name || 'Abuja Zone 1'})!`
       );
 
       setSelectedUserId('');
-      setSelectedPcfId('');
+      setSelectedChurchId('');
       await loadAll();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -117,7 +115,7 @@ export const SoulWinnerAssigner: React.FC = () => {
           <UserCheck size={24} className="inline-icon" /> Soul Winner Assignment
         </h2>
         <p className="form-lead">
-          Assign registered Soul Winners to their Zone → Group → Church → PCF.
+          Assign registered Soul Winners to their Zone → Group → Church.
         </p>
       </div>
 
@@ -168,7 +166,6 @@ export const SoulWinnerAssigner: React.FC = () => {
               setSelectedZoneId(e.target.value);
               setSelectedGroupId('');
               setSelectedChurchId('');
-              setSelectedPcfId('');
             }}
             className="form-input"
             required
@@ -189,7 +186,6 @@ export const SoulWinnerAssigner: React.FC = () => {
             onChange={(e) => {
               setSelectedGroupId(e.target.value);
               setSelectedChurchId('');
-              setSelectedPcfId('');
             }}
             disabled={!selectedZoneId}
             className="form-input"
@@ -210,7 +206,6 @@ export const SoulWinnerAssigner: React.FC = () => {
             value={selectedChurchId}
             onChange={(e) => {
               setSelectedChurchId(e.target.value);
-              setSelectedPcfId('');
             }}
             disabled={!selectedGroupId}
             className="form-input"
@@ -225,27 +220,9 @@ export const SoulWinnerAssigner: React.FC = () => {
           </select>
         </div>
 
-        <div className="form-group">
-          <label className="form-label">5. Select PCF *</label>
-          <select
-            value={selectedPcfId}
-            onChange={(e) => setSelectedPcfId(e.target.value)}
-            disabled={!selectedChurchId}
-            className="form-input"
-            required
-          >
-            <option value="">-- Select PCF --</option>
-            {availablePcfs.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name} ({p.code})
-              </option>
-            ))}
-          </select>
-        </div>
-
         <button
           type="submit"
-          disabled={isSubmitting || !selectedPcfId || !selectedUserId}
+          disabled={isSubmitting || !selectedChurchId || !selectedUserId}
           className="submit-button"
         >
           <ShieldCheck size={18} />

@@ -20,7 +20,7 @@ describe('Official PDF Targets Integrity & Logic Verification', () => {
   });
 
   it('covers all default churches with their distinct individual targets from the PDF', () => {
-    expect(DEFAULT_CHURCHES.length).toBe(129);
+    expect(DEFAULT_CHURCHES.length).toBe(127);
 
     // Every single church in DEFAULT_CHURCHES must have an official target mapped
     DEFAULT_CHURCHES.forEach((church) => {
@@ -32,7 +32,7 @@ describe('Official PDF Targets Integrity & Logic Verification', () => {
 
   it('mergeTargetsWithDefaults preserves all official PDF targets when custom target list is empty', () => {
     const merged = mergeTargetsWithDefaults([]);
-    expect(merged.length).toBeGreaterThanOrEqual(129);
+    expect(merged.length).toBeGreaterThanOrEqual(127);
 
     const kubwa1 = merged.find((t) => t.level === 'group' && t.organizationId === 'grp-kubwa-1');
     expect(kubwa1?.target).toBe(3500);

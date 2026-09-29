@@ -57,7 +57,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onOpenAuth }) =>
                 {isActiveSoulWinner
                   ? 'Your account is active. Tap below to start recording souls won!'
                   : isPendingAssignment
-                  ? 'Your account is pending PCF assignment. An administrator will assign your PCF shortly.'
+                  ? 'Your account is pending assignment. An administrator will assign your Church shortly.'
                   : 'Account status notice: check My Account.'}
               </p>
             </div>
@@ -96,7 +96,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onOpenAuth }) =>
           <Compass size={24} />
           <div>
             <h3>MY ACCOUNT</h3>
-            <p>View your PCF, Church, Group & Zone</p>
+            <p>View your Church, Group & Zone</p>
           </div>
         </button>
       </div>

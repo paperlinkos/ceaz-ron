@@ -219,14 +219,12 @@ export const OFFICIAL_TARGET_MAP: { orgId: string; level: 'zone' | 'group' | 'ch
   { orgId: 'grp-city-church', level: 'group', target: 1500 },
   { orgId: 'grp-teens-church', level: 'group', target: 1500 },
 
-  // Churches (129 Churches)
+  // Churches (127 Churches)
   // Zonal Church Group
-  { orgId: 'ch-zonal-church-1', level: 'church', target: 2000 },
-  { orgId: 'ch-zonal-church-2', level: 'church', target: 2000 },
+  { orgId: 'ch-zonal-church-1', level: 'church', target: 3500 },
+  { orgId: 'ch-zonal-church-2', level: 'church', target: 3500 },
   { orgId: 'ch-lingual-church', level: 'church', target: 1500 },
   { orgId: 'ch-ce-city-church-zonal', level: 'church', target: 1500 },
-  { orgId: 'ch-service-1', level: 'church', target: 1500 },
-  { orgId: 'ch-service-2', level: 'church', target: 1500 },
 
   // Strategic Group Zonal
   { orgId: 'ch-ce-tasha-2', level: 'church', target: 350 },

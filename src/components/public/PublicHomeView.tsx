@@ -47,7 +47,7 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
   }
 
   // 2. Church / Leader / Soul Winner Role: Render 3-section Church Home View
-  if (role === 'churchManager' || role === 'soulWinner' || role === 'pcfLeader') {
+  if (role === 'churchManager' || role === 'soulWinner') {
     return <ChurchHomeView onNavigate={onNavigate} onOpenAuth={onOpenAuth} />;
   }
 

@@ -24,7 +24,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onOpenAuth }) => {
           <Target size={20} className="text-green-accent" />
           <div>
             <h4>Zonal Goal</h4>
-            <p>Targeting 50,000 souls recorded live across all Groups, Churches, PCFs, and Soul Winners.</p>
+            <p>Targeting 50,000 souls recorded live across all Groups, Churches, and Soul Winners.</p>
           </div>
         </div>
 
@@ -40,7 +40,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onOpenAuth }) => {
           <ShieldCheck size={20} className="text-green-accent" />
           <div>
             <h4>Authenticated Recording</h4>
-            <p>Every soul-winning record is linked to a verified Soul Winner profile and PCF hierarchy.</p>
+            <p>Every soul-winning record is linked to a verified Soul Winner profile and Church hierarchy.</p>
           </div>
         </div>
       </div>

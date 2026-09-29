@@ -130,8 +130,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     ? 'MY GROUP'
                     : role === 'churchManager'
                     ? 'MY CHURCH'
-                    : role === 'pcfLeader'
-                    ? 'MY PCF'
                     : role === 'superAdmin'
                     ? 'ALL DASHBOARDS'
                     : 'MY PROGRESS'}
@@ -178,7 +176,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <div className="nav-tab-icon-wrapper">
                 <User size={20} />
                 {isPendingAssignment && (
-                  <span className="indicator-dot" title="Pending PCF assignment" />
+                  <span className="indicator-dot" title="Pending assignment" />
                 )}
               </div>
               {!isCollapsed && <span>MY ACCOUNT</span>}

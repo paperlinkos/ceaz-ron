@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Users,
   UserCheck,
@@ -18,6 +18,7 @@ import {
   resetChurchAccountPassword,
   exportChurchAccountsToExcelCSV,
   exportCredentialsCSV,
+  churchCodeToAuthEmail,
   type ChurchAccount,
 } from '../../services/churchAccountService';
 import {
@@ -31,12 +32,10 @@ import {
   getZones,
   getGroups,
   getChurches,
-  getPCFs,
-  resolvePCFHierarchy,
 } from '../../services/organizationService';
 import { getOfficialTarget } from '../../services/targetService';
 import type { UserProfile, SoulWinnerProfile, AccountStatus, UserRole } from '../../types/auth';
-import type { Zone, Group, Church, PCF } from '../../types/organization';
+import type { Zone, Group, Church } from '../../types/organization';
 
 export const UserManagementView: React.FC = () => {
   const { userProfile: currentUser, role } = useAuth();
@@ -47,7 +46,6 @@ export const UserManagementView: React.FC = () => {
   const [zones, setZones] = useState<Zone[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   const [churches, setChurches] = useState<Church[]>([]);
-  const [pcfs, setPcfs] = useState<PCF[]>([]);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -68,7 +66,6 @@ export const UserManagementView: React.FC = () => {
   const [selZoneId, setSelZoneId] = useState<string>('');
   const [selGroupId, setSelGroupId] = useState<string>('');
   const [selChurchId, setSelChurchId] = useState<string>('');
-  const [selPcfId, setSelPcfId] = useState<string>('');
 
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
@@ -90,20 +87,18 @@ export const UserManagementView: React.FC = () => {
   const refreshUsersAndOrgs = async () => {
     setIsLoading(true);
     try {
-      const [uList, swList, zList, gList, cList, pList] = await Promise.all([
+      const [uList, swList, zList, gList, cList] = await Promise.all([
         getAllUsers(),
         getAllSoulWinnerProfiles(),
         getZones(),
         getGroups(),
         getChurches(),
-        getPCFs(),
       ]);
       setUsers(uList);
       setSwProfiles(swList);
       setZones(zList);
       setGroups(gList);
       setChurches(cList);
-      setPcfs(pList);
       setChurchAccounts(await getChurchAccounts());
     } catch (err) {
       console.warn('Error fetching users and orgs:', err);
@@ -111,6 +106,32 @@ export const UserManagementView: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  // Full roster of 127 churches: merge any Firestore accounts with our official roster
+  const displayedChurchAccounts = useMemo<ChurchAccount[]>(() => {
+    const accMapByCode = new Map(churchAccounts.map((a) => [a.churchCode.toUpperCase(), a]));
+    const accMapByChurchId = new Map(churchAccounts.map((a) => [a.churchId, a]));
+
+    return churches.map((c) => {
+      const existing = accMapByCode.get(c.code.toUpperCase()) || accMapByChurchId.get(c.id);
+      if (existing) return existing;
+      const group = groups.find((g) => g.id === c.groupId);
+      return {
+        churchId: c.id,
+        churchName: c.name,
+        churchCode: c.code,
+        uid: '',
+        loginEmail: churchCodeToAuthEmail(c.code),
+        groupId: c.groupId,
+        groupName: group?.name || '',
+        targetSouls: getOfficialTarget('church', c.id) || 0,
+        status: 'active' as const,
+        representative: undefined,
+        createdAt: '',
+        updatedAt: '',
+      };
+    });
+  }, [churches, churchAccounts, groups]);
 
   useEffect(() => {
     refreshUsersAndOrgs();
@@ -253,16 +274,19 @@ export const UserManagementView: React.FC = () => {
       } else if (actionModal.type === 'role' && actionModal.newRole) {
         await updateUserRole(actionModal.user.id, actionModal.newRole, actorId);
         setSuccess(`Changed role for ${actionModal.user.name} to ${actionModal.newRole}.`);
-      } else if (actionModal.type === 'reassign' && selPcfId) {
-        const { pcf, church, group, zone } = await resolvePCFHierarchy(selPcfId);
+      } else if (actionModal.type === 'reassign' && selChurchId) {
+        const church = churches.find((c) => c.id === selChurchId);
+        const group = groups.find((g) => g.id === church?.groupId);
+        const zone = zones[0] || { id: 'zone-abuja-1', name: 'Abuja Zone 1' };
+        if (!church || !group) {
+          throw new Error('Please select a valid church.');
+        }
         await assignSoulWinnerHierarchy(
           actionModal.user.id,
           {
-            pcfId: pcf.id,
             churchId: church.id,
             groupId: group.id,
             zoneId: zone.id,
-            pcfName: pcf.name,
             churchName: church.name,
             groupName: group.name,
             zoneName: zone.name,
@@ -270,7 +294,7 @@ export const UserManagementView: React.FC = () => {
           actorId
         );
         setSuccess(
-          `Reassigned ${actionModal.user.name} to ${pcf.name} (${church.name}, ${group.name}, ${zone.name}). Future records will use this assignment; historical records remain preserved.`
+          `Reassigned ${actionModal.user.name} to ${church.name} (${group.name}, ${zone.name}). Future records will use this assignment; historical records remain preserved.`
         );
       }
 
@@ -286,7 +310,6 @@ export const UserManagementView: React.FC = () => {
 
   const availableGroups = groups.filter((g) => g.zoneId === selZoneId);
   const availableChurches = churches.filter((c) => c.groupId === selGroupId);
-  const availablePcfs = pcfs.filter((p) => p.churchId === selChurchId);
 
   return (
     <div className="account-card">
@@ -330,7 +353,7 @@ export const UserManagementView: React.FC = () => {
                 fontSize: '0.72rem',
               }}
             >
-              {churchAccounts.length}
+              {Math.max(displayedChurchAccounts.length, churches.length, 127)}
             </span>
           </button>
 
@@ -405,7 +428,7 @@ export const UserManagementView: React.FC = () => {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 800, fontSize: '1.1rem', color: '#008751' }}>
                 <Building size={22} />
-                <span>Abuja Zone 1: Church Representative Accounts ({churchAccounts.length} Churches)</span>
+                <span>Abuja Zone 1: Church Representative Accounts ({Math.max(displayedChurchAccounts.length, churches.length, 127)} Churches)</span>
               </div>
               <p style={{ margin: '4px 0 0 0', fontSize: '0.82rem', color: '#475569', lineHeight: '1.4' }}>
                 1 account designated per church. Each Church Code serves as their login username.
@@ -430,8 +453,8 @@ export const UserManagementView: React.FC = () => {
                 Create Single
               </button>
               <button
-                onClick={() => exportChurchAccountsToExcelCSV(churchAccounts)}
-                disabled={churchAccounts.length === 0}
+                onClick={() => exportChurchAccountsToExcelCSV(displayedChurchAccounts)}
+                disabled={displayedChurchAccounts.length === 0}
                 className="secondary-button"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', margin: 0 }}
               >
@@ -524,7 +547,7 @@ export const UserManagementView: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {churchAccounts
+                {displayedChurchAccounts
                   .filter((acc) => {
                     const q = searchQuery.toLowerCase().trim();
                     if (!q) return true;
@@ -665,8 +688,8 @@ export const UserManagementView: React.FC = () => {
                   <div className="detail-row">
                     <span className="detail-lbl">ASSIGNMENT:</span>
                     <span className="detail-val org-path">
-                      {sw?.pcfName ? (
-                        `${sw.pcfName} • ${sw.churchName || ''} • ${sw.groupName || ''} • ${sw.zoneName || ''}`
+                      {sw?.churchName ? (
+                        `${sw.churchName} • ${sw.groupName || ''} • ${sw.zoneName || ''}`
                       ) : (
                         <em className="text-dim">Unassigned</em>
                       )}
@@ -681,7 +704,6 @@ export const UserManagementView: React.FC = () => {
                       setSelZoneId(sw?.zoneId || '');
                       setSelGroupId(sw?.groupId || '');
                       setSelChurchId(sw?.churchId || '');
-                      setSelPcfId(sw?.pcfId || '');
                       setActionModal({ isOpen: true, type: 'reassign', user: u });
                     }}
                     className="btn-xs btn-outline"
@@ -702,7 +724,6 @@ export const UserManagementView: React.FC = () => {
                     className="select-xs"
                   >
                     <option value="soulWinner">Role: Soul Winner</option>
-                    <option value="pcfLeader">Role: PCF Leader</option>
                     <option value="churchManager">Role: Church Manager</option>
                     <option value="groupManager">Role: Group Manager</option>
                     <option value="zoneManager">Role: Zone Manager</option>
@@ -777,7 +798,6 @@ export const UserManagementView: React.FC = () => {
                       setSelZoneId(e.target.value);
                       setSelGroupId('');
                       setSelChurchId('');
-                      setSelPcfId('');
                     }}
                     className="form-input select-sm"
                   >
@@ -797,7 +817,6 @@ export const UserManagementView: React.FC = () => {
                     onChange={(e) => {
                       setSelGroupId(e.target.value);
                       setSelChurchId('');
-                      setSelPcfId('');
                     }}
                     disabled={!selZoneId}
                     className="form-input select-sm"
@@ -817,7 +836,6 @@ export const UserManagementView: React.FC = () => {
                     value={selChurchId}
                     onChange={(e) => {
                       setSelChurchId(e.target.value);
-                      setSelPcfId('');
                     }}
                     disabled={!selGroupId}
                     className="form-input select-sm"
@@ -826,23 +844,6 @@ export const UserManagementView: React.FC = () => {
                     {availableChurches.map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name} ({c.code})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label className="form-label text-xs">4. Select PCF *</label>
-                  <select
-                    value={selPcfId}
-                    onChange={(e) => setSelPcfId(e.target.value)}
-                    disabled={!selChurchId}
-                    className="form-input select-sm"
-                  >
-                    <option value="">-- Select PCF --</option>
-                    {availablePcfs.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name} ({p.code})
                       </option>
                     ))}
                   </select>
@@ -866,7 +867,7 @@ export const UserManagementView: React.FC = () => {
               <button
                 type="button"
                 onClick={handleExecuteAction}
-                disabled={isProcessing || (actionModal.type === 'reassign' && !selPcfId)}
+                disabled={isProcessing || (actionModal.type === 'reassign' && !selChurchId)}
                 className="submit-button"
               >
                 {isProcessing ? 'PROCESSING...' : 'CONFIRM ACTION'}

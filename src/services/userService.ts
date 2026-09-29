@@ -173,14 +173,14 @@ export async function getAllSoulWinnerProfiles(): Promise<SoulWinnerProfile[]> {
   }
 }
 
-/** Admin helper: Assign hierarchy (PCF -> Church -> Group -> Zone) to a user */
+/** Admin helper: Assign hierarchy (Church -> Group -> Zone) to a user */
 export async function assignSoulWinnerHierarchy(
   userId: string,
   assignment: {
-    pcfId: string;
     churchId: string;
     groupId: string;
     zoneId: string;
+    pcfId?: string;
     pcfName?: string;
     churchName?: string;
     groupName?: string;

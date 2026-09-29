@@ -84,7 +84,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
         <div className="nav-tab-icon-wrapper">
           <User size={18} />
           {isAuthenticated && isPendingAssignment && (
-            <span className="indicator-dot" title="Pending PCF assignment" />
+            <span className="indicator-dot" title="Pending assignment" />
           )}
         </div>
         <span>ACCOUNT</span>

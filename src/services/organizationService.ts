@@ -50,8 +50,6 @@ export const DEFAULT_CHURCHES: Church[] = [
   { id: 'ch-zonal-church-2', groupId: 'grp-zonal-church', name: 'Zonal Church 2', code: 'CH-ZNC2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'ch-lingual-church', groupId: 'grp-zonal-church', name: 'Lingual Church', code: 'CH-LNG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'ch-ce-city-church-zonal', groupId: 'grp-zonal-church', name: 'CE City Church', code: 'CH-CCC1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
-  { id: 'ch-service-1', groupId: 'grp-zonal-church', name: 'Service 1', code: 'CH-SVC1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
-  { id: 'ch-service-2', groupId: 'grp-zonal-church', name: 'Service 2', code: 'CH-SVC2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
 
   // Strategic Group Zonal
   { id: 'ch-ce-tasha-2', groupId: 'grp-strategic-zonal', name: 'CE Tasha 2', code: 'CH-TSH2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
@@ -166,7 +164,7 @@ export const DEFAULT_CHURCHES: Church[] = [
   // Gwagwalada 2 Group
   { id: 'ch-ce-gwagwalada-2', groupId: 'grp-gwagwalada-2', name: 'CE Gwagwalada 2', code: 'CH-GWG2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'ch-ce-gwagwalada-3', groupId: 'grp-gwagwalada-2', name: 'CE Gwagwalada 3', code: 'CH-GWG3', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
-  { id: 'ch-ce-anagada', groupId: 'grp-gwagwalada-2', name: 'CE Anagada', code: 'CH-ANG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-anagada', groupId: 'grp-gwagwalada-2', name: 'CE Anangada', code: 'CH-ANG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'ch-ce-gwagwalada-6', groupId: 'grp-gwagwalada-2', name: 'CE Gwagwalada 6', code: 'CH-GWG6', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'ch-ce-chukunku', groupId: 'grp-gwagwalada-2', name: 'CE Chukunku', code: 'CH-CHK', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
 
@@ -241,12 +239,14 @@ function getLocalOrgCache(): LocalOrgCache {
     if (!parsed.zones || parsed.zones.length === 0) parsed.zones = DEFAULT_ZONES;
     parsed.groups = (parsed.groups || []).filter((g) => g.id !== 'grp-standalone');
     let cacheChanged = false;
-    if (!parsed.groups || parsed.groups.length < DEFAULT_GROUPS.length) {
-      parsed.groups = DEFAULT_GROUPS;
+    const cachedGroupIds = new Set((parsed.groups || []).map((g) => g.id));
+    if (!parsed.groups || DEFAULT_GROUPS.some((g) => !cachedGroupIds.has(g.id))) {
+      parsed.groups = mergeGroupsWithDefaults(parsed.groups || []);
       cacheChanged = true;
     }
-    if (!parsed.churches || parsed.churches.length < DEFAULT_CHURCHES.length) {
-      parsed.churches = DEFAULT_CHURCHES;
+    const cachedChurchIds = new Set((parsed.churches || []).map((c) => c.id));
+    if (!parsed.churches || DEFAULT_CHURCHES.some((c) => !cachedChurchIds.has(c.id))) {
+      parsed.churches = mergeChurchesWithDefaults(parsed.churches || []);
       cacheChanged = true;
     }
     if (!parsed.pcfs) parsed.pcfs = [];
