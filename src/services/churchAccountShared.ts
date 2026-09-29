@@ -19,6 +19,22 @@ export function generateDefaultPassword(code: string): string {
 }
 
 /**
+ * Generates an unpredictable password for password resets.
+ *
+ * Resets must NOT reuse generateDefaultPassword: that value is derived purely
+ * from the public church code, so "resetting" would hand back the same
+ * password and quietly fail to revoke access.
+ */
+export function generateResetPassword(): string {
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const bytes = new Uint8Array(12);
+  globalThis.crypto.getRandomValues(bytes);
+  let out = '';
+  for (const byte of bytes) out += alphabet[byte % alphabet.length];
+  return `CEAZ1-${out}`;
+}
+
+/**
  * Maps a Church Code to the synthetic Firebase Auth email it signs in with.
  * Firebase Auth only accepts email-shaped identifiers, but the UI only ever
  * asks the user for their Church Code - this mapping stays server-side.

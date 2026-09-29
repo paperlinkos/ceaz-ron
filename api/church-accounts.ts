@@ -4,6 +4,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import {
   generateDefaultPassword,
+  generateResetPassword,
   churchCodeToAuthEmail,
   CHURCH_ACCOUNTS_COLLECTION,
   type ChurchAccountRecord,
@@ -222,10 +223,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       const account = snap.data() as ChurchAccountRecord;
+      // An admin-supplied password wins; otherwise mint an unpredictable one.
+      // Falling back to generateDefaultPassword here would return the same
+      // password the account already has, making reset a silent no-op.
       const password =
         typeof body.newPassword === 'string' && body.newPassword.trim().length >= 6
           ? body.newPassword.trim()
-          : generateDefaultPassword(churchCode);
+          : generateResetPassword();
 
       await getAuth(getAdminApp()).updateUser(account.uid, { password });
       await snap.ref.update({ updatedAt: new Date().toISOString() });
