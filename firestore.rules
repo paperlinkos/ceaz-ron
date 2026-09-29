@@ -53,13 +53,45 @@ service cloud.firestore {
     }
 
     // ─────────────────────────────────────────────────────────────────────
+    // BOOTSTRAP
+    // The campaign ships with zero user profiles, so the very first SuperAdmin
+    // cannot be created from inside the app (creating it requires an existing
+    // SuperAdmin). This permits one self-assigned superAdmin, and only while
+    // the sentinel document below is absent.
+    //
+    // The seeding step (Admin SDK) writes systemFlags/bootstrap immediately
+    // after creating that first profile, permanently closing the window.
+    // systemFlags is write-locked to clients, so it cannot be re-opened.
+    //
+    // Note: rules have no count(); the sentinel stands in for "no users yet".
+    // ─────────────────────────────────────────────────────────────────────
+    function bootstrapOpen() {
+      return !exists(/databases/$(database)/documents/systemFlags/bootstrap);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // SYSTEM FLAGS
+    // Bootstrap lock and similar operator-controlled switches.
+    // A superAdmin writes the bootstrap lock to close the first-run window.
+    // A superAdmin could also reopen it, which grants nothing extra: a
+    // superAdmin can already promote any profile to superAdmin directly.
+    // ─────────────────────────────────────────────────────────────────────
+    match /systemFlags/{flag} {
+      allow read: if isSuperAdmin();
+      allow write: if isSuperAdmin();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
     // USERS COLLECTION
     // Previously: any authenticated user could read all profiles (privacy risk)
     // Fixed: only self or manager-level roles can read profiles
     // ─────────────────────────────────────────────────────────────────────
     match /users/{userId} {
       allow read: if isOwner(userId) || isManagerOrAbove();
-      // Allow self-creation on signup — role forced to soulWinner, status to pendingAssignment
+      // Bootstrap: the very first profile may claim superAdmin.
+      allow create: if isOwner(userId) && bootstrapOpen() &&
+                       request.resource.data.role == 'superAdmin';
+      // Normal self-creation — role forced to soulWinner, status to pendingAssignment
       allow create: if isOwner(userId) &&
                        request.resource.data.role == 'soulWinner' &&
                        request.resource.data.status == 'pendingAssignment';

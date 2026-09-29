@@ -2,19 +2,45 @@ import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
 import { getFirestore, type Firestore } from 'firebase/firestore';
 import { getAuth, type Auth } from 'firebase/auth';
 
+/**
+ * Config comes exclusively from Vite env vars (see .env.production).
+ * There is deliberately NO hardcoded fallback: a silent default would let a
+ * misconfigured build write campaign data into the wrong Firebase project
+ * instead of failing loudly.
+ */
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyDDMMfAgsX5wJNiFJIVIkoImD9HoDTcXSw',
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'model-webbing-p83d0.firebaseapp.com',
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'model-webbing-p83d0',
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'model-webbing-p83d0.firebasestorage.app',
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '213247113725',
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:213247113725:web:92ba864ae9d4ccfc630194',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-const firestoreDatabaseId = 'ai-studio-ceaz1ronharvestt-70c3271b-2801-4466-80b8-3685c9b19297';
+const missingConfig = !firebaseConfig.projectId || !firebaseConfig.apiKey;
+
+if (missingConfig) {
+  const message =
+    'Firebase is not configured. Set VITE_FIREBASE_PROJECT_ID and VITE_FIREBASE_API_KEY in .env.production (or your Vercel environment variables).';
+  // Production must fail loudly rather than risk writing campaign data into
+  // an unintended project. Tests and tooling only import this module, so they
+  // get a warning instead of taking the whole suite down.
+  if (import.meta.env.PROD) {
+    throw new Error(message);
+  }
+  console.warn(message);
+}
+
+/**
+ * Named database id. The campaign uses the project's default database, so
+ * this resolves to "(default)" unless a named database is configured.
+ */
+const firestoreDatabaseId =
+  import.meta.env.VITE_FIREBASE_FIRESTORE_DATABASE_ID || '(default)';
 
 export const isFirebaseConfigured = Boolean(firebaseConfig.projectId);
 export const CURRENT_PROJECT_ID = firebaseConfig.projectId;
+export const CURRENT_DATABASE_ID = firestoreDatabaseId;
 
 export const ENVIRONMENT_TYPE: 'PRODUCTION' | 'DEVELOPMENT' = 'PRODUCTION';
 

@@ -30,9 +30,7 @@ function getAdminApp() {
 
 function getDb() {
   const app = getAdminApp();
-  const databaseId =
-    process.env.FIRESTORE_DATABASE_ID ||
-    'ai-studio-ceaz1ronharvestt-70c3271b-2801-4466-80b8-3685c9b19297';
+  const databaseId = process.env.FIRESTORE_DATABASE_ID || '(default)';
   return getFirestore(app, databaseId);
 }
 

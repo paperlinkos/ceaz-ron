@@ -1,12 +1,21 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
+import { loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [
-    react(),
-    VitePWA({
+export default defineConfig(({ mode }) => {
+  // Tests run in "test" mode, where Vite does not load .env.production. The
+  // Firebase SDK is initialised at module import, so an empty config would
+  // crash every suite that touches a service. Feed tests the committed
+  // production values so .env.production stays the single source of truth.
+  const firebaseEnv =
+    mode === 'test' ? loadEnv('production', process.cwd(), 'VITE_') : {};
+
+  return {
+    plugins: [
+      react(),
+      VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'icons/*.png'],
       manifest: {
@@ -47,6 +56,10 @@ export default defineConfig({
           },
         ],
       },
-    }),
-  ],
+      }),
+    ],
+    test: {
+      env: firebaseEnv,
+    },
+  };
 });
