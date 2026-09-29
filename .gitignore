@@ -30,3 +30,7 @@ temp-clone
 *.njsproj
 *.sln
 *.sw?
+
+# Local secrets — never commit
+superadmin-credentials.txt
+*.local.json
