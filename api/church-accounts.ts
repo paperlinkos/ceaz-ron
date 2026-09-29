@@ -193,8 +193,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         userId: userRecord.uid,
         zoneId: 'zone-abuja-1',
         zoneName: 'Abuja Zone 1',
-        groupId: record.groupId || undefined,
-        groupName: record.groupName || undefined,
+        // Firestore rejects undefined field values, so store the empty string
+        // rather than collapsing a blank group to undefined.
+        groupId: record.groupId,
+        groupName: record.groupName,
         churchId,
         churchName,
         status: 'active',
