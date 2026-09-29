@@ -1143,6 +1143,12 @@ table {
   backdrop-filter: blur(12px);
   border-top: 1px solid var(--color-card-border-public);
   display: grid;
+  /* Tab count varies by role (2 in observer mode, up to 5 for a SuperAdmin).
+     Laying the columns out implicitly keeps the row correct for every one
+     instead of falling back to a single stacked column. */
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  align-items: stretch;
   padding: 8px 12px calc(12px + env(safe-area-inset-bottom)) 12px;
   z-index: 90;
   box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.08);
@@ -1158,15 +1164,33 @@ table {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 4px;
+  min-width: 0;
   background: transparent;
   border: none;
   color: var(--color-text-muted-dark);
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.04em;
-  padding: 6px;
+  padding: 6px 2px;
   cursor: pointer;
+}
+
+/* Five tabs on a 320px screen leaves ~60px each, so let the labels shrink
+   and truncate rather than force the row wider than the viewport. */
+.nav-tab span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 380px) {
+  .nav-tab {
+    font-size: 0.6rem;
+    letter-spacing: 0;
+  }
 }
 
 .nav-tab-active {
