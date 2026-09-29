@@ -18,6 +18,10 @@ export const DEFAULT_ZONES: Zone[] = [
 ];
 
 export const DEFAULT_GROUPS: Group[] = [
+  { id: 'grp-zonal-church', zoneId: 'zone-abuja-1', name: 'Zonal Church Group', code: 'GRP-ZCG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'grp-strategic-zonal', zoneId: 'zone-abuja-1', name: 'Strategic Group Zonal', code: 'GRP-SGZ', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'grp-heavenly-phantheon', zoneId: 'zone-abuja-1', name: 'Heavenly Phantheon Group', code: 'GRP-HPG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'grp-dawaki', zoneId: 'zone-abuja-1', name: 'Dawaki Sub-Group', code: 'GRP-DWK', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'grp-wuye-1', zoneId: 'zone-abuja-1', name: 'Wuye Sub-Group 1', code: 'GRP-WY1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'grp-wuye-2', zoneId: 'zone-abuja-1', name: 'Wuye Sub-Group 2', code: 'GRP-WY2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'grp-karmo', zoneId: 'zone-abuja-1', name: 'Karmo Group', code: 'GRP-KRM', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
@@ -33,14 +37,54 @@ export const DEFAULT_GROUPS: Group[] = [
   { id: 'grp-lokogoma', zoneId: 'zone-abuja-1', name: 'Lokogoma Group', code: 'GRP-LKG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'grp-dei-dei', zoneId: 'zone-abuja-1', name: 'Dei Dei Group', code: 'GRP-DEI', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'grp-airport-road', zoneId: 'zone-abuja-1', name: 'Airport Road Sub-Group', code: 'GRP-APR', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'grp-byazhin', zoneId: 'zone-abuja-1', name: 'Byazhin Church', code: 'GRP-BYZ', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'grp-dutse-makaranta', zoneId: 'zone-abuja-1', name: 'Dutse Makaranta Sub-Group', code: 'GRP-DMK', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
-  { id: 'grp-city-church', zoneId: 'zone-abuja-1', name: 'CE City Church', code: 'GRP-CCC', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'grp-wealthy-place', zoneId: 'zone-abuja-1', name: 'Wealthy Place Church', code: 'GRP-WLP', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'grp-city-church', zoneId: 'zone-abuja-1', name: 'CE Abuja City Church', code: 'GRP-CCC', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'grp-teens-church', zoneId: 'zone-abuja-1', name: 'Teens Church Group', code: 'GRP-TCG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
-  { id: 'grp-zonal-church', zoneId: 'zone-abuja-1', name: 'Zonal Church Group', code: 'GRP-ZCG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'grp-standalone', zoneId: 'zone-abuja-1', name: 'Standalone Churches', code: 'GRP-STA', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
 ];
 
 export const DEFAULT_CHURCHES: Church[] = [
+  // Zonal Church Group
+  { id: 'ch-service-1', groupId: 'grp-zonal-church', name: 'Zonal Church 1', code: 'CH-ZNC1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-service-2', groupId: 'grp-zonal-church', name: 'Zonal Church 2', code: 'CH-ZNC2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-lingual-church', groupId: 'grp-zonal-church', name: 'Lingual Church', code: 'CH-LNG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-city-church-zonal', groupId: 'grp-zonal-church', name: 'CE City Church', code: 'CH-CCC1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+
+  // Strategic Group Zonal
+  { id: 'ch-ce-tasha-2', groupId: 'grp-strategic-zonal', name: 'CE Tasha 2', code: 'CH-TSH2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-fullness', groupId: 'grp-strategic-zonal', name: 'CE Fullness', code: 'CH-FLN', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-strategic-gudu', groupId: 'grp-strategic-zonal', name: 'CE Strategic Church Gudu', code: 'CH-STG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-kuduru', groupId: 'grp-strategic-zonal', name: 'CE Kuduru', code: 'CH-KDR', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-dawaki-3', groupId: 'grp-strategic-zonal', name: 'CE Dawaki 3', code: 'CH-DWK3', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-life-camp', groupId: 'grp-strategic-zonal', name: 'CE Life Camp', code: 'CH-LFC', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-asokoro', groupId: 'grp-strategic-zonal', name: 'CE Asokoro', code: 'CH-ASK', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-kagini-3', groupId: 'grp-strategic-zonal', name: 'CE Kagini 3', code: 'CH-KAG3', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-giri', groupId: 'grp-strategic-zonal', name: 'CE Giri', code: 'CH-GRI', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-dei-dei-3', groupId: 'grp-strategic-zonal', name: 'CE Dei Dei 3', code: 'CH-DEI3', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-paipe', groupId: 'grp-strategic-zonal', name: 'CE Paipe', code: 'CH-PIP', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-cbd-2', groupId: 'grp-strategic-zonal', name: 'CE CBD 2', code: 'CH-CBD2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-kubwa-2', groupId: 'grp-strategic-zonal', name: 'CE Kubwa 2', code: 'CH-KBW2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-kado', groupId: 'grp-strategic-zonal', name: 'CE Kado', code: 'CH-KAD1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+
+  // Heavenly Phantheon Group
+  { id: 'ch-ce-model-church', groupId: 'grp-heavenly-phantheon', name: 'CE Model Church', code: 'CH-MDC', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-utako', groupId: 'grp-heavenly-phantheon', name: 'CE Utako', code: 'CH-UTK1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-excel', groupId: 'grp-heavenly-phantheon', name: 'CE Excel', code: 'CH-EXC', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-obansajo', groupId: 'grp-heavenly-phantheon', name: 'CE Obansajo', code: 'CH-OBS', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-rabah-apo', groupId: 'grp-heavenly-phantheon', name: 'CE Rabah Apo', code: 'CH-RBH', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-jiwa-3', groupId: 'grp-heavenly-phantheon', name: 'CE Jiwa 3', code: 'CH-JW3', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-saburi', groupId: 'grp-heavenly-phantheon', name: 'CE Saburi', code: 'CH-SBR', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-utako-2', groupId: 'grp-heavenly-phantheon', name: 'CE Utako 2', code: 'CH-UTK2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-kingship-centre', groupId: 'grp-heavenly-phantheon', name: 'CE Kingship Centre', code: 'CH-KSC', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+
+  // Dawaki Sub-Group
+  { id: 'ch-ce-dawaki', groupId: 'grp-dawaki', name: 'CE Dawaki', code: 'CH-DWK1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-dawaki-2', groupId: 'grp-dawaki', name: 'CE Dawaki 2', code: 'CH-DWK2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-dawaki-5', groupId: 'grp-dawaki', name: 'CE Dawaki 5', code: 'CH-DWK5', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-wisdom-mopol', groupId: 'grp-dawaki', name: 'CE Wisdom Mopol Barracks', code: 'CH-WMP', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+
   // Wuye Sub-Group 1
   { id: 'ch-ce-kbs', groupId: 'grp-wuye-1', name: 'CE KBS', code: 'CH-KBS', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'ch-ce-lighthouse', groupId: 'grp-wuye-1', name: 'CE Lighthouse', code: 'CH-LTH', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
@@ -175,9 +219,11 @@ export const DEFAULT_CHURCHES: Church[] = [
   { id: 'ch-service-1', groupId: 'grp-zonal-church', name: 'Service 1', code: 'CH-SVC1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'ch-service-2', groupId: 'grp-zonal-church', name: 'Service 2', code: 'CH-SVC2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
 
-  // Standalone Churches
-  { id: 'ch-ce-byazhin', groupId: 'grp-standalone', name: 'CE Byazhin', code: 'CH-BYZ', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
-  { id: 'ch-ce-wealthy-place', groupId: 'grp-standalone', name: 'CE Wealthy Place', code: 'CH-WLP', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  // Byazhin Church
+  { id: 'ch-ce-byazhin', groupId: 'grp-byazhin', name: 'CE Byazhin', code: 'CH-BYZ', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+
+  // Wealthy Place Church
+  { id: 'ch-ce-wealthy-place', groupId: 'grp-wealthy-place', name: 'CE Wealthy Place', code: 'CH-WLP', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
 ];
 
 

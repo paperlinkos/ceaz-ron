@@ -189,32 +189,76 @@ export function setCachedLocalTargets(targets: Target[]): void {
  * These reflect the exact individual targets for each Group and Church.
  */
 export const OFFICIAL_TARGET_MAP: { orgId: string; level: 'zone' | 'group' | 'church'; target: number }[] = [
-  { orgId: 'zone-abuja-1', level: 'zone', target: 40000 },
-  { orgId: 'default_zone', level: 'zone', target: 40000 },
+  { orgId: 'zone-abuja-1', level: 'zone', target: 50000 },
+  { orgId: 'default_zone', level: 'zone', target: 50000 },
 
-  // Groups (20 Groups)
+  // Groups (24 Groups)
+  { orgId: 'grp-zonal-church', level: 'group', target: 10000 },
+  { orgId: 'grp-strategic-zonal', level: 'group', target: 2500 },
+  { orgId: 'grp-heavenly-phantheon', level: 'group', target: 2000 },
+  { orgId: 'grp-dawaki', level: 'group', target: 1000 },
   { orgId: 'grp-wuye-1', level: 'group', target: 1000 },
   { orgId: 'grp-wuye-2', level: 'group', target: 1000 },
-  { orgId: 'grp-karmo', level: 'group', target: 500 },
-  { orgId: 'grp-gwarinpa', level: 'group', target: 2000 },
-  { orgId: 'grp-fruitful-vine', level: 'group', target: 500 },
-  { orgId: 'grp-kubwa-1', level: 'group', target: 3000 },
-  { orgId: 'grp-kubwa-2', level: 'group', target: 500 },
-  { orgId: 'grp-bwari', level: 'group', target: 2000 },
+  { orgId: 'grp-karmo', level: 'group', target: 1000 },
+  { orgId: 'grp-gwarinpa', level: 'group', target: 2500 },
+  { orgId: 'grp-fruitful-vine', level: 'group', target: 1000 },
+  { orgId: 'grp-kubwa-1', level: 'group', target: 3500 },
+  { orgId: 'grp-kubwa-2', level: 'group', target: 1000 },
+  { orgId: 'grp-bwari', level: 'group', target: 2500 },
   { orgId: 'grp-new-horizon', level: 'group', target: 2000 },
   { orgId: 'grp-gwagwalada-1', level: 'group', target: 2000 },
   { orgId: 'grp-gwagwalada-2', level: 'group', target: 2000 },
   { orgId: 'grp-kuje', level: 'group', target: 2000 },
-  { orgId: 'grp-lokogoma', level: 'group', target: 2000 },
+  { orgId: 'grp-lokogoma', level: 'group', target: 2500 },
   { orgId: 'grp-dei-dei', level: 'group', target: 2000 },
-  { orgId: 'grp-airport-road', level: 'group', target: 1000 },
+  { orgId: 'grp-airport-road', level: 'group', target: 2500 },
+  { orgId: 'grp-byazhin', level: 'group', target: 1000 },
   { orgId: 'grp-dutse-makaranta', level: 'group', target: 1000 },
-  { orgId: 'grp-city-church', level: 'group', target: 1000 },
+  { orgId: 'grp-wealthy-place', level: 'group', target: 1000 },
+  { orgId: 'grp-city-church', level: 'group', target: 1500 },
   { orgId: 'grp-teens-church', level: 'group', target: 1500 },
-  { orgId: 'grp-zonal-church', level: 'group', target: 1000 },
-  { orgId: 'grp-standalone', level: 'group', target: 1000 },
+  { orgId: 'grp-standalone', level: 'group', target: 0 },
 
   // Churches (98 Churches)
+  // Zonal Church Group
+  { orgId: 'ch-service-1', level: 'church', target: 3500 },
+  { orgId: 'ch-service-2', level: 'church', target: 3500 },
+  { orgId: 'ch-lingual-church', level: 'church', target: 1500 },
+  { orgId: 'ch-ce-city-church-zonal', level: 'church', target: 1500 },
+
+  // Strategic Group Zonal
+  { orgId: 'ch-ce-tasha-2', level: 'church', target: 350 },
+  { orgId: 'ch-ce-fullness', level: 'church', target: 150 },
+  { orgId: 'ch-ce-strategic-gudu', level: 'church', target: 300 },
+  { orgId: 'ch-ce-kuduru', level: 'church', target: 100 },
+  { orgId: 'ch-ce-dawaki-3', level: 'church', target: 100 },
+  { orgId: 'ch-ce-life-camp', level: 'church', target: 150 },
+  { orgId: 'ch-ce-asokoro', level: 'church', target: 150 },
+  { orgId: 'ch-ce-kagini-3', level: 'church', target: 100 },
+  { orgId: 'ch-ce-giri', level: 'church', target: 150 },
+  { orgId: 'ch-ce-dei-dei-3', level: 'church', target: 150 },
+  { orgId: 'ch-ce-paipe', level: 'church', target: 100 },
+  { orgId: 'ch-ce-cbd-2', level: 'church', target: 150 },
+  { orgId: 'ch-ce-kubwa-2', level: 'church', target: 400 },
+  { orgId: 'ch-ce-kado', level: 'church', target: 150 },
+
+  // Heavenly Phantheon Group
+  { orgId: 'ch-ce-model-church', level: 'church', target: 1350 },
+  { orgId: 'ch-ce-utako', level: 'church', target: 110 },
+  { orgId: 'ch-ce-excel', level: 'church', target: 130 },
+  { orgId: 'ch-ce-obansajo', level: 'church', target: 50 },
+  { orgId: 'ch-ce-rabah-apo', level: 'church', target: 100 },
+  { orgId: 'ch-ce-jiwa-3', level: 'church', target: 50 },
+  { orgId: 'ch-ce-saburi', level: 'church', target: 50 },
+  { orgId: 'ch-ce-utako-2', level: 'church', target: 80 },
+  { orgId: 'ch-ce-kingship-centre', level: 'church', target: 80 },
+
+  // Dawaki Sub-Group
+  { orgId: 'ch-ce-dawaki', level: 'church', target: 550 },
+  { orgId: 'ch-ce-dawaki-2', level: 'church', target: 150 },
+  { orgId: 'ch-ce-dawaki-5', level: 'church', target: 150 },
+  { orgId: 'ch-ce-wisdom-mopol', level: 'church', target: 150 },
+
   // Wuye Sub-Group 1
   { orgId: 'ch-ce-kbs', level: 'church', target: 400 },
   { orgId: 'ch-ce-lighthouse', level: 'church', target: 280 },
@@ -228,32 +272,32 @@ export const OFFICIAL_TARGET_MAP: { orgId: string; level: 'zone' | 'group' | 'ch
   { orgId: 'ch-ce-pacesetters', level: 'church', target: 230 },
 
   // Karmo Group
-  { orgId: 'ch-ce-karmo', level: 'church', target: 330 },
-  { orgId: 'ch-ce-dape', level: 'church', target: 20 },
-  { orgId: 'ch-ce-karmo-2', level: 'church', target: 20 },
-  { orgId: 'ch-ce-kagini', level: 'church', target: 130 },
+  { orgId: 'ch-ce-karmo', level: 'church', target: 700 },
+  { orgId: 'ch-ce-dape', level: 'church', target: 100 },
+  { orgId: 'ch-ce-karmo-2', level: 'church', target: 100 },
+  { orgId: 'ch-ce-kagini', level: 'church', target: 100 },
 
   // Gwarinpa Group
-  { orgId: 'ch-ce-gwarinpa-1', level: 'church', target: 1350 },
-  { orgId: 'ch-ce-precious-place', level: 'church', target: 260 },
-  { orgId: 'ch-ce-word-arena', level: 'church', target: 110 },
-  { orgId: 'ch-ce-kagini-2', level: 'church', target: 100 },
-  { orgId: 'ch-ce-flourish', level: 'church', target: 130 },
-  { orgId: 'ch-ce-karsana', level: 'church', target: 50 },
+  { orgId: 'ch-ce-gwarinpa-1', level: 'church', target: 1500 },
+  { orgId: 'ch-ce-precious-place', level: 'church', target: 350 },
+  { orgId: 'ch-ce-word-arena', level: 'church', target: 150 },
+  { orgId: 'ch-ce-kagini-2', level: 'church', target: 150 },
+  { orgId: 'ch-ce-flourish', level: 'church', target: 150 },
+  { orgId: 'ch-ce-karsana', level: 'church', target: 200 },
 
   // Fruitful Vine Sub-Group
-  { orgId: 'ch-ce-solution-arena', level: 'church', target: 100 },
-  { orgId: 'ch-ce-jahi', level: 'church', target: 200 },
-  { orgId: 'ch-ce-kado-2', level: 'church', target: 200 },
+  { orgId: 'ch-ce-solution-arena', level: 'church', target: 400 },
+  { orgId: 'ch-ce-jahi', level: 'church', target: 300 },
+  { orgId: 'ch-ce-kado-2', level: 'church', target: 300 },
 
   // Kubwa 1 Group
-  { orgId: 'ch-ce-kubwa', level: 'church', target: 1550 },
+  { orgId: 'ch-ce-kubwa', level: 'church', target: 2000 },
   { orgId: 'ch-ce-katampe-ext', level: 'church', target: 500 },
   { orgId: 'ch-ce-kubwa-3', level: 'church', target: 100 },
   { orgId: 'ch-ce-kubwa-4', level: 'church', target: 100 },
   { orgId: 'ch-ce-kubwa-5', level: 'church', target: 100 },
   { orgId: 'ch-ce-kubwa-6', level: 'church', target: 100 },
-  { orgId: 'ch-ce-kubwa-8', level: 'church', target: 50 },
+  { orgId: 'ch-ce-kubwa-8', level: 'church', target: 100 },
   { orgId: 'ch-ce-kubwa-9', level: 'church', target: 100 },
   { orgId: 'ch-ce-kubwa-10', level: 'church', target: 150 },
   { orgId: 'ch-ce-mpape', level: 'church', target: 50 },
@@ -261,21 +305,21 @@ export const OFFICIAL_TARGET_MAP: { orgId: string; level: 'zone' | 'group' | 'ch
   { orgId: 'ch-ce-kaba', level: 'church', target: 100 },
 
   // Kubwa 2 Sub-Group
-  { orgId: 'ch-ce-kubwa-ext', level: 'church', target: 100 },
-  { orgId: 'ch-ce-channel-8', level: 'church', target: 100 },
-  { orgId: 'ch-ce-guidna', level: 'church', target: 100 },
-  { orgId: 'ch-ce-grace-and-glory', level: 'church', target: 100 },
-  { orgId: 'ch-ce-obasanjo-road', level: 'church', target: 100 },
+  { orgId: 'ch-ce-kubwa-ext', level: 'church', target: 200 },
+  { orgId: 'ch-ce-channel-8', level: 'church', target: 200 },
+  { orgId: 'ch-ce-guidna', level: 'church', target: 200 },
+  { orgId: 'ch-ce-grace-and-glory', level: 'church', target: 200 },
+  { orgId: 'ch-ce-obasanjo-road', level: 'church', target: 200 },
 
   // Bwari Group
-  { orgId: 'ch-ce-bwari-main', level: 'church', target: 1000 },
-  { orgId: 'ch-ce-kuchiko', level: 'church', target: 200 },
+  { orgId: 'ch-ce-bwari-main', level: 'church', target: 1200 },
+  { orgId: 'ch-ce-kuchiko', level: 'church', target: 250 },
   { orgId: 'ch-ce-piawe', level: 'church', target: 100 },
-  { orgId: 'ch-ce-peyi', level: 'church', target: 200 },
-  { orgId: 'ch-ce-scc', level: 'church', target: 50 },
-  { orgId: 'ch-ce-kogo', level: 'church', target: 250 },
-  { orgId: 'ch-ce-lambent', level: 'church', target: 100 },
-  { orgId: 'ch-ce-garam', level: 'church', target: 100 },
+  { orgId: 'ch-ce-peyi', level: 'church', target: 250 },
+  { orgId: 'ch-ce-scc', level: 'church', target: 100 },
+  { orgId: 'ch-ce-kogo', level: 'church', target: 300 },
+  { orgId: 'ch-ce-lambent', level: 'church', target: 150 },
+  { orgId: 'ch-ce-garam', level: 'church', target: 150 },
 
   // New Horizon Group
   { orgId: 'ch-ce-ushafa', level: 'church', target: 1350 },
@@ -295,7 +339,7 @@ export const OFFICIAL_TARGET_MAP: { orgId: string; level: 'zone' | 'group' | 'ch
   // Gwagwalada 2 Group
   { orgId: 'ch-ce-gwagwalada-2', level: 'church', target: 1000 },
   { orgId: 'ch-ce-gwagwalada-3', level: 'church', target: 400 },
-  { orgId: 'ch-ce-anagada', level: 'church', target: 250 },
+  { orgId: 'ch-ce-anangada', level: 'church', target: 250 },
   { orgId: 'ch-ce-gwagwalada-6', level: 'church', target: 250 },
   { orgId: 'ch-ce-chukunku', level: 'church', target: 100 },
 
@@ -311,47 +355,45 @@ export const OFFICIAL_TARGET_MAP: { orgId: string; level: 'zone' | 'group' | 'ch
   { orgId: 'ch-ce-kuje-8', level: 'church', target: 50 },
 
   // Lokogoma Group
-  { orgId: 'ch-ce-lokogoma', level: 'church', target: 1100 },
-  { orgId: 'ch-ce-kabusa', level: 'church', target: 100 },
+  { orgId: 'ch-ce-lokogoma', level: 'church', target: 1200 },
+  { orgId: 'ch-ce-kabusa', level: 'church', target: 150 },
   { orgId: 'ch-ce-durumi', level: 'church', target: 100 },
-  { orgId: 'ch-ce-apo', level: 'church', target: 100 },
-  { orgId: 'ch-ce-apo-dutse', level: 'church', target: 100 },
-  { orgId: 'ch-ce-wumba', level: 'church', target: 50 },
+  { orgId: 'ch-ce-apo', level: 'church', target: 150 },
+  { orgId: 'ch-ce-apo-dutse', level: 'church', target: 150 },
+  { orgId: 'ch-ce-wumba', level: 'church', target: 150 },
   { orgId: 'ch-ce-gbuduwyi', level: 'church', target: 100 },
-  { orgId: 'ch-ce-damagaza', level: 'church', target: 100 },
+  { orgId: 'ch-ce-damagaza', level: 'church', target: 150 },
   { orgId: 'ch-ce-pigbakasa', level: 'church', target: 100 },
   { orgId: 'ch-ce-city-of-david', level: 'church', target: 100 },
-  { orgId: 'ch-ce-citadel-of-grace', level: 'church', target: 50 },
+  { orgId: 'ch-ce-citadel-of-grace', level: 'church', target: 150 },
 
   // Dei Dei Group
   { orgId: 'ch-ce-deidei-2', level: 'church', target: 2000 },
 
   // Airport Road Sub-Group
-  { orgId: 'ch-ce-airport-road', level: 'church', target: 420 },
-  { orgId: 'ch-ce-airport-road-2', level: 'church', target: 290 },
-  { orgId: 'ch-ce-airport-road-4', level: 'church', target: 30 },
-  { orgId: 'ch-ce-kapwa', level: 'church', target: 260 },
+  { orgId: 'ch-ce-airport-road', level: 'church', target: 1200 },
+  { orgId: 'ch-ce-airport-road-2', level: 'church', target: 500 },
+  { orgId: 'ch-ce-airport-road-4', level: 'church', target: 300 },
+  { orgId: 'ch-ce-kapwa', level: 'church', target: 500 },
 
   // Dutse Makaranta Sub-Group
-  { orgId: 'ch-ce-dutse-makaranta', level: 'church', target: 740 },
+  { orgId: 'ch-ce-dutse-makaranta', level: 'church', target: 700 },
   { orgId: 'ch-ce-garki-1', level: 'church', target: 100 },
-  { orgId: 'ch-ce-springtime', level: 'church', target: 80 },
+  { orgId: 'ch-ce-springtime', level: 'church', target: 100 },
   { orgId: 'ch-ce-new-jerusalem', level: 'church', target: 50 },
-  { orgId: 'ch-ce-mbuko', level: 'church', target: 30 },
+  { orgId: 'ch-ce-mbuko', level: 'church', target: 50 },
+
+  // Byazhin Church
+  { orgId: 'ch-ce-byazhin', level: 'church', target: 1000 },
+
+  // Wealthy Place Church
+  { orgId: 'ch-ce-wealthy-place', level: 'church', target: 1000 },
 
   // CE City Church
-  { orgId: 'ch-ce-city-church', level: 'church', target: 1000 },
+  { orgId: 'ch-ce-city-church', level: 'church', target: 1500 },
 
   // Teens Church Group
   { orgId: 'ch-teens-church', level: 'church', target: 1500 },
-
-  // Zonal Church Group
-  { orgId: 'ch-service-1', level: 'church', target: 500 },
-  { orgId: 'ch-service-2', level: 'church', target: 500 },
-
-  // Standalone Churches
-  { orgId: 'ch-ce-byazhin', level: 'church', target: 500 },
-  { orgId: 'ch-ce-wealthy-place', level: 'church', target: 500 },
 ];
 
 /** Lookup helper for the official target of an entity from the PDF document */

@@ -215,6 +215,115 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    if (action === 'batchCreate') {
+      const items = Array.isArray(body.churches) ? body.churches : [];
+      if (items.length === 0) {
+        return res.status(400).json({ error: 'No churches array provided for batch creation.' });
+      }
+
+      const createdAccounts: ChurchAccountRecord[] = [];
+      const createdCredentials: Array<{ churchCode: string; churchName: string; password: string }> = [];
+
+      for (const item of items) {
+        const churchCode = normalizeCode(item.churchCode);
+        if (!churchCode) continue;
+
+        const churchId = String(item.churchId ?? '').trim();
+        const churchName = String(item.churchName ?? '').trim();
+        if (!churchId || !churchName) continue;
+
+        const docId = churchCode.toLowerCase();
+        const existingDoc = await db.doc(`${CHURCH_ACCOUNTS_COLLECTION}/${docId}`).get();
+        if (existingDoc.exists) {
+          createdAccounts.push(existingDoc.data() as ChurchAccountRecord);
+          continue;
+        }
+
+        const password = generateStrongPassword();
+        const email = churchCodeToAuthEmail(churchCode);
+        const nowIso = new Date().toISOString();
+
+        let userRecord;
+        try {
+          userRecord = await getAuth(getAdminApp()).createUser({
+            email,
+            password,
+            emailVerified: true,
+            displayName: `${churchName} Representative`,
+          });
+        } catch (err) {
+          const code = (err as { code?: string }).code;
+          if (code === 'auth/email-already-exists') {
+            userRecord = await getAuth(getAdminApp()).getUserByEmail(email);
+          } else {
+            console.error(`Failed to create Auth account for ${churchCode}:`, err);
+            continue;
+          }
+        }
+
+        const record: ChurchAccountRecord = {
+          churchId,
+          churchName,
+          churchCode,
+          uid: userRecord.uid,
+          loginEmail: email,
+          groupId: String(item.groupId ?? '').trim(),
+          groupName: String(item.groupName ?? '').trim(),
+          targetSouls: Number(item.targetSouls ?? 0) || 0,
+          status: 'active',
+          representative: {
+            name: `${churchName} Representative`,
+            email: '',
+            phone: '',
+            activatedAt: nowIso,
+          },
+          createdBy: actorUid,
+          createdAt: nowIso,
+          updatedAt: nowIso,
+        };
+
+        await db.doc(`${CHURCH_ACCOUNTS_COLLECTION}/${docId}`).set(record);
+        await db.doc(`users/${userRecord.uid}`).set(
+          {
+            id: userRecord.uid,
+            name: record.representative?.name || `${churchName} Representative`,
+            email,
+            phone: '',
+            role: 'churchManager',
+            status: 'active',
+            createdAt: nowIso,
+            updatedAt: nowIso,
+          },
+          { merge: true }
+        );
+        await db.doc(`soulWinners/${userRecord.uid}`).set(
+          {
+            id: userRecord.uid,
+            userId: userRecord.uid,
+            zoneId: 'zone-abuja-1',
+            zoneName: 'Abuja Zone 1',
+            groupId: record.groupId,
+            groupName: record.groupName,
+            churchId,
+            churchName,
+            status: 'active',
+            createdAt: nowIso,
+            updatedAt: nowIso,
+          },
+          { merge: true }
+        );
+
+        createdAccounts.push(record);
+        createdCredentials.push({ churchCode, churchName, password });
+      }
+
+      return res.status(200).json({
+        createdCount: createdCredentials.length,
+        accounts: createdAccounts,
+        credentials: createdCredentials,
+      });
+    }
+
     if (action === 'reset') {
       const churchCode = normalizeCode(body.churchCode);
       if (!churchCode) return res.status(400).json({ error: 'Invalid church code.' });

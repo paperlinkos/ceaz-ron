@@ -68,6 +68,48 @@ export async function createChurchAccount(input: {
   return callApi({ action: 'create', ...input });
 }
 
+export async function batchCreateChurchAccounts(churches: Array<{
+  churchId: string;
+  churchName: string;
+  churchCode: string;
+  groupId: string;
+  groupName: string;
+  targetSouls: number;
+}>): Promise<{
+  createdCount: number;
+  accounts: ChurchAccount[];
+  credentials: Array<{ churchCode: string; churchName: string; password: string }>;
+}> {
+  return callApi({ action: 'batchCreate', churches });
+}
+
+export function exportCredentialsCSV(
+  credentials: Array<{ churchCode: string; churchName: string; password: string }>
+): void {
+  const headers = ['Church Name', 'Church Code (Username)', 'Default Password', 'Login Domain'];
+  const rows = credentials.map((c) => [
+    `"${c.churchName.replace(/"/g, '""')}"`,
+    `"${c.churchCode}"`,
+    `"${c.password}"`,
+    `"${c.churchCode.toLowerCase()}@ceaz1.org"`,
+  ]);
+
+  const csvContent =
+    '﻿' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\r\n');
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute(
+    'download',
+    `CEAZ1_New_Church_Credentials_${new Date().toISOString().slice(0, 10)}.csv`
+  );
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 /** Resets a church rep password. Omit newPassword to restore the default. */
 export async function resetChurchAccountPassword(
   churchCode: string,

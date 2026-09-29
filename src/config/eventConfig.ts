@@ -57,8 +57,8 @@ export const DEFAULT_LOCATION_PRESETS: string[] = [
 ];
 
 export const DEFAULT_ANNOUNCEMENTS: string[] = [
-  '📢 REACH OUT NIGERIA 2026: Every soul counts! Keep recording harvest results across all 20 Groups & 98 Churches!',
-  '⚡ ZONAL VICTORY MANDATE: 40,000 Souls targeted for the Master\'s Kingdom in Abuja Zone 1!',
+  '📢 REACH OUT NIGERIA 2026: Every soul counts! Keep recording harvest results across all 24 Groups & Churches!',
+  '⚡ ZONAL VICTORY MANDATE: 50,000 Souls targeted for the Master\'s Kingdom in Abuja Zone 1!',
   '🔥 CELL LEADERS & COORDINATORS: Verify and sync all field counts as soon as outreaches conclude.',
   '👑 UPWARD RACE IN MOTION: Who will claim the #1 spot in Abuja Zone 1? Standings update live!',
 ];
@@ -67,7 +67,7 @@ export const DEFAULT_EVENT_CONFIG: EventConfig = {
   id: 'ron-2026-oct1',
   name: 'Reach Out Nigeria',
   eventDate: '2026-10-01',
-  target: 40000,
+  target: 50000,
   status: 'upcoming',
   updatedAt: new Date().toISOString(),
   description: 'CEAZ1 Reachout Nigeria Soul Winning Campaign taking place on October 1st, 2026.',
@@ -81,8 +81,8 @@ export const DEFAULT_EVENT_CONFIG: EventConfig = {
 
 export const REACH_OUT_NIGERIA_EVENT = {
   ...DEFAULT_EVENT_CONFIG,
-  zonalTarget: 40000,
-  nationalTarget: 40000, // Retain backward-compatible alias for existing imports
+  zonalTarget: 50000,
+  nationalTarget: 50000, // Retain backward-compatible alias for existing imports
   campaignDate: '2026-10-01',
 };
 

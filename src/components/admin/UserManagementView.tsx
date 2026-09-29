@@ -14,8 +14,10 @@ import { useAuth } from '../../context/AuthContext';
 import {
   getChurchAccounts,
   createChurchAccount,
+  batchCreateChurchAccounts,
   resetChurchAccountPassword,
   exportChurchAccountsToExcelCSV,
+  exportCredentialsCSV,
   type ChurchAccount,
 } from '../../services/churchAccountService';
 import {
@@ -32,6 +34,7 @@ import {
   getPCFs,
   resolvePCFHierarchy,
 } from '../../services/organizationService';
+import { getOfficialTarget } from '../../services/targetService';
 import type { UserProfile, SoulWinnerProfile, AccountStatus, UserRole } from '../../types/auth';
 import type { Zone, Group, Church, PCF } from '../../types/organization';
 
@@ -155,6 +158,39 @@ export const UserManagementView: React.FC = () => {
       await refreshUsersAndOrgs();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create account.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleBatchProvision = async () => {
+    setError('');
+    setSuccess('');
+    setIsProcessing(true);
+
+    try {
+      const payload = churches.map((c) => {
+        const group = groups.find((g) => g.id === c.groupId);
+        return {
+          churchId: c.id,
+          churchName: c.name,
+          churchCode: c.code,
+          groupId: c.groupId,
+          groupName: group?.name || '',
+          targetSouls: getOfficialTarget('church', c.id) || 0,
+        };
+      });
+
+      const res = await batchCreateChurchAccounts(payload);
+      if (res.credentials && res.credentials.length > 0) {
+        exportCredentialsCSV(res.credentials);
+        setSuccess(`Successfully provisioned ${res.credentials.length} missing church account(s) and downloaded their initial credentials CSV!`);
+      } else {
+        setSuccess('All churches in the roster already have active accounts.');
+      }
+      await refreshUsersAndOrgs();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Batch provisioning failed.');
     } finally {
       setIsProcessing(false);
     }
@@ -377,12 +413,21 @@ export const UserManagementView: React.FC = () => {
             </div>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               <button
-                onClick={() => setShowCreateAccount(true)}
+                onClick={handleBatchProvision}
+                disabled={isProcessing}
                 className="submit-button"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', margin: 0, backgroundColor: '#059669' }}
+              >
+                <RefreshCw size={16} className={isProcessing ? 'animate-spin' : ''} />
+                Provision All Accounts
+              </button>
+              <button
+                onClick={() => setShowCreateAccount(true)}
+                className="secondary-button"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', margin: 0 }}
               >
                 <UserCheck size={18} />
-                Create Account
+                Create Single
               </button>
               <button
                 onClick={() => exportChurchAccountsToExcelCSV(churchAccounts)}
