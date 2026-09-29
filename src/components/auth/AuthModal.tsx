@@ -105,6 +105,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   className="form-input"
                   disabled={isSubmitting}
                   autoFocus
+                  autoCapitalize="characters"
+                  autoCorrect="off"
+                  autoComplete="off"
+                  spellCheck={false}
                 />
               </div>
               <span className="input-helper">
@@ -142,6 +146,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                   placeholder="Enter the password issued to you"
                   className="form-input"
                   disabled={isSubmitting}
+                  /* Issued passwords mix cases and contain ! % &, which iOS
+                     and Android keyboards will silently rewrite unless these
+                     are set. That produced "Invalid Church Code or Password"
+                     for credentials that were in fact correct. */
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  autoComplete="off"
+                  spellCheck={false}
                 />
               </div>
             </div>
