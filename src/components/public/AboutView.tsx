@@ -24,7 +24,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onOpenAuth }) => {
           <Target size={20} className="text-green-accent" />
           <div>
             <h4>Zonal Goal</h4>
-            <p>Targeting 40,000 souls recorded live across all Groups, Churches, PCFs, and Soul Winners.</p>
+            <p>Targeting 50,000 souls recorded live across all Groups, Churches, PCFs, and Soul Winners.</p>
           </div>
         </div>
 

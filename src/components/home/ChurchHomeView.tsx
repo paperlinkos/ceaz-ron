@@ -445,7 +445,7 @@ export const ChurchHomeView: React.FC<ChurchHomeViewProps> = ({ onNavigate }) =>
                 Your church <strong>{soulWinnerProfile?.churchName || currentChurch?.name}</strong> has
                 brought in{' '}
                 <span className="text-green font-bold">{churchSoulsWon.toLocaleString()} souls</span> to
-                Abuja Zone 1's 40,000 harvest goal!
+                Abuja Zone 1's {(eventConfig.target || 50000).toLocaleString()} harvest goal!
               </p>
             </div>
           </div>

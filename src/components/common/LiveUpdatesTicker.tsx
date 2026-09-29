@@ -165,8 +165,8 @@ export const LiveUpdatesTicker: React.FC<LiveUpdatesTickerProps> = ({
     const announcements = eventConfig.announcements && eventConfig.announcements.length > 0
       ? eventConfig.announcements
       : [
-          '📢 REACH OUT NIGERIA 2026: Every soul counts! Keep recording harvest results across all 20 Groups & 98 Churches!',
-          '⚡ ZONAL VICTORY MANDATE: 40,000 Souls targeted for the Master\'s Kingdom in Abuja Zone 1!',
+          '📢 REACH OUT NIGERIA 2026: Every soul counts! Keep recording harvest results across all 24 Groups & Churches!',
+          '⚡ ZONAL VICTORY MANDATE: 50,000 Souls targeted for the Master\'s Kingdom in Abuja Zone 1!',
           '🔥 CELL LEADERS & COORDINATORS: Verify and sync all field counts as soon as outreaches conclude.',
         ];
 
