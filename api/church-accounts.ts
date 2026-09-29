@@ -83,7 +83,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed.' });
   }
 
-  const guard = await requireSuperAdmin(req);
+  let guard: Awaited<ReturnType<typeof requireSuperAdmin>>;
+  try {
+    guard = await requireSuperAdmin(req);
+  } catch (err) {
+    // requireSuperAdmin initialises the Admin SDK, which throws when the
+    // service account env vars are missing. A throw is always a server-side
+    // misconfiguration, so report it as a readable 500 rather than letting it
+    // escape as an opaque FUNCTION_INVOCATION_FAILED.
+    const message = err instanceof Error ? err.message : 'Authentication check failed.';
+    console.error('church-accounts: admin auth guard failed:', err);
+    return res.status(500).json({ error: message });
+  }
   if ('error' in guard) {
     return res.status(403).json({ error: guard.error });
   }

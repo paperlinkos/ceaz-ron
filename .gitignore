@@ -34,3 +34,5 @@ temp-clone
 # Local secrets — never commit
 superadmin-credentials.txt
 *.local.json
+.vercel
+.env*
