@@ -3,7 +3,7 @@ import { cert, getApps, initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import {
-  generateDefaultPassword,
+  generateStrongPassword,
   generateResetPassword,
   churchCodeToAuthEmail,
   CHURCH_ACCOUNTS_COLLECTION,
@@ -135,7 +135,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           .json({ error: `Account ${churchCode} already exists. Reset its password instead.` });
       }
 
-      const password = generateDefaultPassword(churchCode);
+      // A random password, not generateDefaultPassword: church codes are
+      // published, so a code-derived password would be guessable by anyone
+      // holding the campaign roster.
+      const password = generateStrongPassword();
       const email = churchCodeToAuthEmail(churchCode);
       const nowIso = new Date().toISOString();
 

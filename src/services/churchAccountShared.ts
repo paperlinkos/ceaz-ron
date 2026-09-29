@@ -35,6 +35,36 @@ export function generateResetPassword(): string {
 }
 
 /**
+ * Generates a strong password for a newly provisioned church account.
+ *
+ * Unlike generateDefaultPassword, this does not depend on the church code, so
+ * publishing the church roster does not expose anyone's sign-in.
+ */
+export function generateStrongPassword(): string {
+  const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const lower = 'abcdefghijkmnopqrstuvwxyz';
+  const digits = '23456789';
+  const symbols = '@#$%&*';
+  const all = upper + lower + digits + symbols;
+  const bytes = new Uint8Array(16);
+  globalThis.crypto.getRandomValues(bytes);
+  const chars = [
+    upper[bytes[0] % upper.length],
+    lower[bytes[1] % lower.length],
+    digits[bytes[2] % digits.length],
+    symbols[bytes[3] % symbols.length],
+  ];
+  for (let i = 4; i < bytes.length; i++) chars.push(all[bytes[i] % all.length]);
+  // Fisher-Yates with the same random source, so the guaranteed classes
+  // above cannot be guessed from their position.
+  for (let i = chars.length - 1; i > 0; i--) {
+    const j = bytes[i % bytes.length] % (i + 1);
+    [chars[i], chars[j]] = [chars[j], chars[i]];
+  }
+  return `Ceaz1!${chars.join('')}`;
+}
+
+/**
  * Maps a Church Code to the synthetic Firebase Auth email it signs in with.
  * Firebase Auth only accepts email-shaped identifiers, but the UI only ever
  * asks the user for their Church Code - this mapping stays server-side.

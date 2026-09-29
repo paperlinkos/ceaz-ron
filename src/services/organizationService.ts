@@ -138,7 +138,7 @@ export const DEFAULT_CHURCHES: Church[] = [
 
   // Lokogoma Group
   { id: 'ch-ce-lokogoma', groupId: 'grp-lokogoma', name: 'CE Lokogoma', code: 'CH-LKG1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
-  { id: 'ch-ce-kabusa', groupId: 'grp-lokogoma', name: 'CE Kabusa', code: 'CH-KBS', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-kabusa', groupId: 'grp-lokogoma', name: 'CE Kabusa', code: 'CH-KABUSA', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'ch-ce-durumi', groupId: 'grp-lokogoma', name: 'CE Durumi', code: 'CH-DRM', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'ch-ce-apo', groupId: 'grp-lokogoma', name: 'CE Apo', code: 'CH-APO1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'ch-ce-apo-dutse', groupId: 'grp-lokogoma', name: 'CE Apo Dutse', code: 'CH-APD', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
