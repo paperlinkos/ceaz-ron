@@ -1,0 +1,180 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─────────────────────────────────────────────────────────────────────
+    // HELPER FUNCTIONS
+    // ─────────────────────────────────────────────────────────────────────
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    /**
+     * Reads the requesting user's role directly from the Firestore users
+     * collection. This does NOT require Firebase custom claims to be set up
+     * (the get() function in rules bypasses collection-level read rules).
+     */
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    /**
+     * True if the authenticated user's Firestore profile has role = superAdmin.
+     * Using a direct Firestore get() instead of custom claims so this works
+     * without any additional backend setup.
+     */
+    function isSuperAdmin() {
+      return isAuthenticated() && getUserRole() == 'superAdmin';
+    }
+
+    /**
+     * True if the user is a manager at any level or higher.
+     * Used to allow managers to read aggregated soul records and user profiles
+     * within their organizational scope.
+     */
+    function isManagerOrAbove() {
+      return isAuthenticated() &&
+        getUserRole() in ['superAdmin', 'zoneManager', 'groupManager', 'churchManager', 'pcfLeader'];
+    }
+
+    // Soul Winning Record schema validation
+    function isValidSoulRecord(data) {
+      return data.keys().hasAll(['id', 'name', 'phone', 'location', 'createdAt', 'clientCreatedAt', 'syncStatus']) &&
+             data.name is string && data.name.size() > 0 &&
+             data.phone is string && data.phone.size() >= 7 &&
+             data.location is string && data.location.size() > 0 &&
+             data.syncStatus == 'synced';
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // USERS COLLECTION
+    // Previously: any authenticated user could read all profiles (privacy risk)
+    // Fixed: only self or manager-level roles can read profiles
+    // ─────────────────────────────────────────────────────────────────────
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isManagerOrAbove();
+      // Allow self-creation on signup — role forced to soulWinner, status to pendingAssignment
+      allow create: if isOwner(userId) &&
+                       request.resource.data.role == 'soulWinner' &&
+                       request.resource.data.status == 'pendingAssignment';
+      // Only superAdmin can change role or status; owner can update safe fields
+      allow update: if isSuperAdmin() ||
+                       (isOwner(userId) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'status']));
+      allow delete: if isSuperAdmin();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // SOUL WINNERS HIERARCHY PROFILES COLLECTION
+    // ─────────────────────────────────────────────────────────────────────
+    match /soulWinners/{userId} {
+      allow read: if isOwner(userId) || isManagerOrAbove();
+      allow create: if isOwner(userId);
+      // Hierarchy assignments can only be altered by superAdmin
+      allow update: if isSuperAdmin() ||
+                       (isOwner(userId) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['pcfId', 'churchId', 'groupId', 'zoneId', 'status']));
+      allow delete: if isSuperAdmin();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // ORGANIZATIONAL COLLECTIONS
+    // Read: any authenticated user (needed for org tree display)
+    // Write: superAdmin only
+    // ─────────────────────────────────────────────────────────────────────
+    match /zones/{zoneId} {
+      allow read: if isAuthenticated();
+      allow write: if isSuperAdmin();
+    }
+
+    match /groups/{groupId} {
+      allow read: if isAuthenticated();
+      allow write: if isSuperAdmin();
+    }
+
+    match /churches/{churchId} {
+      allow read: if isAuthenticated();
+      allow write: if isSuperAdmin();
+    }
+
+    match /pcfs/{pcfId} {
+      allow read: if isAuthenticated();
+      allow write: if isSuperAdmin();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // TARGETS COLLECTION
+    // Public read allows unauthenticated progress display on big screens
+    // Write restricted to superAdmin only
+    // ─────────────────────────────────────────────────────────────────────
+    match /targets/{targetId} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // EVENTS COLLECTION
+    // ─────────────────────────────────────────────────────────────────────
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // AUDIT & HISTORY COLLECTIONS — SuperAdmin only
+    // ─────────────────────────────────────────────────────────────────────
+    match /eventAuditLogs/{logId} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    match /importHistory/{importId} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    match /adminAuditLogs/{logId} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // ADMIN DUPLICATE RESOLUTIONS
+    // Stores "mark as unique" decisions persistently in Firestore
+    // so they survive browser cache clears
+    // ─────────────────────────────────────────────────────────────────────
+    match /adminDuplicateResolutions/{pairId} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // SOUL WINNING RECORDS COLLECTION
+    // Previously: all authenticated users could read all records (privacy risk)
+    // Fixed: soul winners read their own; managers read their scope
+    // ─────────────────────────────────────────────────────────────────────
+    match /soulWinningRecords/{recordId} {
+      // Create: authenticated user writing their own record with valid schema
+      allow create: if isAuthenticated() &&
+                       request.resource.data.id == recordId &&
+                       request.resource.data.soulWinnerId == request.auth.uid &&
+                       isValidSoulRecord(request.resource.data);
+
+      // Read: own records OR manager/admin aggregation access
+      allow read: if isAuthenticated() && (
+        resource.data.soulWinnerId == request.auth.uid ||
+        isManagerOrAbove()
+      );
+
+      // Update and delete: SuperAdmin only
+      allow update, delete: if isSuperAdmin();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // DEFAULT CATCH-ALL — SuperAdmin only
+    // ─────────────────────────────────────────────────────────────────────
+    match /{document=**} {
+      allow read, write: if isSuperAdmin();
+    }
+  }
+}

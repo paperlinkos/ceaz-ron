@@ -1,0 +1,6 @@
+{
+  "name": "CEAZ1 RON Harvest Tracker",
+  "description": "CEAZ1 Reach Out Nigeria (RON) Soul Winning Campaign Tracker",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
