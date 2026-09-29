@@ -219,12 +219,14 @@ export const OFFICIAL_TARGET_MAP: { orgId: string; level: 'zone' | 'group' | 'ch
   { orgId: 'grp-city-church', level: 'group', target: 1500 },
   { orgId: 'grp-teens-church', level: 'group', target: 1500 },
 
-  // Churches (127 Churches)
+  // Churches (129 Churches)
   // Zonal Church Group
-  { orgId: 'ch-service-1', level: 'church', target: 3500 },
-  { orgId: 'ch-service-2', level: 'church', target: 3500 },
+  { orgId: 'ch-zonal-church-1', level: 'church', target: 2000 },
+  { orgId: 'ch-zonal-church-2', level: 'church', target: 2000 },
   { orgId: 'ch-lingual-church', level: 'church', target: 1500 },
   { orgId: 'ch-ce-city-church-zonal', level: 'church', target: 1500 },
+  { orgId: 'ch-service-1', level: 'church', target: 1500 },
+  { orgId: 'ch-service-2', level: 'church', target: 1500 },
 
   // Strategic Group Zonal
   { orgId: 'ch-ce-tasha-2', level: 'church', target: 350 },
@@ -339,7 +341,7 @@ export const OFFICIAL_TARGET_MAP: { orgId: string; level: 'zone' | 'group' | 'ch
   // Gwagwalada 2 Group
   { orgId: 'ch-ce-gwagwalada-2', level: 'church', target: 1000 },
   { orgId: 'ch-ce-gwagwalada-3', level: 'church', target: 400 },
-  { orgId: 'ch-ce-anangada', level: 'church', target: 250 },
+  { orgId: 'ch-ce-anagada', level: 'church', target: 250 },
   { orgId: 'ch-ce-gwagwalada-6', level: 'church', target: 250 },
   { orgId: 'ch-ce-chukunku', level: 'church', target: 100 },
 

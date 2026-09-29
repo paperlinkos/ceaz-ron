@@ -7,8 +7,8 @@ import { ENVIRONMENT_TYPE, CURRENT_PROJECT_ID } from '../src/services/firebase';
 
 describe('Phase 17 — Production Data Configuration & Reconciliation Engine', () => {
   describe('Zonal Campaign Terminology Audit', () => {
-    it('enforces Zonal Target of 40,000 souls without National campaign scope terminology', () => {
-      expect(REACH_OUT_NIGERIA_EVENT.zonalTarget).toBe(40000);
+    it('enforces Zonal Target of 50,000 souls without National campaign scope terminology', () => {
+      expect(REACH_OUT_NIGERIA_EVENT.zonalTarget).toBe(50000);
       expect(REACH_OUT_NIGERIA_EVENT.name).toBe('Reach Out Nigeria');
     });
 

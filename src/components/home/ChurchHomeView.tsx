@@ -50,7 +50,7 @@ export const ChurchHomeView: React.FC<ChurchHomeViewProps> = ({ onNavigate }) =>
   const [currentGroup, setCurrentGroup] = useState<Group | null>(null);
   const [churchZoneRank, setChurchZoneRank] = useState<number>(1);
   const [churchGroupRank, setChurchGroupRank] = useState<number>(1);
-  const [totalChurchesCount, setTotalChurchesCount] = useState<number>(98);
+  const [totalChurchesCount, setTotalChurchesCount] = useState<number>(129);
 
   // Subscribe to zonal counter
   useEffect(() => {

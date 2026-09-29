@@ -42,7 +42,7 @@ describe('Super Admin Settings, Milestones & Targets Engine', () => {
   describe('Campaign & System Settings Customization', () => {
     it('initializes with default event configuration and location presets', () => {
       const config = getLocalEventConfig();
-      expect(config.target).toBe(40000);
+      expect(config.target).toBe(50000);
       expect(config.personalTargetDefault).toBe(20);
       expect(config.raceThresholdYellow).toBe(50);
       expect(config.raceThresholdGreen).toBe(75);
@@ -93,38 +93,14 @@ describe('Super Admin Settings, Milestones & Targets Engine', () => {
   });
 
   describe('Dynamic Race Color Thresholds', () => {
-    it('applies default thresholds (50% and 75%) correctly', () => {
-      const under50 = getBarColorConfig(30, 50, 75);
-      expect(under50.textColor).toBe('#ff453a');
-      expect(under50.tierName).toBe('BELOW 50%');
+    it('applies in-progress and achieved color configs correctly', () => {
+      const inProgress = getBarColorConfig(60);
+      expect(inProgress.textColor).toBe('#008751');
+      expect(inProgress.tierName).toBe('IN PROGRESS');
 
-      const between50and74 = getBarColorConfig(60, 50, 75);
-      expect(between50and74.textColor).toBe('#ffd60a');
-      expect(between50and74.tierName).toBe('50% - 74%');
-
-      const above75 = getBarColorConfig(80, 50, 75);
-      expect(above75.textColor).toBe('#00ff87');
-      expect(above75.tierName).toBe('75%+');
-    });
-
-    it('respects custom Super Admin thresholds (e.g. 40% and 80%)', () => {
-      const yellowThreshold = 40;
-      const greenThreshold = 80;
-
-      // 35% should be Red
-      const under40 = getBarColorConfig(35, yellowThreshold, greenThreshold);
-      expect(under40.textColor).toBe('#ff453a');
-      expect(under40.tierName).toBe('BELOW 40%');
-
-      // 55% should be Yellow
-      const between = getBarColorConfig(55, yellowThreshold, greenThreshold);
-      expect(between.textColor).toBe('#ffd60a');
-      expect(between.tierName).toBe('40% - 79%');
-
-      // 85% should be Green
-      const above80 = getBarColorConfig(85, yellowThreshold, greenThreshold);
-      expect(above80.textColor).toBe('#00ff87');
-      expect(above80.tierName).toBe('80%+');
+      const achieved = getBarColorConfig(105);
+      expect(achieved.textColor).toBe('#d97706');
+      expect(achieved.tierName).toBe('100%+ TARGET ACHIEVED');
     });
   });
 

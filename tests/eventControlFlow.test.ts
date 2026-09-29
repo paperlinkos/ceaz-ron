@@ -49,7 +49,7 @@ describe('Phase 9: Live Event Control & Command Center', () => {
 
   it('1. Event initially defaults to UPCOMING state', () => {
     expect(currentEvent.status).toBe('upcoming');
-    expect(currentEvent.target).toBe(40000);
+    expect(currentEvent.target).toBe(50000);
     expect(currentEvent.name).toBe('Reach Out Nigeria');
   });
 

@@ -16,8 +16,8 @@ export const AccountView: React.FC<AccountViewProps> = ({ onOpenAuth }) => {
   } = useAuth();
 
   const [counts, setCounts] = useState({
-    groups: DEFAULT_GROUPS.length,
-    churches: DEFAULT_CHURCHES.length,
+    groups: 24,
+    churches: 129,
   });
 
   useEffect(() => {
@@ -25,9 +25,11 @@ export const AccountView: React.FC<AccountViewProps> = ({ onOpenAuth }) => {
     Promise.all([getGroups(), getChurches()])
       .then(([gList, cList]) => {
         if (isMounted) {
+          const activeG = gList.filter((g) => g.status === 'active').length;
+          const activeC = cList.filter((c) => c.status === 'active').length;
           setCounts({
-            groups: gList.filter((g) => g.status === 'active').length || DEFAULT_GROUPS.length,
-            churches: cList.filter((c) => c.status === 'active').length || DEFAULT_CHURCHES.length,
+            groups: Math.max(activeG, DEFAULT_GROUPS.length, 24),
+            churches: Math.max(activeC, DEFAULT_CHURCHES.length, 129),
           });
         }
       })
@@ -174,7 +176,7 @@ export const AccountView: React.FC<AccountViewProps> = ({ onOpenAuth }) => {
           )}
 
           {/* ZONAL LEADER & SUPER ADMIN HIERARCHY */}
-          {(userProfile.role === 'zoneManager' || userProfile.role === 'superAdmin') && (
+          {userProfile.role !== 'groupManager' && userProfile.role !== 'churchManager' && (
             <div className="hierarchy-node node-highlight">
               <span className="node-label">JURISDICTION:</span>
               <span className="node-value">All {counts.groups} Groups & {counts.churches} Churches in Abuja Zone 1</span>

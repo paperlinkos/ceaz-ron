@@ -312,7 +312,7 @@ export const RoleDashboardView: React.FC<RoleDashboardViewProps> = ({ onNavigate
         <div className="account-card dashboard-children-card" style={{ marginBottom: '20px' }}>
           <div className="children-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
             <h3 className="children-title" style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800 }}>
-              {data.activeLevel === 'zone' ? 'GROUPS IN ABUJA ZONE 1 (20 GROUPS)' : 'CHURCHES IN THIS GROUP'}
+              {data.activeLevel === 'zone' ? `GROUPS IN ABUJA ZONE 1 (${data.children.length || 24} GROUPS)` : 'CHURCHES IN THIS GROUP'}
             </h3>
             <span className="text-muted text-sm" style={{ color: '#64748b' }}>
               {data.children.length} {data.activeLevel === 'zone' ? 'Groups' : 'Churches'}

@@ -46,10 +46,12 @@ export const DEFAULT_GROUPS: Group[] = [
 
 export const DEFAULT_CHURCHES: Church[] = [
   // Zonal Church Group
-  { id: 'ch-service-1', groupId: 'grp-zonal-church', name: 'Zonal Church 1', code: 'CH-ZNC1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
-  { id: 'ch-service-2', groupId: 'grp-zonal-church', name: 'Zonal Church 2', code: 'CH-ZNC2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-zonal-church-1', groupId: 'grp-zonal-church', name: 'Zonal Church 1', code: 'CH-ZNC1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-zonal-church-2', groupId: 'grp-zonal-church', name: 'Zonal Church 2', code: 'CH-ZNC2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'ch-lingual-church', groupId: 'grp-zonal-church', name: 'Lingual Church', code: 'CH-LNG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'ch-ce-city-church-zonal', groupId: 'grp-zonal-church', name: 'CE City Church', code: 'CH-CCC1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-service-1', groupId: 'grp-zonal-church', name: 'Service 1', code: 'CH-SVC1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-service-2', groupId: 'grp-zonal-church', name: 'Service 2', code: 'CH-SVC2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
 
   // Strategic Group Zonal
   { id: 'ch-ce-tasha-2', groupId: 'grp-strategic-zonal', name: 'CE Tasha 2', code: 'CH-TSH2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
@@ -238,9 +240,19 @@ function getLocalOrgCache(): LocalOrgCache {
     const parsed: LocalOrgCache = JSON.parse(raw);
     if (!parsed.zones || parsed.zones.length === 0) parsed.zones = DEFAULT_ZONES;
     parsed.groups = (parsed.groups || []).filter((g) => g.id !== 'grp-standalone');
-    if (parsed.groups.length === 0) parsed.groups = DEFAULT_GROUPS;
-    if (!parsed.churches || parsed.churches.length === 0) parsed.churches = DEFAULT_CHURCHES;
+    let cacheChanged = false;
+    if (!parsed.groups || parsed.groups.length < DEFAULT_GROUPS.length) {
+      parsed.groups = DEFAULT_GROUPS;
+      cacheChanged = true;
+    }
+    if (!parsed.churches || parsed.churches.length < DEFAULT_CHURCHES.length) {
+      parsed.churches = DEFAULT_CHURCHES;
+      cacheChanged = true;
+    }
     if (!parsed.pcfs) parsed.pcfs = [];
+    if (cacheChanged) {
+      saveLocalOrgCache(parsed);
+    }
     return parsed;
   } catch {
     return {

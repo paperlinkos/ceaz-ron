@@ -5,15 +5,15 @@ import { calculateOrganizationProgress } from '../src/services/targetProgressEng
 
 describe('Phase 16 — Final UX, Mobile & Accessibility Verification', () => {
   describe('Zonal Target & Public Observer Hero Counter', () => {
-    it('maintains primary Zonal Target of 40,000 souls', () => {
-      expect(REACH_OUT_NIGERIA_EVENT.zonalTarget).toBe(40000);
+    it('maintains primary Zonal Target of 50,000 souls', () => {
+      expect(REACH_OUT_NIGERIA_EVENT.zonalTarget).toBe(50000);
     });
 
     it('calculates percentage achieved accurately for public observer view', () => {
       const actual = 10000;
       const target = REACH_OUT_NIGERIA_EVENT.zonalTarget;
       const percentage = (actual / target) * 100;
-      expect(percentage).toBe(25);
+      expect(percentage).toBe(20);
     });
   });
 

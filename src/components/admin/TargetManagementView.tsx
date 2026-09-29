@@ -339,7 +339,7 @@ export const TargetManagementView: React.FC = () => {
       });
       setChurchDrafts(cDrafts);
 
-      setSuccessMsg(`Successfully restored all 20 Groups and 98 Churches to their official targets from the PDF document! Total: ${totalChurchTargetAllocated.toLocaleString()} souls.`);
+      setSuccessMsg(`Successfully restored all 24 Groups and 129 Churches to their official targets from the PDF document! Total: ${totalChurchTargetAllocated.toLocaleString()} souls.`);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       setError(msg);

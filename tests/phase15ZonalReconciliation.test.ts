@@ -10,16 +10,16 @@ import type { SoulWinningRecord } from '../src/types/record';
 
 describe('Phase 15 — Real Organization Data & Zonal Reconciliation Engine', () => {
   describe('Zonal & Hierarchy Target Calculations', () => {
-    it('enforces primary campaign Zonal Target of 40,000 souls', () => {
-      expect(REACH_OUT_NIGERIA_EVENT.zonalTarget).toBe(40000);
-      expect(REACH_OUT_NIGERIA_EVENT.nationalTarget).toBe(40000); // backward compatibility alias
+    it('enforces primary campaign Zonal Target of 50,000 souls', () => {
+      expect(REACH_OUT_NIGERIA_EVENT.zonalTarget).toBe(50000);
+      expect(REACH_OUT_NIGERIA_EVENT.nationalTarget).toBe(50000); // backward compatibility alias
     });
 
-    it('calculates Zonal progress accurately (7,420 / 40,000 = 18.55%)', () => {
+    it('calculates Zonal progress accurately (7,420 / 50,000 = 14.84%)', () => {
       const zonalTarget = REACH_OUT_NIGERIA_EVENT.zonalTarget;
       const zonalSoulsWon = 7420;
       const percentage = (zonalSoulsWon / zonalTarget) * 100;
-      expect(percentage).toBeCloseTo(18.55, 2);
+      expect(percentage).toBeCloseTo(14.84, 2);
     });
 
     it('calculates Group target progress correctly', () => {

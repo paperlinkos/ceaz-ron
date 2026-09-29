@@ -194,12 +194,12 @@ export const DevRoleSwitcher: React.FC = () => {
               })}
             </div>
 
-            {/* Church Search & All 98 Selector */}
+            {/* Church Search & All 129 Selector */}
             <input
               type="text"
               value={churchSearch}
               onChange={(e) => setChurchSearch(e.target.value)}
-              placeholder="Search all 98 churches..."
+              placeholder="Search all 129 churches..."
               style={{
                 width: '100%',
                 padding: '7px 10px',
