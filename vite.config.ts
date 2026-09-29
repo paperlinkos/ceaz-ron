@@ -17,7 +17,12 @@ export default defineConfig(({ mode }) => {
       react(),
       VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'apple-touch-icon.png', 'icons/*.png'],
+      includeAssets: [
+        'favicon.ico',
+        'favicon-*.png',
+        'apple-touch-icon.png',
+        'icons/*.png',
+      ],
       manifest: {
         name: 'Reach Out Nigeria - Soul Winning Platform',
         short_name: 'RON Harvest',

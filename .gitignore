@@ -33,6 +33,9 @@ temp-clone
 
 # Local secrets — never commit
 superadmin-credentials.txt
+
+# Live church login credentials — never commit
+CHURCH-LOGIN-CREDENTIALS.md
 *.local.json
 .vercel
 .env*
