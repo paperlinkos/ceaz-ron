@@ -282,7 +282,7 @@ export const CampaignSettingsView: React.FC = () => {
                 step="1"
                 value={target}
                 onChange={(e) => setTarget(parseInt(e.target.value, 10) || 0)}
-                placeholder="e.g. 40000"
+                placeholder="e.g. 50000"
                 className="form-input"
                 required
               />

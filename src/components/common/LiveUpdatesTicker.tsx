@@ -182,7 +182,7 @@ export const LiveUpdatesTicker: React.FC<LiveUpdatesTickerProps> = ({
     });
 
     // 3. MILESTONE ALERTS
-    const target = eventConfig.target || 40000;
+    const target = eventConfig.target || 50000;
     const zonalPercentage = Math.round(((recordsCount / target) * 100) * 10) / 10;
     const milestones = eventConfig.milestones || [];
 

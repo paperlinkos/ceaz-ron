@@ -99,7 +99,7 @@ export async function getDashboardViewData(
   
   // Default target fallback if not custom set — query official PDF target map first
   const officialTarget = getOfficialTarget(activeLevel, activeOrgId);
-  const defaultTarget = officialTarget ?? (activeLevel === 'zone' ? (getLocalEventConfig().target || 40000) : activeLevel === 'group' ? 2000 : 250);
+  const defaultTarget = officialTarget ?? (activeLevel === 'zone' ? (getLocalEventConfig().target || 50000) : activeLevel === 'group' ? 2000 : 250);
   const target = targetObj ? targetObj.target : defaultTarget;
 
   const mainProgress = calculateOrganizationProgress({

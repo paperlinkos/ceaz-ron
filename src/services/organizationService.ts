@@ -333,32 +333,54 @@ export async function updateZoneStatus(zoneId: string, status: EntityStatus, act
   );
 }
 
+export function mergeGroupsWithDefaults(customGroups: Group[]): Group[] {
+  const map = new Map<string, Group>();
+  for (const g of DEFAULT_GROUPS) {
+    map.set(g.id, g);
+  }
+  for (const g of customGroups) {
+    if (g.status === 'active') {
+      map.set(g.id, { ...map.get(g.id), ...g });
+    }
+  }
+  return Array.from(map.values());
+}
+
+export function mergeChurchesWithDefaults(customChurches: Church[]): Church[] {
+  const map = new Map<string, Church>();
+  for (const c of DEFAULT_CHURCHES) {
+    map.set(c.id, c);
+  }
+  for (const c of customChurches) {
+    if (c.status === 'active') {
+      map.set(c.id, { ...map.get(c.id), ...c });
+    }
+  }
+  return Array.from(map.values());
+}
+
 // GROUPS
 export async function getGroups(zoneId?: string): Promise<Group[]> {
+  let all: Group[] = [];
   if (!navigator.onLine) {
-    const all = getLocalOrgCache().groups;
-    const finalAll = all.length > 0 ? all : DEFAULT_GROUPS;
-    return zoneId ? finalAll.filter((g) => g.zoneId === zoneId) : finalAll;
-  }
-  try {
-    const colRef = collection(db, 'groups');
-    const q = zoneId ? query(colRef, where('zoneId', '==', zoneId)) : colRef;
-    const snapshot = await getDocs(q);
-    const groups = snapshot.docs.map((d) => d.data() as Group);
-    
-    if (groups.length > 0) {
+    const cached = getLocalOrgCache().groups;
+    all = mergeGroupsWithDefaults(cached);
+  } else {
+    try {
+      const colRef = collection(db, 'groups');
+      const snapshot = await getDocs(colRef);
+      const groups = snapshot.docs.map((d) => d.data() as Group);
+      all = mergeGroupsWithDefaults(groups);
       const cache = getLocalOrgCache();
-      if (!zoneId) cache.groups = groups;
+      cache.groups = all;
       saveLocalOrgCache(cache);
-      return groups;
+    } catch (err) {
+      console.warn('Error fetching groups from Firestore, using defaults:', err);
+      const cached = getLocalOrgCache().groups;
+      all = mergeGroupsWithDefaults(cached);
     }
-    return zoneId ? DEFAULT_GROUPS.filter((g) => g.zoneId === zoneId) : DEFAULT_GROUPS;
-  } catch (err) {
-    console.warn('Error fetching groups from Firestore, using defaults:', err);
-    const all = getLocalOrgCache().groups;
-    const finalAll = all.length > 0 ? all : DEFAULT_GROUPS;
-    return zoneId ? finalAll.filter((g) => g.zoneId === zoneId) : finalAll;
   }
+  return zoneId ? all.filter((g) => g.zoneId === zoneId) : all;
 }
 
 export async function createGroup(name: string, code: string, zoneId: string, actorId: string = 'superAdmin'): Promise<Group> {
@@ -416,30 +438,26 @@ export async function updateGroupStatus(groupId: string, status: EntityStatus, a
 
 // CHURCHES
 export async function getChurches(groupId?: string): Promise<Church[]> {
+  let all: Church[] = [];
   if (!navigator.onLine) {
-    const all = getLocalOrgCache().churches;
-    const finalAll = all.length > 0 ? all : DEFAULT_CHURCHES;
-    return groupId ? finalAll.filter((c) => c.groupId === groupId) : finalAll;
-  }
-  try {
-    const colRef = collection(db, 'churches');
-    const q = groupId ? query(colRef, where('groupId', '==', groupId)) : colRef;
-    const snapshot = await getDocs(q);
-    const churches = snapshot.docs.map((d) => d.data() as Church);
-    
-    if (churches.length > 0) {
+    const cached = getLocalOrgCache().churches;
+    all = mergeChurchesWithDefaults(cached);
+  } else {
+    try {
+      const colRef = collection(db, 'churches');
+      const snapshot = await getDocs(colRef);
+      const churches = snapshot.docs.map((d) => d.data() as Church);
+      all = mergeChurchesWithDefaults(churches);
       const cache = getLocalOrgCache();
-      if (!groupId) cache.churches = churches;
+      cache.churches = all;
       saveLocalOrgCache(cache);
-      return churches;
+    } catch (err) {
+      console.warn('Error fetching churches from Firestore, using defaults:', err);
+      const cached = getLocalOrgCache().churches;
+      all = mergeChurchesWithDefaults(cached);
     }
-    return groupId ? DEFAULT_CHURCHES.filter((c) => c.groupId === groupId) : DEFAULT_CHURCHES;
-  } catch (err) {
-    console.warn('Error fetching churches from Firestore, using defaults:', err);
-    const all = getLocalOrgCache().churches;
-    const finalAll = all.length > 0 ? all : DEFAULT_CHURCHES;
-    return groupId ? finalAll.filter((c) => c.groupId === groupId) : finalAll;
   }
+  return groupId ? all.filter((c) => c.groupId === groupId) : all;
 }
 
 export async function createChurch(name: string, code: string, groupId: string, actorId: string = 'superAdmin'): Promise<Church> {

@@ -36,7 +36,7 @@ export async function seedDemoData(): Promise<void> {
       eventId: REACH_OUT_NIGERIA_EVENT.id,
       level: 'zone',
       organizationId: DEMO_HIERARCHY.zone.id,
-      target: 40000,
+      target: 50000,
       createdAt: now,
       updatedAt: now,
       createdBy: 'system',

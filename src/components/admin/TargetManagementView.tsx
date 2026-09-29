@@ -49,7 +49,7 @@ export const TargetManagementView: React.FC = () => {
   // Single target state
   const [singleLevel, setSingleLevel] = useState<TargetLevel>('zone');
   const [singleOrgId, setSingleOrgId] = useState<string>('default_zone');
-  const [singleTargetInput, setSingleTargetInput] = useState<string>('40000');
+  const [singleTargetInput, setSingleTargetInput] = useState<string>('50000');
 
   // Filters & Search
   const [groupSearch, setGroupSearch] = useState<string>('');
@@ -106,7 +106,7 @@ export const TargetManagementView: React.FC = () => {
 
       // Pre-fill single form
       const existingZone = tList.find((t) => t.level === 'zone' && t.status === 'active');
-      setSingleTargetInput(existingZone ? existingZone.target.toString() : (eventConfig.target || 40000).toString());
+      setSingleTargetInput(existingZone ? existingZone.target.toString() : (eventConfig.target || 50000).toString());
     } catch (err) {
       console.warn('Error loading target data:', err);
     } finally {
