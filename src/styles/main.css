@@ -366,7 +366,7 @@ table {
   }
   .stage-content {
     padding: 12px;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+    padding-bottom: calc(var(--bottom-nav-height) + 48px + env(safe-area-inset-bottom));
   }
 }
 
@@ -1150,7 +1150,9 @@ table {
   grid-auto-columns: minmax(0, 1fr);
   align-items: stretch;
   padding: 8px 12px calc(12px + env(safe-area-inset-bottom)) 12px;
-  z-index: 90;
+  /* Above the live ticker, which shares a stacking level with page content
+     and must never intercept taps meant for the tabs. */
+  z-index: 95;
   box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.08);
 }
 
@@ -1309,7 +1311,7 @@ table {
 /* Clear the mobile bottom navigation so the bar does not cover it. */
 @media (max-width: 768px) {
   .pwa-install-bar {
-    bottom: 78px;
+    bottom: calc(var(--bottom-nav-height) + 10px);
     border-radius: 14px 14px 0 0;
     border: 1px solid var(--color-card-border-public);
     border-bottom: none;
@@ -3349,6 +3351,12 @@ table {
   font-weight: 600;
 }
 
+/* Height of the fixed mobile bottom nav (48px touch target + 20px padding).
+   Anything that stacks above the nav must offset by this, not guess. */
+:root {
+  --bottom-nav-height: 68px;
+}
+
 /* MOBILE TOUCH TARGET & PREVENT IOS ZOOM */
 @media (max-width: 767px) {
   .form-input {
@@ -3756,7 +3764,7 @@ select {
     padding-left: 1rem !important;
     padding-right: 1rem !important;
     padding-top: 0.5rem !important;
-    padding-bottom: 80px !important;
+    padding-bottom: calc(var(--bottom-nav-height) + 48px + env(safe-area-inset-bottom)) !important;
   }
 
   .big-screen-counter-wrapper {
@@ -4069,7 +4077,7 @@ select {
 @media (max-width: 768px) {
   .live-ticker-container:not(.ticker-bigscreen) {
     left: 0 !important;
-    bottom: calc(56px + env(safe-area-inset-bottom)) !important;
+    bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom)) !important;
     height: 38px !important;
   }
 }
@@ -4080,7 +4088,7 @@ select {
 }
 
 .big-screen-container {
-  padding-bottom: 80px !important;
+  padding-bottom: calc(var(--bottom-nav-height) + 48px + env(safe-area-inset-bottom)) !important;
 }
 
 /* ==========================================================================

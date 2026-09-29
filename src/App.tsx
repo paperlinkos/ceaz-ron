@@ -120,7 +120,7 @@ const MainContent: React.FC = () => {
             />
           )}
 
-          {activeTab === 'race' && role !== 'soulWinner' && isRoleVerified && (
+          {activeTab === 'race' && role !== 'soulWinner' && (
             <UpwardRaceView />
           )}
 
