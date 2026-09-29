@@ -68,10 +68,10 @@ export function subscribeToZonalCounter(
       const allRecords = Array.from(recordMap.values());
       const totalSoulsWon = allRecords.length;
 
-      // Determine Zonal Target (from custom target if configured, else default)
+      // Determine Zonal Target (from custom target if configured, else default 50,000)
       const targetsList = await currentTargets;
-      const zoneTargetObj = targetsList.find((t) => t.level === 'zone' && t.status === 'active');
-      const activeZoneTarget = zoneTargetObj ? zoneTargetObj.target : zonalTarget;
+      const zoneTargetObj = targetsList.find((t) => t.level === 'zone' && t.status === 'active' && t.target >= 50000);
+      const activeZoneTarget = zoneTargetObj ? zoneTargetObj.target : (zonalTarget >= 50000 ? zonalTarget : 50000);
 
       const zoneProgress = calculateOrganizationProgress({
         organizationId: 'zone',

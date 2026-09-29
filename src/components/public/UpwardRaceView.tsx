@@ -15,10 +15,11 @@ export const UpwardRaceView: React.FC = () => {
 
   const isObserverMode = !isAuthenticated || !role;
 
+  const targetVal = eventConfig.target >= 50000 ? eventConfig.target : 50000;
   const [counterData, setCounterData] = useState<ZonalCounterData>({
     totalSoulsWon: 0,
-    zonalTarget: eventConfig.target,
-    nationalTarget: eventConfig.target,
+    zonalTarget: targetVal,
+    nationalTarget: targetVal,
     percentageAchieved: 0,
     groupCompetitors: [],
     groupProgresses: [],
@@ -26,11 +27,11 @@ export const UpwardRaceView: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = subscribeToNationalCounter(
-      eventConfig.target,
+      targetVal,
       (data) => setCounterData(data)
     );
     return () => unsubscribe();
-  }, [eventConfig.target]);
+  }, [targetVal]);
 
   const competitors = counterData.groupCompetitors;
 

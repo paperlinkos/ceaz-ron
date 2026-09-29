@@ -20,10 +20,11 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
   const { soulWinnerProfile, isAuthenticated, role } = useAuth();
   const [isDisplayModeOpen, setIsDisplayModeOpen] = useState<boolean>(false);
 
+  const targetVal = eventConfig.target >= 50000 ? eventConfig.target : 50000;
   const [counterData, setCounterData] = useState<ZonalCounterData>({
     totalSoulsWon: 0,
-    zonalTarget: eventConfig.target,
-    nationalTarget: eventConfig.target,
+    zonalTarget: targetVal,
+    nationalTarget: targetVal,
     percentageAchieved: 0,
     groupCompetitors: [],
     groupProgresses: [],
@@ -31,11 +32,11 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
 
   useEffect(() => {
     const unsubscribe = subscribeToNationalCounter(
-      eventConfig.target,
+      targetVal,
       (data) => setCounterData(data)
     );
     return () => unsubscribe();
-  }, [eventConfig.target]);
+  }, [targetVal]);
 
   // Observer Mode: Unauthenticated guest viewer
   const isObserverMode = !isAuthenticated || !role;

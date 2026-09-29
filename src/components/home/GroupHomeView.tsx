@@ -33,10 +33,11 @@ interface GroupHomeViewProps {
 export const GroupHomeView: React.FC<GroupHomeViewProps> = ({ onNavigate }) => {
   const { soulWinnerProfile } = useAuth();
   const { eventConfig, isLive } = useEventConfig();
+  const targetVal = eventConfig.target >= 50000 ? eventConfig.target : 50000;
   const [counterData, setCounterData] = useState<ZonalCounterData>({
     totalSoulsWon: 0,
-    zonalTarget: eventConfig.target,
-    nationalTarget: eventConfig.target,
+    zonalTarget: targetVal,
+    nationalTarget: targetVal,
     percentageAchieved: 0,
     groupCompetitors: [],
     groupProgresses: [],
