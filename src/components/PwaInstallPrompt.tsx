@@ -9,6 +9,7 @@ interface BeforeInstallPromptEvent extends Event {
 export const PwaInstallPrompt: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isInstalling, setIsInstalling] = useState<boolean>(false);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -25,12 +26,21 @@ export const PwaInstallPrompt: React.FC = () => {
   }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log('[PWA] User response to install prompt:', outcome);
-    setDeferredPrompt(null);
-    setIsVisible(false);
+    // Guard against a double click: prompt() rejects if it is called twice in
+    // the same page load, which previously surfaced as an unhandled rejection.
+    if (!deferredPrompt || isInstalling) return;
+    setIsInstalling(true);
+    try {
+      await deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log('[PWA] install prompt outcome:', outcome);
+    } catch (err) {
+      console.error('[PWA] install prompt failed:', err);
+    } finally {
+      setDeferredPrompt(null);
+      setIsVisible(false);
+      setIsInstalling(false);
+    }
   };
 
   const handleDismiss = () => {
@@ -42,17 +52,19 @@ export const PwaInstallPrompt: React.FC = () => {
   }
 
   return (
-    <div className="pwa-install-bar">
+    <div className="pwa-install-bar" role="status" aria-live="polite">
       <div className="pwa-install-content">
-        <Download size={18} />
-        <span>Install <strong>CEAZ1 Reachout Nigeria</strong> app for fast offline recording</span>
+        <Download size={18} aria-hidden="true" />
+        <span>
+          Install <strong>CEAZ1 Reachout Nigeria</strong> app for fast offline recording
+        </span>
       </div>
       <div className="pwa-install-actions">
-        <button onClick={handleInstall} className="pwa-install-btn">
-          Install App
+        <button onClick={handleInstall} className="pwa-install-btn" disabled={isInstalling}>
+          {isInstalling ? 'Installing…' : 'Install App'}
         </button>
-        <button onClick={handleDismiss} className="pwa-dismiss-btn" aria-label="Dismiss">
-          <X size={16} />
+        <button onClick={handleDismiss} className="pwa-dismiss-btn" aria-label="Dismiss install prompt">
+          <X size={16} aria-hidden="true" />
         </button>
       </div>
     </div>
