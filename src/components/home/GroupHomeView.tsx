@@ -27,7 +27,7 @@ import type { Group } from '../../types/organization';
 
 interface GroupHomeViewProps {
   onNavigate?: (tab: 'home' | 'record' | 'account' | 'org' | 'race' | 'dashboard') => void;
-  onOpenAuth?: (mode: 'login' | 'signup') => void;
+  onOpenAuth?: () => void;
 }
 
 export const GroupHomeView: React.FC<GroupHomeViewProps> = ({ onNavigate }) => {

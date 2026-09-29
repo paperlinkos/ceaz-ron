@@ -12,7 +12,7 @@ import { useAuth } from '../../context/AuthContext';
 
 interface PublicHomeViewProps {
   onNavigate?: (tab: 'home' | 'record' | 'account' | 'org' | 'race' | 'dashboard') => void;
-  onOpenAuth?: (mode: 'login' | 'signup') => void;
+  onOpenAuth?: () => void;
 }
 
 export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOpenAuth }) => {

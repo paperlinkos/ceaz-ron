@@ -3,7 +3,7 @@ import { Target, Calendar, ShieldCheck, HeartHandshake } from 'lucide-react';
 import { REACH_OUT_NIGERIA_EVENT } from '../../config/eventConfig';
 
 interface AboutViewProps {
-  onOpenAuth: (mode: 'login' | 'signup') => void;
+  onOpenAuth: () => void;
 }
 
 export const AboutView: React.FC<AboutViewProps> = ({ onOpenAuth }) => {
@@ -46,10 +46,10 @@ export const AboutView: React.FC<AboutViewProps> = ({ onOpenAuth }) => {
       </div>
 
       <div className="about-cta">
-        <h3>Ready to participate?</h3>
-        <button onClick={() => onOpenAuth('signup')} className="btn-green-accent btn-large">
+        <h3>Already have your Church Code?</h3>
+        <button onClick={() => onOpenAuth()} className="btn-green-accent btn-large">
           <HeartHandshake size={18} />
-          <span>Register as a Soul Winner</span>
+          <span>Sign In to the Portal</span>
         </button>
       </div>
     </div>

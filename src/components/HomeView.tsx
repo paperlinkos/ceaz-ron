@@ -5,7 +5,7 @@ import { REACH_OUT_NIGERIA_EVENT } from '../config/eventConfig';
 
 interface HomeViewProps {
   onNavigate: (tab: 'home' | 'record' | 'account' | 'org') => void;
-  onOpenAuth: (mode: 'login' | 'signup') => void;
+  onOpenAuth: () => void;
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onOpenAuth }) => {
@@ -13,7 +13,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onOpenAuth }) =>
 
   const handleRecordClick = () => {
     if (!isAuthenticated) {
-      onOpenAuth('signup');
+      onOpenAuth();
     } else {
       onNavigate('record');
     }
@@ -69,11 +69,8 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onOpenAuth }) =>
               <span>Sign in required to record souls. Anonymous submissions are prohibited.</span>
             </div>
             <div className="home-guest-actions">
-              <button onClick={() => onOpenAuth('login')} className="submit-button">
-                Sign In
-              </button>
-              <button onClick={() => onOpenAuth('signup')} className="secondary-button">
-                Register
+              <button onClick={() => onOpenAuth()} className="submit-button">
+                Sign In with your Church Code
               </button>
             </div>
           </div>

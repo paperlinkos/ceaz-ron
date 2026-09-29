@@ -13,6 +13,9 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import {
   getChurchAccounts,
+  createChurchAccount,
+  resetChurchAccountPassword,
+  exportChurchAccountsToExcelCSV,
   type ChurchAccount,
 } from '../../services/churchAccountService';
 import {
@@ -68,6 +71,19 @@ export const UserManagementView: React.FC = () => {
   const [success, setSuccess] = useState<string>('');
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
+  // Church account provisioning: admins create real Firebase Auth accounts
+  // and hand out the credentials. Passwords are shown exactly once.
+  const [showCreateAccount, setShowCreateAccount] = useState<boolean>(false);
+  const [draftChurchId, setDraftChurchId] = useState<string>('');
+  const [draftRepName, setDraftRepName] = useState<string>('');
+  const [draftRepEmail, setDraftRepEmail] = useState<string>('');
+  const [draftRepPhone, setDraftRepPhone] = useState<string>('');
+  const [issuedCredentials, setIssuedCredentials] = useState<{
+    churchCode: string;
+    password: string;
+    churchName: string;
+  } | null>(null);
+
   const refreshUsersAndOrgs = async () => {
     setIsLoading(true);
     try {
@@ -85,7 +101,7 @@ export const UserManagementView: React.FC = () => {
       setGroups(gList);
       setChurches(cList);
       setPcfs(pList);
-      setChurchAccounts(getChurchAccounts());
+      setChurchAccounts(await getChurchAccounts());
     } catch (err) {
       console.warn('Error fetching users and orgs:', err);
     } finally {
@@ -96,6 +112,72 @@ export const UserManagementView: React.FC = () => {
   useEffect(() => {
     refreshUsersAndOrgs();
   }, []);
+
+  const handleCreateAccount = async () => {
+    setError('');
+    setSuccess('');
+    const church = churches.find((c) => c.id === draftChurchId);
+    if (!church) {
+      setError('Please select a church.');
+      return;
+    }
+    if (!draftRepName.trim()) {
+      setError('Please enter the representative full name.');
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      const group = groups.find((g) => g.id === church.groupId);
+      const result = await createChurchAccount({
+        churchId: church.id,
+        churchName: church.name,
+        churchCode: church.code,
+        groupId: church.groupId,
+        groupName: group?.name || '',
+        targetSouls: 0,
+        repName: draftRepName.trim(),
+        repEmail: draftRepEmail.trim(),
+        repPhone: draftRepPhone.trim(),
+      });
+
+      setIssuedCredentials({
+        churchCode: result.credentials.churchCode,
+        password: result.credentials.password,
+        churchName: church.name,
+      });
+      setShowCreateAccount(false);
+      setDraftChurchId('');
+      setDraftRepName('');
+      setDraftRepEmail('');
+      setDraftRepPhone('');
+      setSuccess(`Account created for ${church.name}. Copy the password now — it is not shown again.`);
+      await refreshUsersAndOrgs();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create account.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleResetPassword = async (acc: ChurchAccount) => {
+    setError('');
+    setSuccess('');
+    setIsProcessing(true);
+    try {
+      const result = await resetChurchAccountPassword(acc.churchCode);
+      setIssuedCredentials({
+        churchCode: result.credentials.churchCode,
+        password: result.credentials.password,
+        churchName: acc.churchName,
+      });
+      setSuccess(`Password reset for ${acc.churchName}.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to reset password.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   if (!isSuperAdmin) {
     return (
@@ -293,7 +375,71 @@ export const UserManagementView: React.FC = () => {
                 1 account designated per church. Each Church Code serves as their login username.
               </p>
             </div>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => setShowCreateAccount(true)}
+                className="submit-button"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', margin: 0 }}
+              >
+                <UserCheck size={18} />
+                Create Account
+              </button>
+              <button
+                onClick={() => exportChurchAccountsToExcelCSV(churchAccounts)}
+                disabled={churchAccounts.length === 0}
+                className="secondary-button"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', margin: 0 }}
+              >
+                Export CSV
+              </button>
+            </div>
           </div>
+
+          {/* ONE-TIME CREDENTIALS REVEAL — passwords are never stored or re-shown */}
+          {issuedCredentials && (
+            <div
+              style={{
+                background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+                borderRadius: '16px',
+                padding: '18px 24px',
+                marginBottom: '20px',
+                color: '#f8fafc',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px' }}>
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '4px' }}>
+                    {issuedCredentials.churchName} — hand these over now
+                  </div>
+                  <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+                    This password is shown once and is not stored anywhere. Write it down or print
+                    the sheet before closing.
+                  </div>
+                  <div style={{ marginTop: '12px', display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                    <div>
+                      <div style={{ fontSize: '0.68rem', color: '#94a3b8', letterSpacing: '0.08em' }}>USERNAME</div>
+                      <code style={{ fontSize: '1.05rem', fontWeight: 800, color: '#4ade80' }}>
+                        {issuedCredentials.churchCode}
+                      </code>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.68rem', color: '#94a3b8', letterSpacing: '0.08em' }}>PASSWORD</div>
+                      <code style={{ fontSize: '1.05rem', fontWeight: 800, color: '#4ade80' }}>
+                        {issuedCredentials.password}
+                      </code>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIssuedCredentials(null)}
+                  className="secondary-button"
+                  style={{ margin: 0, whiteSpace: 'nowrap' }}
+                >
+                  I've recorded it
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* SEARCH BAR FOR CHURCH ACCOUNTS */}
           <div className="user-filter-bar" style={{ marginBottom: '16px' }}>
@@ -309,7 +455,6 @@ export const UserManagementView: React.FC = () => {
             </div>
             <button
               onClick={() => {
-                setChurchAccounts(getChurchAccounts());
                 refreshUsersAndOrgs();
               }}
               className="icon-button-light"
@@ -330,6 +475,7 @@ export const UserManagementView: React.FC = () => {
                   <th style={{ padding: '12px 16px' }}>Target Souls</th>
                   <th style={{ padding: '12px 16px' }}>Status</th>
                   <th style={{ padding: '12px 16px' }}>Representative Contact</th>
+                  <th style={{ padding: '12px 16px' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -371,11 +517,11 @@ export const UserManagementView: React.FC = () => {
                             borderRadius: '12px',
                             fontSize: '0.72rem',
                             fontWeight: 800,
-                            background: acc.status === 'activated' ? 'rgba(0, 135, 81, 0.12)' : 'rgba(234, 179, 8, 0.15)',
-                            color: acc.status === 'activated' ? '#008751' : '#b45309',
+                            background: acc.status === 'active' ? 'rgba(0, 135, 81, 0.12)' : 'rgba(234, 179, 8, 0.15)',
+                            color: acc.status === 'active' ? '#008751' : '#b45309',
                           }}
                         >
-                          {acc.status === 'activated' ? 'ACTIVATED' : 'PENDING ACTIVATION'}
+                          {acc.status === 'active' ? 'ACTIVE' : 'SUSPENDED'}
                         </span>
                       </td>
                       <td style={{ padding: '12px 16px' }}>
@@ -385,8 +531,18 @@ export const UserManagementView: React.FC = () => {
                             <div style={{ fontSize: '0.72rem', color: '#64748b' }}>{acc.representative.email} • {acc.representative.phone}</div>
                           </div>
                         ) : (
-                          <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>Pending 1st sign-in</span>
+                          <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>No representative set</span>
                         )}
+                      </td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <button
+                          onClick={() => handleResetPassword(acc)}
+                          disabled={isProcessing}
+                          className="secondary-button"
+                          style={{ margin: 0, padding: '6px 12px', fontSize: '0.74rem' }}
+                        >
+                          Reset Password
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -670,6 +826,117 @@ export const UserManagementView: React.FC = () => {
               >
                 {isProcessing ? 'PROCESSING...' : 'CONFIRM ACTION'}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CREATE CHURCH REPRESENTATIVE ACCOUNT */}
+      {showCreateAccount && (
+        <div className="modal-backdrop">
+          <div className="modal-card" style={{ maxWidth: '520px' }}>
+            <div className="modal-header">
+              <h3 className="modal-title">Create Church Account</h3>
+              <p className="modal-subtitle">
+                Provisions a real login for this church. The Church Code becomes their username and
+                the password is revealed once, after creation.
+              </p>
+            </div>
+
+            <div className="modal-form">
+              <div className="form-group">
+                <label className="form-label">Church</label>
+                <select
+                  value={draftChurchId}
+                  onChange={(e) => setDraftChurchId(e.target.value)}
+                  className="form-input"
+                  disabled={isProcessing}
+                >
+                  <option value="">Select a church...</option>
+                  {churches.map((c) => {
+                    const already = churchAccounts.find((a) => a.churchId === c.id);
+                    return (
+                      <option key={c.id} value={c.id} disabled={Boolean(already)}>
+                        {c.name} ({c.code}){already ? ' — account exists' : ''}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Representative Full Name</label>
+                <input
+                  type="text"
+                  value={draftRepName}
+                  onChange={(e) => setDraftRepName(e.target.value)}
+                  placeholder="e.g. Bro. David Emmanuel"
+                  className="form-input"
+                  disabled={isProcessing}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Contact Email (optional)</label>
+                <input
+                  type="email"
+                  value={draftRepEmail}
+                  onChange={(e) => setDraftRepEmail(e.target.value)}
+                  placeholder="e.g. david.emmanuel@gmail.com"
+                  className="form-input"
+                  disabled={isProcessing}
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Contact Phone (optional)</label>
+                <input
+                  type="tel"
+                  value={draftRepPhone}
+                  onChange={(e) => setDraftRepPhone(e.target.value)}
+                  placeholder="e.g. 08031234567"
+                  className="form-input"
+                  disabled={isProcessing}
+                />
+              </div>
+
+              {draftChurchId && (
+                <div
+                  style={{
+                    background: 'rgba(0, 135, 81, 0.06)',
+                    border: '1px solid rgba(0, 135, 81, 0.2)',
+                    borderRadius: '12px',
+                    padding: '12px 14px',
+                    fontSize: '0.8rem',
+                    color: '#334155',
+                  }}
+                >
+                  The representative will sign in with username{' '}
+                  <strong style={{ color: '#008751' }}>
+                    {churches.find((c) => c.id === draftChurchId)?.code?.toUpperCase()}
+                  </strong>
+                  .
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: '10px', marginTop: '0.75rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowCreateAccount(false)}
+                  disabled={isProcessing}
+                  className="secondary-button"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCreateAccount}
+                  disabled={isProcessing || !draftChurchId}
+                  className="submit-button"
+                >
+                  {isProcessing ? 'Creating...' : 'Create Account'}
+                </button>
+              </div>
             </div>
           </div>
         </div>

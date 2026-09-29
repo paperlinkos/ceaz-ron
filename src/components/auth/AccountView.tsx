@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { DEFAULT_CHURCHES } from '../../services/organizationService';
 
 interface AccountViewProps {
-  onOpenAuth: (mode: 'login' | 'signup') => void;
+  onOpenAuth: () => void;
 }
 
 export const AccountView: React.FC<AccountViewProps> = ({ onOpenAuth }) => {
@@ -26,7 +26,7 @@ export const AccountView: React.FC<AccountViewProps> = ({ onOpenAuth }) => {
           Sign in with your Church Code or Coordinator credentials to access uploads, targets, and monitoring.
         </p>
         <div className="account-actions">
-          <button onClick={() => onOpenAuth('login')} className="submit-button">
+          <button onClick={() => onOpenAuth()} className="submit-button">
             Sign In
           </button>
         </div>

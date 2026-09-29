@@ -1,27 +1,18 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   onAuthStateChanged,
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  sendPasswordResetEmail,
   type User as FirebaseUser,
 } from 'firebase/auth';
 import { auth } from '../services/firebase';
+import { churchCodeToAuthEmail } from '../services/churchAccountShared';
 import {
-  createUserProfile,
   fetchUserProfile,
   fetchSoulWinnerProfile,
   clearCachedProfiles,
-  getCachedLocalProfiles,
 } from '../services/userService';
 import { DEFAULT_GROUPS, DEFAULT_CHURCHES } from '../services/organizationService';
-import {
-  authenticateChurchCredentials,
-  activateChurchAccount,
-  findChurchAccount,
-  type ChurchAccount,
-} from '../services/churchAccountService';
 import type { UserProfile, SoulWinnerProfile, UserRole, AccountStatus } from '../types/auth';
 
 interface AuthContextType {
@@ -40,27 +31,12 @@ interface AuthContextType {
    * rendering privileged views — prevents localStorage-role tampering.
    */
   isRoleVerified: boolean;
-  signup: (
-    name: string,
-    email: string,
-    phone: string,
-    pass: string,
-    groupId?: string,
-    churchId?: string
-  ) => Promise<void>;
-  login: (emailOrCode: string, pass: string) => Promise<{ requiresActivation?: boolean; churchAccount?: ChurchAccount } | void>;
+  /** Signs in with an official Church Code (or a raw email for admin accounts). */
   loginWithChurchCode: (codeOrEmail: string, pass: string) => Promise<{
     success: boolean;
-    requiresActivation?: boolean;
-    churchAccount?: ChurchAccount;
     error?: string;
   }>;
-  activateChurch: (
-    code: string,
-    repData: { name: string; email: string; phone: string; newPassword?: string }
-  ) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
-  resetPassword: (email: string) => Promise<void>;
   refreshProfile: () => Promise<void>;
   setDevRole: (targetRole: UserRole | 'pending' | 'logout', specificChurchOrGroupId?: string) => void;
 }
@@ -87,46 +63,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    const cached = getCachedLocalProfiles();
-    if (cached.userProfile) {
-      setUserProfile(cached.userProfile);
-      setSoulWinnerProfile(cached.soulWinnerProfile);
-      if (!currentUser) {
-        setCurrentUser({
-          uid: cached.userProfile.id,
-          email: cached.userProfile.email,
-          displayName: cached.userProfile.name,
-        } as FirebaseUser);
-      }
-    }
-
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setCurrentUser(user);
         await loadProfiles(user.uid);
         // Role is now confirmed from live Firestore — safe to grant privileged UI
         setIsRoleVerified(true);
-      } else if (!localStorage.getItem('ron_user_profile')) {
+      } else {
         setCurrentUser(null);
         setUserProfile(null);
         setSoulWinnerProfile(null);
         clearCachedProfiles();
         setIsRoleVerified(false);
-      } else {
-        // Authenticated Church Account or Dev Role Session
-        const cached = getCachedLocalProfiles();
-        if (cached.userProfile) {
-          setUserProfile(cached.userProfile);
-          setSoulWinnerProfile(cached.soulWinnerProfile);
-          setCurrentUser({
-            uid: cached.userProfile.id,
-            email: cached.userProfile.email,
-            displayName: cached.userProfile.name,
-          } as FirebaseUser);
-          setIsRoleVerified(true);
-        } else {
-          setIsRoleVerified(false);
-        }
       }
       setIsLoading(false);
     });
@@ -134,130 +82,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => unsubscribe();
   }, []);
 
-  const signup = async (
-    name: string,
-    email: string,
-    phone: string,
-    pass: string,
-    groupId?: string,
-    churchId?: string
-  ) => {
-    const cred = await createUserWithEmailAndPassword(auth, email, pass);
-    const nowIso = new Date().toISOString();
-
-    const groupObj = DEFAULT_GROUPS.find((g) => g.id === groupId);
-    const churchObj = DEFAULT_CHURCHES.find((c) => c.id === churchId);
-
-    const newProfile: UserProfile = {
-      id: cred.user.uid,
-      name: name.trim(),
-      email: email.trim().toLowerCase(),
-      phone: phone.trim(),
-      role: 'soulWinner',
-      status: 'active',
-      createdAt: nowIso,
-      updatedAt: nowIso,
-    };
-
-    const swData: Partial<SoulWinnerProfile> = {
-      zoneId: 'zone-abuja-1',
-      zoneName: 'Abuja Zone 1',
-      groupId: groupObj?.id || groupId,
-      groupName: groupObj?.name,
-      churchId: churchObj?.id || churchId,
-      churchName: churchObj?.name,
-    };
-
-    await createUserProfile(newProfile, swData);
-    await loadProfiles(cred.user.uid);
-  };
-
-  const setChurchRepSession = (account: ChurchAccount) => {
-    const repName = account.representative?.name || `${account.churchName} Representative`;
-    const repEmail = account.representative?.email || `${account.churchCode.toLowerCase()}@ron.org`;
-    const repPhone = account.representative?.phone || '';
-    const nowIso = new Date().toISOString();
-
-    const mockUid = `church-rep-${account.churchCode.toLowerCase()}`;
-    const mockUser = {
-      uid: mockUid,
-      email: repEmail,
-      displayName: repName,
-    } as FirebaseUser;
-
-    const uProf: UserProfile = {
-      id: mockUid,
-      name: repName,
-      email: repEmail,
-      phone: repPhone,
-      role: 'churchManager',
-      status: 'active',
-      createdAt: account.createdAt || nowIso,
-      updatedAt: account.updatedAt || nowIso,
-    };
-
-    const swProf: SoulWinnerProfile = {
-      id: `sw-${account.churchCode.toLowerCase()}`,
-      userId: mockUid,
-      zoneId: 'zone-abuja-1',
-      zoneName: 'Abuja Zone 1',
-      groupId: account.groupId,
-      groupName: account.groupName,
-      churchId: account.churchId,
-      churchName: account.churchName,
-      status: 'active',
-      createdAt: account.createdAt || nowIso,
-      updatedAt: account.updatedAt || nowIso,
-    };
-
-    setCurrentUser(mockUser);
-    setUserProfile(uProf);
-    setSoulWinnerProfile(swProf);
-    setIsRoleVerified(true);
-    localStorage.setItem('ron_user_profile', JSON.stringify(uProf));
-    localStorage.setItem('ron_soul_winner_profile', JSON.stringify(swProf));
-  };
-
-  const loginWithChurchCode = async (codeOrEmail: string, pass: string) => {
-    const authResult = authenticateChurchCredentials(codeOrEmail, pass);
-    if (!authResult.success || !authResult.account) {
-      return authResult;
+  /**
+   * Signs in a representative using their official Church Code.
+   * The code is mapped to a synthetic email behind the scenes so the
+   * representative never has to know or type an email address.
+   */
+  const loginWithChurchCode = async (
+    codeOrEmail: string,
+    pass: string
+  ): Promise<{ success: boolean; error?: string }> => {
+    const identifier = codeOrEmail.trim();
+    if (!identifier) {
+      return { success: false, error: 'Please enter your Church Code.' };
     }
-    if (authResult.requiresActivation) {
-      return authResult;
+    if (!pass) {
+      return { success: false, error: 'Please enter your Password.' };
     }
-    setChurchRepSession(authResult.account);
-    return { success: true, account: authResult.account };
-  };
 
-  const activateChurch = async (
-    code: string,
-    repData: { name: string; email: string; phone: string; newPassword?: string }
-  ) => {
-    const actResult = activateChurchAccount(code, repData);
-    if (!actResult.success || !actResult.account) {
-      return { success: false, error: actResult.error || 'Activation failed' };
-    }
-    setChurchRepSession(actResult.account);
-    return { success: true };
-  };
+    // Accept a raw email too, for SuperAdmin and zone accounts.
+    const loginEmail = identifier.includes('@')
+      ? identifier
+      : churchCodeToAuthEmail(identifier);
 
-  const login = async (emailOrCode: string, pass: string) => {
-    const matchingAccount = findChurchAccount(emailOrCode);
-    if (matchingAccount) {
-      const authRes = authenticateChurchCredentials(emailOrCode, pass);
-      if (!authRes.success) {
-        throw new Error(authRes.error || 'Invalid credentials');
+    try {
+      const cred = await signInWithEmailAndPassword(auth, loginEmail, pass);
+      await loadProfiles(cred.user.uid);
+      return { success: true };
+    } catch (err) {
+      const code = (err as { code?: string }).code;
+      if (
+        code === 'auth/invalid-credential' ||
+        code === 'auth/wrong-password' ||
+        code === 'auth/user-not-found' ||
+        code === 'auth/invalid-email'
+      ) {
+        return { success: false, error: 'Invalid Church Code or Password.' };
       }
-      if (authRes.requiresActivation) {
-        return { requiresActivation: true, churchAccount: authRes.account };
+      if (code === 'auth/user-disabled') {
+        return { success: false, error: 'This account has been suspended. Contact your zonal admin.' };
       }
-      setChurchRepSession(authRes.account!);
-      return;
+      if (code === 'auth/too-many-requests') {
+        return { success: false, error: 'Too many failed attempts. Please wait a moment and try again.' };
+      }
+      if (code === 'auth/network-request-failed') {
+        return { success: false, error: 'Network unavailable. Check your connection and try again.' };
+      }
+      return { success: false, error: err instanceof Error ? err.message : 'Sign-in failed.' };
     }
-
-    const cred = await signInWithEmailAndPassword(auth, emailOrCode, pass);
-    await loadProfiles(cred.user.uid);
   };
 
   const logout = async () => {
@@ -265,10 +136,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUserProfile(null);
     setSoulWinnerProfile(null);
     clearCachedProfiles();
-  };
-
-  const resetPassword = async (email: string) => {
-    await sendPasswordResetEmail(auth, email);
   };
 
   const refreshProfile = async () => {
@@ -445,12 +312,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isPendingAssignment,
         isLoading,
         isRoleVerified,
-        signup,
-        login,
         loginWithChurchCode,
-        activateChurch,
         logout,
-        resetPassword,
         refreshProfile,
         setDevRole,
       }}

@@ -21,7 +21,7 @@ import type { SoulWinningRecord } from '../../types/record';
 
 interface RoleDashboardViewProps {
   onNavigateTab: (tab: 'home' | 'record' | 'account' | 'org' | 'race' | 'about') => void;
-  onOpenAuth: (mode: 'login' | 'signup') => void;
+  onOpenAuth: () => void;
 }
 
 export const RoleDashboardView: React.FC<RoleDashboardViewProps> = ({ onNavigateTab, onOpenAuth }) => {
@@ -93,7 +93,7 @@ export const RoleDashboardView: React.FC<RoleDashboardViewProps> = ({ onNavigate
           Monitoring dashboards require an authenticated Church Representative or Pastor account.
         </p>
         <div className="sidebar-auth-btns" style={{ width: '220px', marginTop: '12px' }}>
-          <button onClick={() => onOpenAuth('login')} className="btn-green-accent btn-large">
+          <button onClick={() => onOpenAuth()} className="btn-green-accent btn-large">
             Sign In to Dashboard
           </button>
         </div>

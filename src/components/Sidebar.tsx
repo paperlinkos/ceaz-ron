@@ -20,7 +20,7 @@ import type { TabType } from './Navigation';
 interface SidebarProps {
   activeTab: TabType;
   onSelectTab: (tab: TabType) => void;
-  onOpenAuth: (mode: 'login' | 'signup') => void;
+  onOpenAuth: () => void;
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
 }
@@ -209,12 +209,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="sidebar-guest-card">
               <span className="guest-hint">Record souls under your account</span>
               <div className="sidebar-auth-btns">
-                <button onClick={() => onOpenAuth('login')} className="btn-light-secondary btn-sm">
+                <button onClick={() => onOpenAuth()} className="btn-green-accent btn-sm">
                   <LogIn size={14} />
                   <span>Sign In</span>
-                </button>
-                <button onClick={() => onOpenAuth('signup')} className="btn-green-accent btn-sm">
-                  <span>Register</span>
                 </button>
               </div>
             </div>

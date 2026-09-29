@@ -140,6 +140,18 @@ service cloud.firestore {
     }
 
     // ─────────────────────────────────────────────────────────────────────
+    // CHURCH ACCOUNTS
+    // Pre-provisioned representative accounts, created only by the
+    // /api/church-accounts function (Admin SDK, which bypasses these rules).
+    // Clients never write here — they read the list to render the admin table.
+    // Contains no password material: the password lives in Firebase Auth.
+    // ─────────────────────────────────────────────────────────────────────
+    match /churchAccounts/{churchCode} {
+      allow read: if isSuperAdmin();
+      allow write: if false;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
     // ADMIN DUPLICATE RESOLUTIONS
     // Stores "mark as unique" decisions persistently in Firestore
     // so they survive browser cache clears

@@ -30,7 +30,7 @@ const MainContent: React.FC = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
   const [authModalState, setAuthModalState] = useState<{
     isOpen: boolean;
-    mode: 'login' | 'signup';
+    mode: 'login';
   }>({ isOpen: false, mode: 'login' });
 
   const [recordSubTab, setRecordSubTab] = useState<'form' | 'history'>('form');
@@ -69,8 +69,8 @@ const MainContent: React.FC = () => {
     }
   }, []);
 
-  const handleOpenAuth = (mode: 'login' | 'signup') => {
-    setAuthModalState({ isOpen: true, mode });
+  const handleOpenAuth = () => {
+    setAuthModalState({ isOpen: true, mode: 'login' });
   };
 
   const handleSelectTab = (tab: TabType) => {
@@ -78,7 +78,7 @@ const MainContent: React.FC = () => {
     if (tab === 'record') {
       setRecordSubTab('form');
       if (!isAuthenticated) {
-        handleOpenAuth('signup');
+        handleOpenAuth();
       }
     }
   };
@@ -138,11 +138,8 @@ const MainContent: React.FC = () => {
                     Soul winning recording requires a registered and authenticated Soul Winner account. Anonymous soul submissions are forbidden.
                   </p>
                   <div className="account-actions">
-                    <button onClick={() => handleOpenAuth('login')} className="submit-button">
-                      Sign In
-                    </button>
-                    <button onClick={() => handleOpenAuth('signup')} className="secondary-button">
-                      Register Account
+                    <button onClick={() => handleOpenAuth()} className="submit-button">
+                      Sign In with your Church Code
                     </button>
                   </div>
                 </div>
@@ -242,7 +239,6 @@ const MainContent: React.FC = () => {
       <AuthModal
         isOpen={authModalState.isOpen}
         onClose={() => setAuthModalState({ isOpen: false, mode: 'login' })}
-        initialMode={authModalState.mode}
       />
 
       {/* PWA Banner */}
