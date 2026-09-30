@@ -5,6 +5,7 @@ import {
   subscribeToEventConfig,
   updateEventStatus,
   updateEventConfig,
+  triggerLiveCelebration,
   getLocalEventConfig,
 } from '../services/eventService';
 import { useAuth } from '../context/AuthContext';
@@ -119,6 +120,20 @@ export function useEventConfig() {
     [eventConfig.id, userProfile?.id]
   );
 
+  const triggerCelebration = useCallback(
+    async (message?: string, milestoneValue?: number): Promise<boolean> => {
+      const actorId = userProfile?.id || 'superAdmin';
+      const result = await triggerLiveCelebration(eventConfig.id, {
+        type: milestoneValue ? 'milestone' : 'manual',
+        milestoneValue,
+        message,
+        actorId,
+      });
+      return result.success;
+    },
+    [eventConfig.id, userProfile?.id]
+  );
+
   return {
     eventConfig,
     status: eventConfig.status,
@@ -129,5 +144,6 @@ export function useEventConfig() {
     isLoading,
     changeStatus,
     saveSettings,
+    triggerCelebration,
   };
 }

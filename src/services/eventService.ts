@@ -15,6 +15,7 @@ import {
   type EventConfig,
   type EventStatus,
   type EventAuditLog,
+  type CelebrationTrigger,
   DEFAULT_EVENT_CONFIG,
 } from '../config/eventConfig';
 import { generateUUID } from '../utils/uuid';
@@ -258,6 +259,42 @@ export async function updateEventConfig(
     };
     setLocalEventConfig(fallbackConfig);
     return { success: true, config: fallbackConfig };
+  }
+}
+
+/** Broadcast a real-time celebration or milestone event to all viewing screens */
+export async function triggerLiveCelebration(
+  eventId: string = DEFAULT_EVENT_CONFIG.id,
+  payload: {
+    type?: 'manual' | 'milestone';
+    milestoneValue?: number;
+    message?: string;
+    actorId?: string;
+  } = {}
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const docRef = doc(db, 'events', eventId);
+    const trigger: CelebrationTrigger = {
+      id: generateUUID(),
+      timestamp: Date.now(),
+      type: payload.type || 'manual',
+      message: payload.message || 'SPECIAL ZONAL CELEBRATION!',
+      triggeredBy: payload.actorId || 'superAdmin',
+      ...(payload.milestoneValue != null ? { milestoneValue: payload.milestoneValue } : {}),
+    };
+
+    await updateDoc(docRef, {
+      lastCelebrationTrigger: trigger,
+      updatedAt: new Date().toISOString(),
+    });
+
+    return { success: true };
+  } catch (err: unknown) {
+    console.error('Error triggering live celebration in Firestore:', err);
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Failed to trigger celebration',
+    };
   }
 }
 

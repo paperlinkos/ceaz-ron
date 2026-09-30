@@ -12,6 +12,8 @@ import {
   History,
   TrendingUp,
   RotateCcw,
+  PartyPopper,
+  Sparkles,
 } from 'lucide-react';
 import { useEventConfig } from '../../hooks/useEventConfig';
 import { getEventAuditLogs } from '../../services/eventService';
@@ -25,7 +27,10 @@ import {
 import { getZones, getGroups, getChurches } from '../../services/organizationService';
 
 export const EventControlView: React.FC = () => {
-  const { eventConfig, isUpcoming, isLive, isCompleted, changeStatus } = useEventConfig();
+  const { eventConfig, isUpcoming, isLive, isCompleted, changeStatus, saveSettings, triggerCelebration } = useEventConfig();
+  const [isTriggeringConfetti, setIsTriggeringConfetti] = useState<boolean>(false);
+  const [confettiSuccessMessage, setConfettiSuccessMessage] = useState<string | null>(null);
+  const currentInterval = eventConfig.milestoneInterval || 10000;
 
   const [counterData, setCounterData] = useState<ZonalCounterData>({
     totalSoulsWon: 0,
@@ -120,6 +125,43 @@ export const EventControlView: React.FC = () => {
     } finally {
       setIsProcessing(false);
     }
+  };
+
+  const handleTriggerConfetti = async () => {
+    setIsTriggeringConfetti(true);
+    try {
+      await triggerCelebration('SUPER ADMIN LIVE CELEBRATION!');
+      setConfettiSuccessMessage('🎉 Confetti Celebration broadcast to all screens in real-time!');
+      setTimeout(() => setConfettiSuccessMessage(null), 5000);
+    } catch (err) {
+      console.error('Failed to trigger celebration:', err);
+    } finally {
+      setIsTriggeringConfetti(false);
+    }
+  };
+
+  const handleSetInterval = async (interval: number) => {
+    try {
+      const maxTarget = (eventConfig.target || 50000) * 1.5;
+      const newMilestones: number[] = [];
+      for (let m = interval; m <= maxTarget; m += interval) {
+        newMilestones.push(m);
+      }
+      await saveSettings({
+        milestoneInterval: interval,
+        zonalMilestones: newMilestones,
+      });
+      setConfettiSuccessMessage(`Saved Zonal Milestones: Celebration every ${interval.toLocaleString()} Souls.`);
+      setTimeout(() => setConfettiSuccessMessage(null), 4000);
+    } catch (err) {
+      console.error('Failed to update milestone interval:', err);
+    }
+  };
+
+  const handleResetCelebratedTracker = () => {
+    localStorage.removeItem('ron_celebrated_zonal_milestones');
+    setConfettiSuccessMessage('Celebrated milestones tracker reset. Automatic celebrations can trigger again.');
+    setTimeout(() => setConfettiSuccessMessage(null), 4000);
   };
 
   const formattedStart = eventConfig.startAt
@@ -244,6 +286,137 @@ export const EventControlView: React.FC = () => {
             <span>{resetSuccessMessage}</span>
           </div>
         )}
+      </div>
+
+      {/* 2. ZONAL MILESTONES & LIVE CONFETTI CELEBRATIONS PANEL */}
+      <div
+        className="event-section-card"
+        style={{
+          background: 'linear-gradient(135deg, rgba(0, 135, 81, 0.08) 0%, rgba(15, 23, 42, 0.45) 100%)',
+          border: '1.5px solid rgba(0, 135, 81, 0.28)',
+          borderRadius: '16px',
+          padding: '24px',
+          marginBottom: '24px',
+          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '18px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <PartyPopper size={24} style={{ color: '#FFD700' }} />
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, color: '#ffffff' }}>
+                ZONAL MILESTONES & REAL-TIME CELEBRATIONS
+              </h3>
+              <p style={{ margin: '2px 0 0 0', fontSize: '0.8rem', color: '#94a3b8' }}>
+                Full-screen confetti automatically bursts every 10k souls, or tap below to trigger on-demand for the hall.
+              </p>
+            </div>
+          </div>
+
+          {/* REAL-TIME MANUAL CONFETTI TRIGGER BUTTON */}
+          <button
+            type="button"
+            onClick={handleTriggerConfetti}
+            disabled={isTriggeringConfetti}
+            style={{
+              background: 'linear-gradient(135deg, #008751 0%, #00b36b 100%)',
+              border: '1.5px solid #FFD700',
+              borderRadius: '12px',
+              padding: '10px 20px',
+              color: '#ffffff',
+              fontWeight: '900',
+              fontSize: '0.9rem',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              cursor: isTriggeringConfetti ? 'not-allowed' : 'pointer',
+              boxShadow: '0 4px 20px rgba(0, 135, 81, 0.4), 0 0 15px rgba(255, 215, 0, 0.3)',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+            }}
+          >
+            <Sparkles size={18} style={{ color: '#FFD700' }} />
+            <span>{isTriggeringConfetti ? 'BROADCASTING...' : '🎉 FIRE CONFETTI CELEBRATION NOW'}</span>
+          </button>
+        </div>
+
+        {/* FEEDBACK BANNER */}
+        {confettiSuccessMessage && (
+          <div
+            style={{
+              background: 'rgba(0, 135, 81, 0.2)',
+              border: '1px solid rgba(0, 255, 135, 0.4)',
+              borderRadius: '8px',
+              padding: '10px 16px',
+              color: '#00ff87',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              marginBottom: '16px',
+            }}
+          >
+            <CheckCircle2 size={16} />
+            <span>{confettiSuccessMessage}</span>
+          </div>
+        )}
+
+        {/* MILESTONE INTERVAL CONFIGURATOR */}
+        <div style={{ background: 'rgba(0, 0, 0, 0.25)', padding: '16px 20px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.07)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+            <div>
+              <span style={{ fontSize: '0.74rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                AUTO-CONFETTI TRIGGER FREQUENCY FOR THE ZONE:
+              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
+                {[5000, 10000, 20000, 25000].map((val) => {
+                  const isActive = currentInterval === val;
+                  return (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => handleSetInterval(val)}
+                      style={{
+                        padding: '6px 14px',
+                        borderRadius: '8px',
+                        fontSize: '0.82rem',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        background: isActive ? '#008751' : 'rgba(255, 255, 255, 0.06)',
+                        border: isActive ? '1.5px solid #00ff87' : '1px solid rgba(255, 255, 255, 0.12)',
+                        color: isActive ? '#ffffff' : '#cbd5e1',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      Every {val.toLocaleString()} Souls {isActive ? '✓ (Active)' : ''}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleResetCelebratedTracker}
+              style={{
+                background: 'transparent',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                borderRadius: '8px',
+                padding: '6px 12px',
+                fontSize: '0.75rem',
+                color: '#94a3b8',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+              }}
+              title="Reset celebrated milestones local cache to re-test auto celebrations"
+            >
+              <RotateCcw size={12} />
+              <span>Reset Celebrated Tracker</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* 2. LIVE COMMAND CENTER OPERATIONAL DASHBOARD */}

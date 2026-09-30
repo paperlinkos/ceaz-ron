@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Layers, BarChart2, Church, Trophy, Search, X, ChevronLeft, ChevronRight, LayoutList, CircleDot } from 'lucide-react';
+import { Layers, BarChart2, Church, Trophy, Search, X, ChevronLeft, ChevronRight, LayoutList, CircleDot, Sparkles } from 'lucide-react';
+import { useEventConfig } from '../../hooks/useEventConfig';
+import { fireFullCelebration } from '../../utils/confetti';
 import { AppleProgressRingsWidget } from './AppleProgressRingsWidget';
 import { UpwardRaceVisualization } from './UpwardRaceVisualization';
 import { getAllLocalRecords } from '../../services/indexedDbService';
@@ -57,6 +59,7 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
   eventStatus,
 }) => {
   const [activePage, setActivePage] = useState<'counter' | 'groups' | 'churches'>('counter');
+  const { triggerCelebration } = useEventConfig();
   const [churchStandings, setChurchStandings] = useState<ChurchStandingItem[]>(buildInitialChurchStandings);
   const [topGroups, setTopGroups] = useState<OrganizationProgress[]>([]);
   const [churchSearchQuery, setChurchSearchQuery] = useState<string>('');
@@ -75,11 +78,14 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
         setActivePage('groups');
       } else if (e.key === '3') {
         setActivePage('churches');
+      } else if (e.key === 'c' || e.key === 'C') {
+        triggerCelebration('AUDITORIUM CELEBRATION!');
+        fireFullCelebration(6000);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, triggerCelebration]);
 
   // Load standings for Page 1 & Page 3
   useEffect(() => {
@@ -178,6 +184,27 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
         >
           <Church size={18} />
           {!isDockCollapsed && <span>CHURCHES STANDINGS</span>}
+        </button>
+
+        <div className="dock-divider" />
+
+        <button
+          type="button"
+          onClick={() => {
+            triggerCelebration('AUDITORIUM CELEBRATION!');
+            fireFullCelebration(6000);
+          }}
+          className="dock-btn"
+          style={{
+            background: 'rgba(255, 215, 0, 0.12)',
+            border: '1.5px solid rgba(255, 215, 0, 0.4)',
+            color: '#FFD700',
+            boxShadow: '0 0 12px rgba(255, 215, 0, 0.2)',
+          }}
+          title="Fire Confetti Celebration (Press C)"
+        >
+          <Sparkles size={18} style={{ color: '#FFD700' }} />
+          {!isDockCollapsed && <span style={{ color: '#FFD700', fontWeight: 800 }}>FIRE CONFETTI (C)</span>}
         </button>
 
         <div className="dock-divider" />

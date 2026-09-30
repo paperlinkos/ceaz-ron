@@ -11,12 +11,15 @@ import {
   Calendar,
   Layers,
   Megaphone,
+  PartyPopper,
+  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useEventConfig } from '../../hooks/useEventConfig';
 import {
   DEFAULT_MILESTONES,
   DEFAULT_ANNOUNCEMENTS,
+  DEFAULT_ZONAL_MILESTONES,
   type MilestoneConfig,
   type EventStatus,
 } from '../../config/eventConfig';
@@ -24,7 +27,7 @@ import {
 export const CampaignSettingsView: React.FC = () => {
   const { role } = useAuth();
   const isSuperAdmin = role === 'superAdmin';
-  const { eventConfig, saveSettings } = useEventConfig();
+  const { eventConfig, saveSettings, triggerCelebration } = useEventConfig();
 
   // Form State
   const [name, setName] = useState<string>(eventConfig.name);
@@ -47,6 +50,12 @@ export const CampaignSettingsView: React.FC = () => {
       ? eventConfig.milestones
       : DEFAULT_MILESTONES
   );
+
+  // Zonal Milestones (Soul count threshold for full-screen confetti)
+  const [milestoneInterval, setMilestoneInterval] = useState<number>(
+    eventConfig.milestoneInterval || 10000
+  );
+  const [isTriggeringConfetti, setIsTriggeringConfetti] = useState<boolean>(false);
 
   // Live Broadcast Announcements (Running Ticker)
   const [announcements, setAnnouncements] = useState<string[]>(
@@ -79,6 +88,9 @@ export const CampaignSettingsView: React.FC = () => {
     setRaceThresholdGreen(eventConfig.raceThresholdGreen ?? 75);
     if (eventConfig.milestones && eventConfig.milestones.length > 0) {
       setMilestones(eventConfig.milestones);
+    }
+    if (eventConfig.milestoneInterval) {
+      setMilestoneInterval(eventConfig.milestoneInterval);
     }
     if (eventConfig.announcements && eventConfig.announcements.length > 0) {
       setAnnouncements(eventConfig.announcements);
@@ -188,6 +200,10 @@ export const CampaignSettingsView: React.FC = () => {
         raceThresholdYellow: Math.round(raceThresholdYellow),
         raceThresholdGreen: Math.round(raceThresholdGreen),
         milestones,
+        milestoneInterval: Math.round(milestoneInterval),
+        zonalMilestones: [5000, 10000, 20000, 25000].includes(milestoneInterval)
+          ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((multiplier) => multiplier * milestoneInterval)
+          : DEFAULT_ZONAL_MILESTONES,
         announcements,
       };
 
@@ -447,11 +463,98 @@ export const CampaignSettingsView: React.FC = () => {
             marginBottom: '24px',
           }}
         >
+          {/* ZONAL CONFETTI MILESTONES CARD */}
+          <div
+            style={{
+              background: 'linear-gradient(135deg, rgba(0, 135, 81, 0.12) 0%, rgba(15, 23, 42, 0.6) 100%)',
+              border: '1.5px solid rgba(0, 135, 81, 0.35)',
+              borderRadius: '12px',
+              padding: '16px 20px',
+              marginBottom: '20px',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <PartyPopper size={22} style={{ color: '#FFD700' }} />
+                <div>
+                  <h4 style={{ margin: 0, color: '#ffffff', fontSize: '1rem', fontWeight: 800 }}>
+                    ZONAL CONFETTI CELEBRATION MILESTONES
+                  </h4>
+                  <p style={{ margin: '2px 0 0 0', color: '#94a3b8', fontSize: '0.8rem' }}>
+                    Every connected screen (projectors, big screen, mobile) bursts with confetti whenever this milestone interval is reached.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={async () => {
+                  setIsTriggeringConfetti(true);
+                  try {
+                    await triggerCelebration('SUPER ADMIN LIVE CELEBRATION TEST!');
+                    setSuccessMsg('🎉 Live confetti celebration broadcast sent to all screens!');
+                    setTimeout(() => setSuccessMsg(null), 4000);
+                  } catch (err) {
+                    console.error(err);
+                  } finally {
+                    setIsTriggeringConfetti(false);
+                  }
+                }}
+                disabled={isTriggeringConfetti}
+                style={{
+                  background: 'linear-gradient(135deg, #008751 0%, #00b36b 100%)',
+                  border: '1.5px solid #FFD700',
+                  borderRadius: '10px',
+                  padding: '8px 16px',
+                  color: '#ffffff',
+                  fontWeight: 900,
+                  fontSize: '0.82rem',
+                  cursor: isTriggeringConfetti ? 'not-allowed' : 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  boxShadow: '0 4px 15px rgba(0, 135, 81, 0.3)',
+                }}
+              >
+                <Sparkles size={16} style={{ color: '#FFD700' }} />
+                <span>{isTriggeringConfetti ? 'Broadcasting...' : '🎉 Fire Confetti Now'}</span>
+              </button>
+            </div>
+
+            <div style={{ marginTop: '14px', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#cbd5e1' }}>
+                TRIGGER INTERVAL:
+              </span>
+              {[5000, 10000, 20000, 25000].map((val) => {
+                const isActive = milestoneInterval === val;
+                return (
+                  <button
+                    key={val}
+                    type="button"
+                    onClick={() => setMilestoneInterval(val)}
+                    style={{
+                      padding: '5px 12px',
+                      borderRadius: '6px',
+                      fontSize: '0.78rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      background: isActive ? '#008751' : 'rgba(255, 255, 255, 0.08)',
+                      border: isActive ? '1.5px solid #00ff87' : '1px solid rgba(255, 255, 255, 0.15)',
+                      color: isActive ? '#ffffff' : '#94a3b8',
+                    }}
+                  >
+                    Every {val.toLocaleString()} Souls {isActive ? '✓' : ''}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Trophy size={20} className="text-gold" />
               <h3 style={{ color: '#ffffff', fontSize: '1.1rem', margin: 0, fontWeight: '700' }}>
-                3. CAMPAIGN CELEBRATION MILESTONES ({milestones.length})
+                PERCENTAGE REWARD BADGES ({milestones.length})
               </h3>
             </div>
             <div style={{ display: 'flex', gap: '8px' }}>

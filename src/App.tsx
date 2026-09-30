@@ -22,6 +22,7 @@ import { useSoulRecords } from './hooks/useSoulRecords';
 import { useEventConfig } from './hooks/useEventConfig';
 import { DevRoleSwitcher } from './components/DevRoleSwitcher';
 import { LiveUpdatesTicker } from './components/common/LiveUpdatesTicker';
+import { ConfettiCelebrationOverlay } from './components/common/ConfettiCelebrationOverlay';
 import { Lock } from 'lucide-react';
 
 const MainContent: React.FC = () => {
@@ -246,6 +247,9 @@ const MainContent: React.FC = () => {
 
       {/* Dev Role Switcher — ONLY shown in development builds, never in production */}
       {import.meta.env.DEV && <DevRoleSwitcher />}
+
+      {/* Global Milestone & Confetti Celebration Overlay */}
+      <ConfettiCelebrationOverlay />
     </div>
   );
 };

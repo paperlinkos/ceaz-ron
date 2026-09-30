@@ -8,6 +8,15 @@ export interface MilestoneConfig {
   description?: string;
 }
 
+export interface CelebrationTrigger {
+  id: string;
+  timestamp: number;
+  type: 'manual' | 'milestone';
+  milestoneValue?: number;
+  message?: string;
+  triggeredBy?: string;
+}
+
 export interface EventConfig {
   id: string;
   name: string;
@@ -24,6 +33,9 @@ export interface EventConfig {
   locationPresets?: string[];
   milestones?: MilestoneConfig[];
   announcements?: string[];
+  milestoneInterval?: number; // e.g. every 10,000 souls won
+  zonalMilestones?: number[]; // e.g. [10000, 20000, 30000, 40000, 50000]
+  lastCelebrationTrigger?: CelebrationTrigger;
 }
 
 export interface EventAuditLog {
@@ -63,6 +75,8 @@ export const DEFAULT_ANNOUNCEMENTS: string[] = [
   '👑 UPWARD RACE IN MOTION: Who will claim the #1 spot in Abuja Zone 1? Standings update live!',
 ];
 
+export const DEFAULT_ZONAL_MILESTONES: number[] = [10000, 20000, 30000, 40000, 50000];
+
 export const DEFAULT_EVENT_CONFIG: EventConfig = {
   id: 'ron-2026-oct1',
   name: 'Reach Out Nigeria',
@@ -77,6 +91,8 @@ export const DEFAULT_EVENT_CONFIG: EventConfig = {
   locationPresets: DEFAULT_LOCATION_PRESETS,
   milestones: DEFAULT_MILESTONES,
   announcements: DEFAULT_ANNOUNCEMENTS,
+  milestoneInterval: 10000,
+  zonalMilestones: DEFAULT_ZONAL_MILESTONES,
 };
 
 export const REACH_OUT_NIGERIA_EVENT = {

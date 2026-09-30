@@ -39,3 +39,12 @@ CHURCH-LOGIN-CREDENTIALS.md
 *.local.json
 .vercel
 .env*
+*.png
+*_credentials.*
+all_campaign_accounts_credentials.csv
+group_and_zonal_accounts_credentials.csv
+church_accounts_credentials.csv
+church_accounts_credentials.json
+auth_users.json
+future.md
+
