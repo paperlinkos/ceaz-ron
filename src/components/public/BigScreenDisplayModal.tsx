@@ -124,7 +124,15 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="big-screen-backdrop" role="dialog" aria-modal="true" aria-label="Big Screen Live Display Mode">
+    <div
+      className="big-screen-backdrop"
+      style={{
+        overflowY: activePage === 'churches' ? 'auto' : 'hidden',
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Big Screen Live Display Mode"
+    >
       {/* LEFT SIDE COLLAPSIBLE PROJECTOR NAVIGATION DOCK */}
       <div className={`big-screen-left-dock ${isDockCollapsed ? 'dock-collapsed' : 'dock-expanded'}`}>
         <button
@@ -753,14 +761,15 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
             <div style={{ marginTop: '12px' }}>
               <LiveSurgeLineGraph
                 records={counterData.allRecords}
-                isFullScreenMode={true}
+                isFullScreenMode={false}
+                singleCardMode={true}
                 defaultMode="velocity"
               />
             </div>
           </div>
         )}
 
-        {/* PAGE 4: LIVE SOUL SURGE LINE GRAPH (LARGE FULL SCREEN VIEW) */}
+        {/* PAGE 4: LIVE SOUL SURGE LINE GRAPH (LARGE FULL SCREEN SINGLE CARD VIEW - NO SCROLLING) */}
         {activePage === 'timeline' && (
           <div
             className="big-screen-page-timeline"
@@ -768,13 +777,15 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
               flex: 1,
               display: 'flex',
               flexDirection: 'column',
-              height: '100%',
-              minHeight: 'calc(100vh - 160px)',
+              height: 'calc(100vh - 130px)',
+              maxHeight: 'calc(100vh - 130px)',
+              overflow: 'hidden',
             }}
           >
             <LiveSurgeLineGraph
               records={counterData.allRecords}
               isFullScreenMode={false}
+              singleCardMode={true}
               defaultMode="velocity"
             />
           </div>

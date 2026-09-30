@@ -26,6 +26,7 @@ interface LiveSurgeLineGraphProps {
   title?: string;
   subtitle?: string;
   defaultMode?: 'velocity' | 'cumulative';
+  singleCardMode?: boolean;
 }
 
 export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
@@ -35,6 +36,7 @@ export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
   title = 'CAMPAIGN SOUL SURGE & INFLOW TIMELINE',
   subtitle = 'Real-time velocity tracking showing field outreach spikes, locations, and lead groups',
   defaultMode = 'velocity',
+  singleCardMode = false,
 }) => {
   const [viewMode, setViewMode] = useState<'velocity' | 'cumulative'>(defaultMode);
   const [useSimulationData, setUseSimulationData] = useState<boolean>(false);
@@ -167,19 +169,19 @@ export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`live-surge-graph-container ${isFullScreenMode ? 'fullscreen-surge-view' : ''}`}
+      className={`live-surge-graph-container ${isFullScreenMode ? 'fullscreen-surge-view' : ''} ${singleCardMode ? 'single-card-mode' : ''}`}
       style={{
         width: '100%',
         height: '100%',
-        minHeight: isFullScreenMode ? '100vh' : '520px',
+        maxHeight: isFullScreenMode ? '100vh' : (singleCardMode ? 'calc(100vh - 130px)' : 'none'),
+        minHeight: singleCardMode ? 'auto' : (isFullScreenMode ? '100vh' : '520px'),
         display: 'flex',
         flexDirection: 'column',
         background: 'linear-gradient(180deg, #090e17 0%, #0d1523 50%, #070b12 100%)',
         color: '#f8fafc',
         fontFamily: "'Inter', -apple-system, sans-serif",
         position: 'relative',
-        overflowX: 'hidden',
-        overflowY: 'auto',
+        overflow: singleCardMode ? 'hidden' : 'auto',
         borderRadius: isFullScreenMode ? '0' : '20px',
         border: isFullScreenMode ? 'none' : '1.5px solid rgba(0, 135, 81, 0.25)',
         boxShadow: isFullScreenMode ? 'none' : '0 20px 50px rgba(0, 0, 0, 0.4)',
@@ -214,353 +216,590 @@ export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
       />
 
       {/* HEADER SECTION WITH METRICS AND CONTROL TOOLBAR */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 2,
-          padding: '20px 28px 16px 28px',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          background: 'rgba(10, 15, 29, 0.75)',
-          backdropFilter: 'blur(14px)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-        }}
-      >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-              <div
+      {singleCardMode ? (
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 2,
+            padding: '10px 20px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+            background: 'rgba(10, 15, 29, 0.85)',
+            backdropFilter: 'blur(14px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '12px',
+          }}
+        >
+          {/* TITLE & LIVE BADGE */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'rgba(0, 255, 135, 0.15)',
+                border: '1px solid rgba(0, 255, 135, 0.3)',
+                padding: '3px 8px',
+                borderRadius: '12px',
+                color: '#00ff87',
+                fontSize: '0.68rem',
+                fontWeight: 800,
+                letterSpacing: '0.05em',
+                fontFamily: "'Share Tech Mono', monospace",
+              }}
+            >
+              <span
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  background: 'rgba(0, 255, 135, 0.15)',
-                  border: '1px solid rgba(0, 255, 135, 0.3)',
-                  padding: '3px 10px',
-                  borderRadius: '16px',
-                  color: '#00ff87',
-                  fontSize: '0.72rem',
-                  fontWeight: 800,
-                  letterSpacing: '0.05em',
-                  fontFamily: "'Share Tech Mono', monospace",
+                  width: '7px',
+                  height: '7px',
+                  borderRadius: '50%',
+                  background: '#00ff87',
+                  boxShadow: '0 0 8px #00ff87',
+                  display: 'inline-block',
+                  animation: 'pulse 1.8s infinite',
                 }}
-              >
-                <span
-                  style={{
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    background: '#00ff87',
-                    boxShadow: '0 0 10px #00ff87',
-                    display: 'inline-block',
-                    animation: 'pulse 1.8s infinite',
-                  }}
-                />
-                <span>LIVE STREAM ACTIVE</span>
-              </div>
-              <h2
-                style={{
-                  margin: 0,
-                  fontSize: isFullScreenMode ? '1.5rem' : '1.25rem',
-                  fontWeight: 900,
-                  color: '#ffffff',
-                  letterSpacing: '-0.02em',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                }}
-              >
-                <Activity size={24} style={{ color: '#00ff87' }} />
-                <span>{title}</span>
-              </h2>
+              />
+              <span>LIVE</span>
             </div>
-            <p style={{ margin: '4px 0 0 0', color: '#94a3b8', fontSize: '0.84rem' }}>
-              {subtitle}
-            </p>
+
+            <h2
+              style={{
+                margin: 0,
+                fontSize: '1.05rem',
+                fontWeight: 900,
+                color: '#ffffff',
+                letterSpacing: '-0.02em',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}
+            >
+              <Activity size={18} style={{ color: '#00ff87' }} />
+              <span>{title}</span>
+            </h2>
+          </div>
+
+          {/* INLINE COMPACT KPI PILLS */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'rgba(15, 23, 42, 0.8)',
+                border: '1px solid rgba(0, 255, 135, 0.25)',
+                padding: '4px 10px',
+                borderRadius: '8px',
+              }}
+            >
+              <Zap size={14} style={{ color: '#00ff87' }} />
+              <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700 }}>PACE:</span>
+              <strong style={{ fontSize: '0.86rem', color: '#00ff87', fontFamily: "'Orbitron', sans-serif" }}>
+                {timeline.currentVelocityPerHour} <span style={{ fontSize: '0.68rem', color: '#cbd5e1' }}>/HR</span>
+              </strong>
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'rgba(15, 23, 42, 0.8)',
+                border: '1px solid rgba(245, 158, 11, 0.3)',
+                padding: '4px 10px',
+                borderRadius: '8px',
+              }}
+            >
+              <Flame size={14} style={{ color: '#fbbf24' }} />
+              <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700 }}>PEAK:</span>
+              <strong style={{ fontSize: '0.86rem', color: '#fbbf24', fontFamily: "'Orbitron', sans-serif" }}>
+                +{timeline.peakBucket ? timeline.peakBucket.soulsCount.toLocaleString() : 0}
+              </strong>
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'rgba(15, 23, 42, 0.8)',
+                border: '1px solid rgba(0, 210, 255, 0.25)',
+                padding: '4px 10px',
+                borderRadius: '8px',
+              }}
+            >
+              <TrendingUp size={14} style={{ color: '#00d2ff' }} />
+              <span style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 700 }}>TOTAL:</span>
+              <strong style={{ fontSize: '0.86rem', color: '#ffffff', fontFamily: "'Orbitron', sans-serif" }}>
+                {timeline.totalSouls.toLocaleString()}
+              </strong>
+            </div>
           </div>
 
           {/* VIEW TOGGLES & ACTIONS */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-            {/* SIMULATION / LIVE TOGGLE */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <button
               type="button"
               onClick={() => setUseSimulationData(!useSimulationData)}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
+                gap: '5px',
                 background: useSimulationData ? 'rgba(245, 158, 11, 0.15)' : 'rgba(255, 255, 255, 0.06)',
                 border: useSimulationData ? '1px solid #f59e0b' : '1px solid rgba(255, 255, 255, 0.15)',
                 color: useSimulationData ? '#fbbf24' : '#cbd5e1',
-                padding: '6px 12px',
-                borderRadius: '10px',
-                fontSize: '0.76rem',
+                padding: '5px 10px',
+                borderRadius: '8px',
+                fontSize: '0.72rem',
                 fontWeight: 700,
                 cursor: 'pointer',
-                transition: 'all 0.2s ease',
               }}
-              title="Toggle between live recorded entries and full campaign surge simulation"
+              title="Toggle demo simulation"
             >
-              <Sparkles size={14} />
-              <span>{useSimulationData ? 'DEMO SIMULATION ACTIVE' : 'LIVE FIRESTORE ENTRIES'}</span>
+              <Sparkles size={13} />
+              <span>{useSimulationData ? 'DEMO' : 'LIVE'}</span>
             </button>
 
-            {/* INTERVAL GRANULARITY SELECTOR */}
             <div
               style={{
                 display: 'flex',
                 background: 'rgba(15, 23, 42, 0.8)',
                 border: '1px solid rgba(255, 255, 255, 0.12)',
-                borderRadius: '10px',
-                padding: '3px',
+                borderRadius: '8px',
+                padding: '2px',
               }}
             >
               <button
                 type="button"
                 onClick={() => setGranularity(60)}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  padding: '6px 10px',
-                  borderRadius: '7px',
+                  padding: '4px 8px',
+                  borderRadius: '6px',
                   background: granularity === 60 ? 'rgba(0, 255, 135, 0.2)' : 'transparent',
                   color: granularity === 60 ? '#00ff87' : '#94a3b8',
                   border: 'none',
-                  fontSize: '0.74rem',
+                  fontSize: '0.7rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                 }}
               >
-                1 HR
+                1H
               </button>
               <button
                 type="button"
                 onClick={() => setGranularity(30)}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  padding: '6px 10px',
-                  borderRadius: '7px',
+                  padding: '4px 8px',
+                  borderRadius: '6px',
                   background: granularity === 30 ? 'rgba(0, 255, 135, 0.2)' : 'transparent',
                   color: granularity === 30 ? '#00ff87' : '#94a3b8',
                   border: 'none',
-                  fontSize: '0.74rem',
+                  fontSize: '0.7rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                 }}
               >
-                30 MIN
+                30M
               </button>
             </div>
 
-            {/* VELOCITY VS CUMULATIVE MODE SWITCH */}
             <div
               style={{
                 display: 'flex',
                 background: 'rgba(15, 23, 42, 0.8)',
                 border: '1px solid rgba(255, 255, 255, 0.12)',
-                borderRadius: '10px',
-                padding: '3px',
+                borderRadius: '8px',
+                padding: '2px',
               }}
             >
               <button
                 type="button"
                 onClick={() => setViewMode('velocity')}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  borderRadius: '7px',
+                  padding: '4px 8px',
+                  borderRadius: '6px',
                   background: viewMode === 'velocity' ? 'linear-gradient(135deg, #008751, #00b36b)' : 'transparent',
                   color: viewMode === 'velocity' ? '#ffffff' : '#94a3b8',
                   border: 'none',
-                  fontSize: '0.78rem',
+                  fontSize: '0.7rem',
                   fontWeight: 800,
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
                 }}
               >
-                <Zap size={14} />
-                <span>SURGE SPIKES</span>
+                SPIKES
               </button>
               <button
                 type="button"
                 onClick={() => setViewMode('cumulative')}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  borderRadius: '7px',
+                  padding: '4px 8px',
+                  borderRadius: '6px',
                   background: viewMode === 'cumulative' ? 'linear-gradient(135deg, #008751, #00b36b)' : 'transparent',
                   color: viewMode === 'cumulative' ? '#ffffff' : '#94a3b8',
                   border: 'none',
-                  fontSize: '0.78rem',
+                  fontSize: '0.7rem',
                   fontWeight: 800,
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
                 }}
               >
-                <TrendingUp size={14} />
-                <span>CUMULATIVE GROWTH</span>
+                GROWTH
               </button>
             </div>
+          </div>
+        </div>
+      ) : (
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 2,
+            padding: '20px 28px 16px 28px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+            background: 'rgba(10, 15, 29, 0.75)',
+            backdropFilter: 'blur(14px)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '16px',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    background: 'rgba(0, 255, 135, 0.15)',
+                    border: '1px solid rgba(0, 255, 135, 0.3)',
+                    padding: '3px 10px',
+                    borderRadius: '16px',
+                    color: '#00ff87',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    letterSpacing: '0.05em',
+                    fontFamily: "'Share Tech Mono', monospace",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      background: '#00ff87',
+                      boxShadow: '0 0 10px #00ff87',
+                      display: 'inline-block',
+                      animation: 'pulse 1.8s infinite',
+                    }}
+                  />
+                  <span>LIVE STREAM ACTIVE</span>
+                </div>
+                <h2
+                  style={{
+                    margin: 0,
+                    fontSize: isFullScreenMode ? '1.5rem' : '1.25rem',
+                    fontWeight: 900,
+                    color: '#ffffff',
+                    letterSpacing: '-0.02em',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
+                  <Activity size={24} style={{ color: '#00ff87' }} />
+                  <span>{title}</span>
+                </h2>
+              </div>
+              <p style={{ margin: '4px 0 0 0', color: '#94a3b8', fontSize: '0.84rem' }}>
+                {subtitle}
+              </p>
+            </div>
 
-            {/* CLOSE FULL SCREEN IF APPLICABLE */}
-            {isFullScreenMode && onCloseFullScreen && (
+            {/* VIEW TOGGLES & ACTIONS */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+              {/* SIMULATION / LIVE TOGGLE */}
               <button
                 type="button"
-                onClick={onCloseFullScreen}
+                onClick={() => setUseSimulationData(!useSimulationData)}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
-                  background: 'rgba(239, 68, 68, 0.15)',
-                  border: '1px solid rgba(239, 68, 68, 0.4)',
-                  color: '#ef4444',
-                  padding: '6px 14px',
+                  background: useSimulationData ? 'rgba(245, 158, 11, 0.15)' : 'rgba(255, 255, 255, 0.06)',
+                  border: useSimulationData ? '1px solid #f59e0b' : '1px solid rgba(255, 255, 255, 0.15)',
+                  color: useSimulationData ? '#fbbf24' : '#cbd5e1',
+                  padding: '6px 12px',
                   borderRadius: '10px',
-                  fontSize: '0.8rem',
-                  fontWeight: 800,
+                  fontSize: '0.76rem',
+                  fontWeight: 700,
                   cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                }}
+                title="Toggle between live recorded entries and full campaign surge simulation"
+              >
+                <Sparkles size={14} />
+                <span>{useSimulationData ? 'DEMO SIMULATION ACTIVE' : 'LIVE FIRESTORE ENTRIES'}</span>
+              </button>
+
+              {/* INTERVAL GRANULARITY SELECTOR */}
+              <div
+                style={{
+                  display: 'flex',
+                  background: 'rgba(15, 23, 42, 0.8)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '10px',
+                  padding: '3px',
                 }}
               >
-                <X size={16} />
-                <span>EXIT FULL SCREEN</span>
-              </button>
-            )}
+                <button
+                  type="button"
+                  onClick={() => setGranularity(60)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '6px 10px',
+                    borderRadius: '7px',
+                    background: granularity === 60 ? 'rgba(0, 255, 135, 0.2)' : 'transparent',
+                    color: granularity === 60 ? '#00ff87' : '#94a3b8',
+                    border: 'none',
+                    fontSize: '0.74rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                  }}
+                >
+                  1 HR
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setGranularity(30)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '6px 10px',
+                    borderRadius: '7px',
+                    background: granularity === 30 ? 'rgba(0, 255, 135, 0.2)' : 'transparent',
+                    color: granularity === 30 ? '#00ff87' : '#94a3b8',
+                    border: 'none',
+                    fontSize: '0.74rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                  }}
+                >
+                  30 MIN
+                </button>
+              </div>
+
+              {/* VELOCITY VS CUMULATIVE MODE SWITCH */}
+              <div
+                style={{
+                  display: 'flex',
+                  background: 'rgba(15, 23, 42, 0.8)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '10px',
+                  padding: '3px',
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => setViewMode('velocity')}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    borderRadius: '7px',
+                    background: viewMode === 'velocity' ? 'linear-gradient(135deg, #008751, #00b36b)' : 'transparent',
+                    color: viewMode === 'velocity' ? '#ffffff' : '#94a3b8',
+                    border: 'none',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  <Zap size={14} />
+                  <span>SURGE SPIKES</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode('cumulative')}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    borderRadius: '7px',
+                    background: viewMode === 'cumulative' ? 'linear-gradient(135deg, #008751, #00b36b)' : 'transparent',
+                    color: viewMode === 'cumulative' ? '#ffffff' : '#94a3b8',
+                    border: 'none',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  <TrendingUp size={14} />
+                  <span>CUMULATIVE GROWTH</span>
+                </button>
+              </div>
+
+              {/* CLOSE FULL SCREEN IF APPLICABLE */}
+              {isFullScreenMode && onCloseFullScreen && (
+                <button
+                  type="button"
+                  onClick={onCloseFullScreen}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    background: 'rgba(239, 68, 68, 0.15)',
+                    border: '1px solid rgba(239, 68, 68, 0.4)',
+                    color: '#ef4444',
+                    padding: '6px 14px',
+                    borderRadius: '10px',
+                    fontSize: '0.8rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <X size={16} />
+                  <span>EXIT FULL SCREEN</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* HIGH-LEVEL KPI CHIPS ROW */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+            <div
+              style={{
+                background: 'rgba(15, 23, 42, 0.7)',
+                border: '1px solid rgba(0, 255, 135, 0.2)',
+                borderRadius: '12px',
+                padding: '10px 16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+              }}
+            >
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '10px',
+                  background: 'rgba(0, 255, 135, 0.15)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#00ff87',
+                }}
+              >
+                <Zap size={20} />
+              </div>
+              <div>
+                <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>
+                  CURRENT INFLOW PACE
+                </div>
+                <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#00ff87', fontFamily: "'Orbitron', sans-serif" }}>
+                  {timeline.currentVelocityPerHour} <span style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>SOULS/HR</span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: 'rgba(15, 23, 42, 0.7)',
+                border: '1px solid rgba(245, 158, 11, 0.25)',
+                borderRadius: '12px',
+                padding: '10px 16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+              }}
+            >
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '10px',
+                  background: 'rgba(245, 158, 11, 0.15)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#fbbf24',
+                }}
+              >
+                <Flame size={20} />
+              </div>
+              <div>
+                <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>
+                  PEAK SPIKE INTENSITY
+                </div>
+                <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#fbbf24', fontFamily: "'Orbitron', sans-serif" }}>
+                  +{timeline.peakBucket ? timeline.peakBucket.soulsCount.toLocaleString() : 0}{' '}
+                  <span style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>SOULS IN 1 HR</span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: 'rgba(15, 23, 42, 0.7)',
+                border: '1px solid rgba(0, 210, 255, 0.2)',
+                borderRadius: '12px',
+                padding: '10px 16px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+              }}
+            >
+              <div
+                style={{
+                  width: '38px',
+                  height: '38px',
+                  borderRadius: '10px',
+                  background: 'rgba(0, 210, 255, 0.15)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#00d2ff',
+                }}
+              >
+                <TrendingUp size={20} />
+              </div>
+              <div>
+                <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>
+                  TOTAL LOGGED ON TIMELINE
+                </div>
+                <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', fontFamily: "'Orbitron', sans-serif" }}>
+                  {timeline.totalSouls.toLocaleString()}{' '}
+                  <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>SOULS</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* HIGH-LEVEL KPI CHIPS ROW */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
-          <div
-            style={{
-              background: 'rgba(15, 23, 42, 0.7)',
-              border: '1px solid rgba(0, 255, 135, 0.2)',
-              borderRadius: '12px',
-              padding: '10px 16px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-            }}
-          >
-            <div
-              style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: '10px',
-                background: 'rgba(0, 255, 135, 0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#00ff87',
-              }}
-            >
-              <Zap size={20} />
-            </div>
-            <div>
-              <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>
-                CURRENT INFLOW PACE
-              </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#00ff87', fontFamily: "'Orbitron', sans-serif" }}>
-                {timeline.currentVelocityPerHour} <span style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>SOULS/HR</span>
-              </div>
-            </div>
-          </div>
-
-          <div
-            style={{
-              background: 'rgba(15, 23, 42, 0.7)',
-              border: '1px solid rgba(245, 158, 11, 0.25)',
-              borderRadius: '12px',
-              padding: '10px 16px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-            }}
-          >
-            <div
-              style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: '10px',
-                background: 'rgba(245, 158, 11, 0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fbbf24',
-              }}
-            >
-              <Flame size={20} />
-            </div>
-            <div>
-              <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>
-                PEAK SPIKE INTENSITY
-              </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#fbbf24', fontFamily: "'Orbitron', sans-serif" }}>
-                +{timeline.peakBucket ? timeline.peakBucket.soulsCount.toLocaleString() : 0}{' '}
-                <span style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>SOULS IN 1 HR</span>
-              </div>
-            </div>
-          </div>
-
-          <div
-            style={{
-              background: 'rgba(15, 23, 42, 0.7)',
-              border: '1px solid rgba(0, 210, 255, 0.2)',
-              borderRadius: '12px',
-              padding: '10px 16px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-            }}
-          >
-            <div
-              style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: '10px',
-                background: 'rgba(0, 210, 255, 0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#00d2ff',
-              }}
-            >
-              <TrendingUp size={20} />
-            </div>
-            <div>
-              <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>
-                TOTAL LOGGED ON TIMELINE
-              </div>
-              <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff', fontFamily: "'Orbitron', sans-serif" }}>
-                {timeline.totalSouls.toLocaleString()}{' '}
-                <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>SOULS</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* MAIN GRAPH AREA + REALTIME SPIKE ANNOTATIONS */}
       <div
         style={{
           position: 'relative',
           flex: 1,
+          minHeight: 0,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          padding: '10px 24px',
+          padding: singleCardMode ? '6px 20px' : '10px 24px',
           zIndex: 1,
+          overflow: 'hidden',
         }}
       >
         {/* INTERACTIVE SVG LINE GRAPH */}
-        <div style={{ width: '100%', height: isFullScreenMode ? '340px' : '280px', minHeight: '260px', position: 'relative' }}>
+        <div style={{ width: '100%', height: singleCardMode ? '100%' : (isFullScreenMode ? '340px' : '280px'), minHeight: singleCardMode ? '160px' : '260px', position: 'relative' }}>
           <svg
             viewBox={`0 0 ${chartWidth} ${chartHeight}`}
             style={{
@@ -778,7 +1017,7 @@ export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
         </div>
 
         {/* ROOT CAUSE POPUP CARD ("ON THE POINTS ON THE GRAPH YOU CAN SEE WHAT CAUSED IT") */}
-        {activePoint && (
+        {!singleCardMode && activePoint && (
           <div
             style={{
               position: 'relative',
@@ -967,6 +1206,125 @@ export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
           </div>
         )}
       </div>
+
+      {/* COMPACT DOCKED ROOT CAUSE INSPECTOR BAR FOR SINGLE CARD MODE */}
+      {singleCardMode && (
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 2,
+            background: 'linear-gradient(90deg, rgba(15, 23, 42, 0.95) 0%, rgba(13, 38, 27, 0.95) 100%)',
+            borderTop: '1px solid rgba(0, 255, 135, 0.25)',
+            padding: '8px 18px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
+            backdropFilter: 'blur(14px)',
+            minHeight: '58px',
+          }}
+        >
+          {activePoint ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', flex: 1, minWidth: 0 }}>
+              {/* TIME & SPIKE PILL */}
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '3px 8px',
+                  borderRadius: '6px',
+                  background: activePoint.spikeIntensity === 'peak'
+                    ? 'rgba(245, 158, 11, 0.25)'
+                    : activePoint.isSpike
+                    ? 'rgba(0, 255, 135, 0.2)'
+                    : 'rgba(255, 255, 255, 0.1)',
+                  color: activePoint.spikeIntensity === 'peak'
+                    ? '#ffd700'
+                    : activePoint.isSpike
+                    ? '#00ff87'
+                    : '#cbd5e1',
+                  border: activePoint.isSpike ? '1px solid currentColor' : 'none',
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  fontFamily: "'Share Tech Mono', monospace",
+                }}
+              >
+                <Clock size={12} />
+                <span>{activePoint.timeLabel}</span>
+                {activePoint.isSpike && (
+                  <span>• {activePoint.spikeIntensity === 'peak' ? '👑 PEAK' : '⚡ SURGE'} +{activePoint.soulsCount}</span>
+                )}
+              </div>
+
+              {/* PRIMARY DRIVER */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem' }}>
+                <Building2 size={14} style={{ color: '#00ff87' }} />
+                <span style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 800 }}>DRIVER:</span>
+                <strong style={{ color: '#ffffff' }}>{activePoint.spikeCause.primaryGroup}</strong>
+                <span style={{ color: '#94a3b8', fontSize: '0.74rem' }}>
+                  ({activePoint.spikeCause.primaryChurch} • {activePoint.spikeCause.primaryGroupCount} souls, {activePoint.spikeCause.primaryGroupPercentage}%)
+                </span>
+              </div>
+
+              {/* LOCATIONS */}
+              {activePoint.spikeCause.topLocations.length > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.78rem' }}>
+                  <MapPin size={13} style={{ color: '#00ff87' }} />
+                  <span style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 800 }}>LOCATIONS:</span>
+                  <span style={{ color: '#cbd5e1' }}>
+                    {activePoint.spikeCause.topLocations.slice(0, 2).map((l) => `${l.location} (${l.count})`).join(', ')}
+                  </span>
+                </div>
+              )}
+
+              {/* SOUL WINNERS */}
+              {activePoint.spikeCause.topSoulWinners.length > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.78rem' }}>
+                  <Sparkles size={13} style={{ color: '#fbbf24' }} />
+                  <span style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 800 }}>LEADERS:</span>
+                  <span style={{ color: '#cbd5e1' }}>
+                    {activePoint.spikeCause.topSoulWinners.slice(0, 2).map((w) => w.name).join(', ')}
+                  </span>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#94a3b8', fontSize: '0.8rem' }}>
+              <Activity size={15} style={{ color: '#00ff87' }} />
+              <span>Hover or click any node point on the graph to inspect what caused that soul surge</span>
+            </div>
+          )}
+
+          {activePoint && (
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedBucket(activePoint);
+                setIsDrawerOpen(true);
+              }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px',
+                background: 'rgba(0, 135, 81, 0.3)',
+                border: '1px solid rgba(0, 255, 135, 0.4)',
+                color: '#00ff87',
+                padding: '5px 12px',
+                borderRadius: '8px',
+                fontSize: '0.74rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <span>VIEW ALL {activePoint.soulsCount} ENTRIES</span>
+              <ChevronRight size={13} />
+            </button>
+          )}
+        </div>
+      )}
 
       {/* DETAILED SURGE LOG INSPECTION DRAWER / MODAL */}
       {isDrawerOpen && selectedBucket && (
