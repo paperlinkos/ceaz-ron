@@ -1210,6 +1210,7 @@ export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
       {/* COMPACT DOCKED ROOT CAUSE INSPECTOR BAR FOR SINGLE CARD MODE */}
       {singleCardMode && (
         <div
+          className="surge-driver-footer-banner"
           style={{
             position: 'relative',
             zIndex: 2,
@@ -1225,7 +1226,7 @@ export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
           }}
         >
           {activePoint ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', flex: 1, minWidth: 0 }}>
+            <div className="surge-driver-info-block" style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', flex: 1, minWidth: 0 }}>
               {/* TIME & SPIKE PILL */}
               <div
                 style={{
@@ -1258,8 +1259,8 @@ export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
               </div>
 
               {/* PRIMARY DRIVER */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem' }}>
-                <Building2 size={14} style={{ color: '#00ff87' }} />
+              <div className="surge-driver-item" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', flexWrap: 'wrap' }}>
+                <Building2 size={14} style={{ color: '#00ff87', flexShrink: 0 }} />
                 <span style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 800 }}>DRIVER:</span>
                 <strong style={{ color: '#ffffff' }}>{activePoint.spikeCause.primaryGroup}</strong>
                 <span style={{ color: '#94a3b8', fontSize: '0.74rem' }}>
@@ -1269,8 +1270,8 @@ export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
 
               {/* LOCATIONS */}
               {activePoint.spikeCause.topLocations.length > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.78rem' }}>
-                  <MapPin size={13} style={{ color: '#00ff87' }} />
+                <div className="surge-driver-item" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.78rem', flexWrap: 'wrap' }}>
+                  <MapPin size={13} style={{ color: '#00ff87', flexShrink: 0 }} />
                   <span style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 800 }}>LOCATIONS:</span>
                   <span style={{ color: '#cbd5e1' }}>
                     {activePoint.spikeCause.topLocations.slice(0, 2).map((l) => `${l.location} (${l.count})`).join(', ')}
@@ -1280,8 +1281,8 @@ export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
 
               {/* SOUL WINNERS */}
               {activePoint.spikeCause.topSoulWinners.length > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.78rem' }}>
-                  <Sparkles size={13} style={{ color: '#fbbf24' }} />
+                <div className="surge-driver-item" style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.78rem', flexWrap: 'wrap' }}>
+                  <Sparkles size={13} style={{ color: '#fbbf24', flexShrink: 0 }} />
                   <span style={{ color: '#94a3b8', fontSize: '0.7rem', fontWeight: 800 }}>LEADERS:</span>
                   <span style={{ color: '#cbd5e1' }}>
                     {activePoint.spikeCause.topSoulWinners.slice(0, 2).map((w) => w.name).join(', ')}
@@ -1299,6 +1300,7 @@ export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
           {activePoint && (
             <button
               type="button"
+              className="surge-driver-action-btn"
               onClick={() => {
                 setSelectedBucket(activePoint);
                 setIsDrawerOpen(true);
@@ -1310,13 +1312,14 @@ export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
                 background: 'rgba(0, 135, 81, 0.3)',
                 border: '1px solid rgba(0, 255, 135, 0.4)',
                 color: '#00ff87',
-                padding: '5px 12px',
+                padding: '6px 14px',
                 borderRadius: '8px',
                 fontSize: '0.74rem',
                 fontWeight: 800,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
                 transition: 'all 0.2s ease',
+                flexShrink: 0,
               }}
             >
               <span>VIEW ALL {activePoint.soulsCount} ENTRIES</span>

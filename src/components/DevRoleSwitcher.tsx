@@ -66,7 +66,7 @@ export const DevRoleSwitcher: React.FC = () => {
     <div
       style={{
         position: 'fixed',
-        bottom: '16px',
+        bottom: '46px',
         right: '16px',
         zIndex: 9999,
         fontFamily: 'sans-serif',

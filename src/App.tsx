@@ -5,7 +5,7 @@ import { StatusBanner } from './components/StatusBanner';
 import { SoulRecordForm } from './components/SoulRecordForm';
 import { RecentSubmissions } from './components/RecentSubmissions';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt';
-import { Navigation, type TabType } from './components/Navigation';
+import { type TabType } from './components/Navigation';
 import { Sidebar } from './components/Sidebar';
 import { PublicHomeView } from './components/public/PublicHomeView';
 import { UpwardRaceView } from './components/public/UpwardRaceView';
@@ -29,6 +29,7 @@ const MainContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [adminTab, setAdminTab] = useState<'org' | 'users'>('org');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
   const [authModalState, setAuthModalState] = useState<{
     isOpen: boolean;
     mode: 'login';
@@ -87,23 +88,27 @@ const MainContent: React.FC = () => {
 
   return (
     <div className={`layout-shell ${isSidebarCollapsed ? 'layout-sidebar-collapsed' : ''}`}>
-      {/* Left Collapsible Sidebar (Desktop) */}
+      {/* Left Collapsible Sidebar (Desktop) & Slide-out Drawer (Mobile) */}
       <Sidebar
         activeTab={activeTab}
         onSelectTab={handleSelectTab}
         onOpenAuth={handleOpenAuth}
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        isMobileOpen={isMobileDrawerOpen}
+        onCloseMobile={() => setIsMobileDrawerOpen(false)}
       />
 
       {/* Main Content Stage Area */}
       <div className="main-stage">
-        {/* App Header (Mobile & Device Bar) */}
+        {/* App Header (Mobile & Device Bar with Hamburger & Sign In) */}
         <div className="mobile-only-header">
           <Header
             pendingCount={pendingRecordsCount}
             syncedCount={syncedRecordsCount}
             onManualSync={manualSync}
+            onOpenMobileDrawer={() => setIsMobileDrawerOpen(true)}
+            onOpenAuth={handleOpenAuth}
           />
         </div>
 
@@ -226,11 +231,6 @@ const MainContent: React.FC = () => {
 
         {/* Live Running Updates Ticker docked sticky footer at the bottom of main stage */}
         <LiveUpdatesTicker isSidebarCollapsed={isSidebarCollapsed} />
-      </div>
-
-      {/* Bottom Navigation (Mobile Viewports Only) */}
-      <div className="mobile-only-nav">
-        <Navigation activeTab={activeTab} onSelectTab={handleSelectTab} />
       </div>
 
       {/* Auth Modal */}

@@ -405,6 +405,7 @@ export const LiveUpdatesTicker: React.FC<LiveUpdatesTickerProps> = ({
     >
       {/* LEFT BADGE: LIVE UPDATES / PULSE BEACON */}
       <div
+        className="ticker-badge-container"
         style={{
           background: 'linear-gradient(135deg, #008751 0%, #005a36 100%)',
           color: '#ffffff',
@@ -433,7 +434,8 @@ export const LiveUpdatesTicker: React.FC<LiveUpdatesTickerProps> = ({
           }}
           className="animate-pulse"
         />
-        <span>LIVE UPDATES</span>
+        <span className="ticker-badge-text-full">LIVE UPDATES</span>
+        <span className="ticker-badge-text-compact">LIVE</span>
         <button
           type="button"
           onClick={() => setIsPaused(!isPaused)}
@@ -581,6 +583,7 @@ export const LiveUpdatesTicker: React.FC<LiveUpdatesTickerProps> = ({
 
       {/* RIGHT CONTROLS: SPEED & MINIMIZE */}
       <div
+        className="ticker-right-controls"
         style={{
           background: 'rgba(4, 18, 11, 0.95)',
           height: '100%',

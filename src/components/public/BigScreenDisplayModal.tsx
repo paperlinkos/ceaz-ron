@@ -692,7 +692,7 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                   }
 
                   return (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '12px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))', gap: '10px' }}>
                       {filtered.map((c) => {
                         const originalIndex = churchStandings.findIndex((orig) => orig.id === c.id);
                         const cRank = originalIndex === 0 ? '🥇 1st' : originalIndex === 1 ? '🥈 2nd' : originalIndex === 2 ? '🥉 3rd' : `#${originalIndex + 1}`;
@@ -701,37 +701,41 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                         return (
                           <div
                             key={c.id}
+                            className="bigscreen-church-card"
                             style={{
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'space-between',
-                              padding: '12px 16px',
+                              padding: '10px 14px',
                               background: '#ffffff',
                               borderRadius: '12px',
                               border: '1px solid rgba(0, 135, 81, 0.1)',
                               boxShadow: '0 4px 12px rgba(0, 0, 0, 0.02)',
-                              gap: '12px',
+                              gap: '10px',
+                              minWidth: 0,
+                              width: '100%',
+                              boxSizing: 'border-box',
                             }}
                           >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0 }}>
-                              <span style={{ fontSize: '0.88rem', fontWeight: '900', fontFamily: "'Orbitron', sans-serif", color: rankColor, minWidth: '42px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, minWidth: 0 }}>
+                              <span style={{ fontSize: '0.84rem', fontWeight: '900', fontFamily: "'Orbitron', sans-serif", color: rankColor, minWidth: '38px', flexShrink: 0 }}>
                                 {cRank}
                               </span>
                               <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                  <span style={{ fontWeight: '800', color: '#0f172a', fontSize: '0.95rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', flexWrap: 'wrap', minWidth: 0 }}>
+                                  <span style={{ fontWeight: '800', color: '#0f172a', fontSize: '0.90rem', wordBreak: 'break-word' }}>
                                     {c.name}
                                   </span>
                                   {c.code && (
-                                    <span style={{ color: '#475569', fontWeight: '600', fontSize: '0.78rem' }}>
+                                    <span style={{ color: '#475569', fontWeight: '600', fontSize: '0.74rem', whiteSpace: 'nowrap' }}>
                                       ({c.code})
                                     </span>
                                   )}
                                 </div>
-                                <span style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: '700' }}>
+                                <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: '700' }}>
                                   {c.groupName}
                                 </span>
-                                <div className="child-progress-track" style={{ height: '6px', marginTop: '6px', width: '100%', maxWidth: '240px', background: 'rgba(0, 135, 81, 0.05)' }}>
+                                <div className="child-progress-track" style={{ height: '5px', marginTop: '5px', width: '100%', maxWidth: '240px', background: 'rgba(0, 135, 81, 0.05)' }}>
                                   <div
                                     className="child-progress-fill"
                                     style={{ width: `${Math.min(100, c.percentage)}%` }}
@@ -740,11 +744,11 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                               </div>
                             </div>
 
-                            <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px', minWidth: '85px' }}>
-                              <span style={{ fontWeight: '900', color: '#008751', fontSize: '0.92rem', fontFamily: "'Share Tech Mono', monospace" }}>
+                            <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px', flexShrink: 0, minWidth: '75px' }}>
+                              <span style={{ fontWeight: '900', color: '#008751', fontSize: '0.90rem', fontFamily: "'Share Tech Mono', monospace", whiteSpace: 'nowrap' }}>
                                 {c.displayPercentage}
                               </span>
-                              <span style={{ fontSize: '0.74rem', color: '#475569', fontWeight: '600', fontFamily: "'Share Tech Mono', monospace" }}>
+                              <span style={{ fontSize: '0.72rem', color: '#475569', fontWeight: '600', fontFamily: "'Share Tech Mono', monospace", whiteSpace: 'nowrap' }}>
                                 {c.soulsWon.toLocaleString()} / {c.target > 0 ? c.target.toLocaleString() : 'Not Set'}
                               </span>
                             </div>

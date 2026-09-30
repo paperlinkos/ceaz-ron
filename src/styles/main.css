@@ -98,7 +98,11 @@ table {
     display: block;
     background: #0d261b;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 12px 16px;
+    padding: 10px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 85;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
   }
 }
 
@@ -106,23 +110,153 @@ table {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
+}
+
+.mobile-hamburger-btn {
+  background: rgba(0, 135, 81, 0.18);
+  border: 1px solid rgba(0, 255, 135, 0.35);
+  color: #00ff87;
+  border-radius: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.mobile-hamburger-btn:hover,
+.mobile-hamburger-btn:active {
+  background: rgba(0, 135, 81, 0.35);
+  border-color: #00ff87;
+  transform: scale(1.04);
+}
+
+.header-brand {
+  min-width: 0;
+  flex: 1;
 }
 
 .header-title {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 900;
-  color: #008751;
-  letter-spacing: 0.04em;
+  color: #00ff87;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
 }
 
 .header-subtitle {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: #94a3b8;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin: 0;
 }
 
-/* LEFT COLLAPSIBLE SIDEBAR - FIXED ON DESKTOP */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.header-signin-btn {
+  background: linear-gradient(135deg, #008751 0%, #006e42 100%);
+  color: #ffffff;
+  border: 1px solid rgba(0, 255, 135, 0.6);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 135, 81, 0.35);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.header-signin-btn:hover,
+.header-signin-btn:active {
+  background: linear-gradient(135deg, #00a865 0%, #008751 100%);
+  border-color: #00ff87;
+  box-shadow: 0 4px 14px rgba(0, 255, 135, 0.4);
+}
+
+.header-user-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 3px 8px 3px 4px;
+  color: #ffffff;
+  font-size: 0.74rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.header-user-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #008751 0%, #005a36 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.72rem;
+  position: relative;
+  border: 1px solid rgba(0, 255, 135, 0.5);
+}
+
+.header-avatar-badge {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f59e0b;
+  border: 1.5px solid #0f172a;
+}
+
+.sidebar-mobile-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 18, 11, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 10009;
+  animation: fadeIn 0.25s ease;
+}
+
+.mobile-close-btn {
+  display: none !important;
+}
+
+.desktop-only-btn {
+  display: flex !important;
+}
+
+@media (max-width: 480px) {
+  .hide-on-compact {
+    display: none !important;
+  }
+}
+
+/* LEFT COLLAPSIBLE SIDEBAR - FIXED ON DESKTOP & SLIDE DRAWER ON MOBILE */
 .app-sidebar {
   position: fixed;
   top: 0;
@@ -391,14 +525,54 @@ table {
 
 @media (max-width: 768px) {
   .app-sidebar {
-    display: none;
+    display: flex !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 290px !important;
+    max-width: 86vw !important;
+    z-index: 10010 !important;
+    transform: translateX(-105%) !important;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s ease !important;
+    overflow-y: auto !important;
+    box-shadow: none !important;
+    padding: 16px 14px !important;
   }
+
+  .app-sidebar.mobile-drawer-open {
+    transform: translateX(0) !important;
+    box-shadow: 12px 0 40px rgba(0, 0, 0, 0.75) !important;
+  }
+
+  .mobile-close-btn {
+    display: flex !important;
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    padding: 6px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+  }
+  .mobile-close-btn:hover {
+    color: #ffffff;
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+  }
+
+  .desktop-only-btn {
+    display: none !important;
+  }
+
   .main-stage {
     margin-left: 0 !important;
   }
+
   .stage-content {
     padding: 12px;
-    padding-bottom: calc(var(--bottom-nav-height) + 48px + env(safe-area-inset-bottom));
+    padding-bottom: calc(52px + env(safe-area-inset-bottom)) !important;
   }
 }
 
@@ -3440,10 +3614,9 @@ table {
   font-weight: 600;
 }
 
-/* Height of the fixed mobile bottom nav (48px touch target + 20px padding).
-   Anything that stacks above the nav must offset by this, not guess. */
+/* Bottom navigation replaced with left hamburger drawer on mobile. Height set to 0. */
 :root {
-  --bottom-nav-height: 68px;
+  --bottom-nav-height: 0px;
 }
 
 /* MOBILE TOUCH TARGET & PREVENT IOS ZOOM */
@@ -3812,14 +3985,15 @@ select {
 @media (max-width: 900px) {
   .big-screen-left-dock {
     top: auto !important;
-    bottom: 16px !important;
+    bottom: calc(44px + 10px + env(safe-area-inset-bottom)) !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     flex-direction: row !important;
     width: auto !important;
     max-width: 92vw !important;
     border-radius: 30px !important;
-    padding: 8px 12px !important;
+    padding: 6px 12px !important;
+    z-index: 10006 !important;
   }
 
   .big-screen-left-dock.dock-collapsed,
@@ -3853,7 +4027,7 @@ select {
     padding-left: 1rem !important;
     padding-right: 1rem !important;
     padding-top: 0.5rem !important;
-    padding-bottom: calc(var(--bottom-nav-height) + 48px + env(safe-area-inset-bottom)) !important;
+    padding-bottom: calc(52px + env(safe-area-inset-bottom)) !important;
   }
 
   .big-screen-counter-wrapper {
@@ -3879,19 +4053,27 @@ select {
     padding-left: 0.65rem !important;
     padding-right: 0.65rem !important;
     padding-top: 0.5rem !important;
-    padding-bottom: 75px !important;
-    gap: 1rem;
+    padding-bottom: calc(52px + env(safe-area-inset-bottom)) !important;
+    gap: 0.75rem;
   }
 
   .spacex-screen-hero {
     height: auto;
-    min-height: calc(100vh - 100px);
+    min-height: calc(100vh - 90px);
     overflow-y: auto;
-    padding-bottom: 60px;
+    padding-bottom: 50px;
   }
 
   .spacex-souls-num {
-    font-size: clamp(3.2rem, 13vw, 4.6rem) !important;
+    font-size: clamp(3.2rem, 13vw, 4.4rem) !important;
+    margin-bottom: 2px !important;
+  }
+
+  .spacex-souls-lbl {
+    font-size: 0.70rem !important;
+    letter-spacing: 0.12em !important;
+    margin-top: 2px !important;
+    margin-bottom: 10px !important;
   }
 
   .spacex-substat-num {
@@ -3900,6 +4082,19 @@ select {
 
   .spacex-target-achieved-row {
     gap: 1.25rem !important;
+    margin-top: 4px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .spacex-substat-col {
+    min-width: 90px !important;
+  }
+
+  .spacex-stat-lbl {
+    font-size: 0.62rem !important;
+    letter-spacing: 0.08em !important;
+    white-space: nowrap !important;
+    margin-top: 4px !important;
   }
 
   .spacex-row-divider {
@@ -3944,8 +4139,8 @@ select {
   }
 }
 
-/* LAPTOPS & SHORT VIEWPORTS RESPONSIVENESS */
-@media (max-height: 740px) {
+/* LAPTOPS & SHORT VIEWPORTS RESPONSIVENESS (DESKTOP ONLY, NEVER ON NARROW PHONES) */
+@media (max-height: 740px) and (min-width: 601px) {
   .spacex-screen-hero {
     height: calc(100vh - 65px) !important;
     max-height: calc(100vh - 65px) !important;
@@ -4177,18 +4372,74 @@ select {
 @media (max-width: 768px) {
   .live-ticker-container:not(.ticker-bigscreen) {
     left: 0 !important;
-    bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom)) !important;
-    height: 38px !important;
+    bottom: 0 !important;
+    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(38px + env(safe-area-inset-bottom)) !important;
+    z-index: 95 !important;
   }
+
+  .ticker-badge-text-full {
+    display: none !important;
+  }
+
+  .ticker-badge-text-compact {
+    display: inline !important;
+  }
+
+  .ticker-badge-container {
+    padding: 0 8px !important;
+    font-size: 0.70rem !important;
+  }
+
+  .ticker-right-controls {
+    padding: 0 4px !important;
+  }
+
+  .ticker-right-controls button[title="Minimize ticker"] {
+    display: none !important;
+  }
+}
+
+.ticker-badge-text-compact {
+  display: none;
 }
 
 /* Ensure stage content and big screen container has bottom clearance */
 .stage-content {
-  padding-bottom: calc(70px + env(safe-area-inset-bottom)) !important;
+  padding-bottom: calc(52px + env(safe-area-inset-bottom)) !important;
 }
 
 .big-screen-container {
-  padding-bottom: calc(var(--bottom-nav-height) + 48px + env(safe-area-inset-bottom)) !important;
+  padding-bottom: calc(52px + env(safe-area-inset-bottom)) !important;
+}
+
+/* Responsive Driver & Surge Banner on Mobile */
+@media (max-width: 768px) {
+  .surge-driver-footer-banner {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 10px 12px !important;
+  }
+
+  .surge-driver-info-block {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .surge-driver-item {
+    width: 100% !important;
+    font-size: 0.74rem !important;
+    line-height: 1.35 !important;
+  }
+
+  .surge-driver-action-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 8px 12px !important;
+  }
 }
 
 /* ==========================================================================
