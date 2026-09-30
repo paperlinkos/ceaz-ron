@@ -14,6 +14,9 @@ import {
   RotateCcw,
   PartyPopper,
   Sparkles,
+  Timer,
+  ToggleLeft,
+  ToggleRight,
 } from 'lucide-react';
 import { useEventConfig } from '../../hooks/useEventConfig';
 import { getEventAuditLogs } from '../../services/eventService';
@@ -31,7 +34,31 @@ export const EventControlView: React.FC = () => {
   const { eventConfig, isUpcoming, isLive, isCompleted, changeStatus, saveSettings, triggerCelebration } = useEventConfig();
   const [isTriggeringConfetti, setIsTriggeringConfetti] = useState<boolean>(false);
   const [confettiSuccessMessage, setConfettiSuccessMessage] = useState<string | null>(null);
+  const [isTogglingTimer, setIsTogglingTimer] = useState<boolean>(false);
+  const [timerFeedback, setTimerFeedback] = useState<string | null>(null);
   const currentInterval = eventConfig.milestoneInterval || 10000;
+
+  const isTimerEnabled = eventConfig.countdownTimerEnabled !== false;
+
+  const handleToggleCountdownTimer = async () => {
+    setIsTogglingTimer(true);
+    try {
+      const nextState = !isTimerEnabled;
+      const ok = await saveSettings({ countdownTimerEnabled: nextState });
+      if (ok) {
+        setTimerFeedback(
+          nextState
+            ? 'Launch countdown timer is now ACTIVE and visible across all screens.'
+            : 'Launch countdown timer has been DISABLED and hidden from all screens.'
+        );
+        setTimeout(() => setTimerFeedback(null), 4000);
+      }
+    } catch (err) {
+      console.error('Failed to toggle countdown timer:', err);
+    } finally {
+      setIsTogglingTimer(false);
+    }
+  };
 
   const [counterData, setCounterData] = useState<ZonalCounterData>({
     totalSoulsWon: 0,
@@ -285,6 +312,113 @@ export const EventControlView: React.FC = () => {
           <div className="reset-feedback-banner">
             <CheckCircle2 size={16} />
             <span>{resetSuccessMessage}</span>
+          </div>
+        )}
+      </div>
+
+      {/* CAMPAIGN COUNTDOWN TIMER FEATURE SWITCH */}
+      <div
+        className="event-section-card"
+        style={{
+          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(13, 38, 27, 0.65) 100%)',
+          border: '1.5px solid rgba(0, 135, 81, 0.3)',
+          borderRadius: '16px',
+          padding: '20px 24px',
+          marginBottom: '24px',
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', maxWidth: '680px' }}>
+            <div
+              style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '12px',
+                background: isTimerEnabled ? 'rgba(0, 135, 81, 0.2)' : 'rgba(148, 163, 184, 0.1)',
+                border: isTimerEnabled ? '1.5px solid #008751' : '1.5px solid rgba(148, 163, 184, 0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: isTimerEnabled ? '#00e676' : '#94a3b8',
+                flexShrink: 0,
+              }}
+            >
+              <Timer size={24} />
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#ffffff' }}>
+                  CAMPAIGN LAUNCH COUNTDOWN TIMER
+                </h3>
+                <span
+                  style={{
+                    fontSize: '0.68rem',
+                    fontWeight: 800,
+                    padding: '3px 10px',
+                    borderRadius: '14px',
+                    background: isTimerEnabled ? 'rgba(0, 135, 81, 0.25)' : 'rgba(100, 116, 139, 0.2)',
+                    color: isTimerEnabled ? '#00e676' : '#94a3b8',
+                    border: isTimerEnabled ? '1px solid #008751' : '1px solid #64748b',
+                    letterSpacing: '0.06em',
+                  }}
+                >
+                  {isTimerEnabled ? '● ACTIVE & VISIBLE' : '○ DISABLED & HIDDEN'}
+                </span>
+              </div>
+              <p style={{ margin: '4px 0 0 0', fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.4 }}>
+                Controls the countdown timer banner on the <strong>Home Screen</strong> and in <strong>Big Screen / TV Mode</strong>. When turned off, the countdown is instantly hidden everywhere.
+              </p>
+            </div>
+          </div>
+
+          {/* TOGGLE SWITCH BUTTON */}
+          <button
+            type="button"
+            onClick={handleToggleCountdownTimer}
+            disabled={isTogglingTimer}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              background: isTimerEnabled
+                ? 'linear-gradient(135deg, #008751 0%, #00b36b 100%)'
+                : 'rgba(51, 65, 85, 0.6)',
+              border: isTimerEnabled ? '1.5px solid #00e676' : '1.5px solid #64748b',
+              color: '#ffffff',
+              padding: '10px 20px',
+              borderRadius: '12px',
+              fontWeight: 800,
+              fontSize: '0.88rem',
+              cursor: isTogglingTimer ? 'not-allowed' : 'pointer',
+              boxShadow: isTimerEnabled ? '0 4px 16px rgba(0, 135, 81, 0.35)' : 'none',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            {isTimerEnabled ? <ToggleRight size={22} style={{ color: '#ffffff' }} /> : <ToggleLeft size={22} style={{ color: '#94a3b8' }} />}
+            <span>{isTimerEnabled ? 'TIMER ENABLED (CLICK TO TURN OFF)' : 'TIMER DISABLED (CLICK TO TURN ON)'}</span>
+          </button>
+        </div>
+
+        {/* FEEDBACK BANNER */}
+        {timerFeedback && (
+          <div
+            style={{
+              marginTop: '14px',
+              background: isTimerEnabled ? 'rgba(0, 135, 81, 0.2)' : 'rgba(217, 119, 6, 0.15)',
+              border: isTimerEnabled ? '1px solid rgba(0, 255, 135, 0.4)' : '1px solid rgba(217, 119, 6, 0.4)',
+              borderRadius: '8px',
+              padding: '8px 14px',
+              color: isTimerEnabled ? '#00ff87' : '#fbbf24',
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            <CheckCircle2 size={15} />
+            <span>{timerFeedback}</span>
           </div>
         )}
       </div>

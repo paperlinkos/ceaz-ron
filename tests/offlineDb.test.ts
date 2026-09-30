@@ -1,12 +1,13 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import 'fake-indexeddb/auto';
-import { saveLocalRecord, getAllLocalRecords, getPendingRecords, updateRecordSyncStatus } from '../src/services/indexedDbService';
+import { saveLocalRecord, getAllLocalRecords, getPendingRecords, updateRecordSyncStatus, closeDB } from '../src/services/indexedDbService';
 import type { SoulWinningRecord } from '../src/types/record';
 import { generateUUID } from '../src/utils/uuid';
 
 describe('IndexedDB Local Offline Persistence Service', () => {
   beforeEach(async () => {
     // Delete database to reset test environment cleanly
+    await closeDB();
     indexedDB.deleteDatabase('ron_harvest_indexeddb');
   });
 

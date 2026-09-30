@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Timer, Zap } from 'lucide-react';
+import { useEventConfig } from '../../hooks/useEventConfig';
 
 interface CampaignCountdownTimerProps {
   variant?: 'home' | 'bigScreen';
   className?: string;
+  enabled?: boolean;
 }
 
 // Target: 9:00 AM on 1 October 2026 (West Africa Time / UTC+1)
@@ -13,7 +15,11 @@ const TARGET_TIMESTAMP = new Date(TARGET_DATE_STRING).getTime();
 export const CampaignCountdownTimer: React.FC<CampaignCountdownTimerProps> = ({
   variant = 'home',
   className = '',
+  enabled,
 }) => {
+  const { eventConfig } = useEventConfig();
+  const isEnabled = enabled !== undefined ? enabled : eventConfig?.countdownTimerEnabled !== false;
+
   const [timeLeft, setTimeLeft] = useState<{
     totalMs: number;
     days: number;
@@ -54,8 +60,8 @@ export const CampaignCountdownTimer: React.FC<CampaignCountdownTimerProps> = ({
     return () => clearInterval(interval);
   }, []);
 
-  // When timer reaches 0 or passes October 1st 9:00 AM, the component completely disappears
-  if (!timeLeft || timeLeft.totalMs <= 0) {
+  // When disabled by Super Admin, or timer reaches 0, the component completely disappears
+  if (!isEnabled || !timeLeft || timeLeft.totalMs <= 0) {
     return null;
   }
 

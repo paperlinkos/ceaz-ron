@@ -90,6 +90,32 @@ describe('Super Admin Settings, Milestones & Targets Engine', () => {
       expect(res.config?.milestones?.[0].label).toBe('Ignition Tier');
       expect(res.config?.locationPresets).toEqual(customLocations);
     });
+
+    it('allows Super Admin to toggle campaign countdown timer on and off', async () => {
+      // Default state should be enabled
+      const initial = getLocalEventConfig();
+      expect(initial.countdownTimerEnabled).toBe(true);
+
+      // Super Admin turns it OFF
+      const turnOffRes = await updateEventConfig(DEFAULT_EVENT_CONFIG.id, {
+        countdownTimerEnabled: false,
+      });
+      expect(turnOffRes.success).toBe(true);
+      expect(turnOffRes.config?.countdownTimerEnabled).toBe(false);
+
+      const cachedAfterTurnOff = getLocalEventConfig();
+      expect(cachedAfterTurnOff.countdownTimerEnabled).toBe(false);
+
+      // Super Admin turns it ON
+      const turnOnRes = await updateEventConfig(DEFAULT_EVENT_CONFIG.id, {
+        countdownTimerEnabled: true,
+      });
+      expect(turnOnRes.success).toBe(true);
+      expect(turnOnRes.config?.countdownTimerEnabled).toBe(true);
+
+      const cachedAfterTurnOn = getLocalEventConfig();
+      expect(cachedAfterTurnOn.countdownTimerEnabled).toBe(true);
+    });
   });
 
   describe('Dynamic Race Color Thresholds', () => {

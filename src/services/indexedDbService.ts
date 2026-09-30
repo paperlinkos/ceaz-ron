@@ -44,6 +44,19 @@ function getDB(): Promise<IDBPDatabase<RonHarvestDB>> {
   return dbPromise;
 }
 
+/** Close the cached IndexedDB instance (useful for clean test resets and teardown) */
+export async function closeDB(): Promise<void> {
+  if (dbPromise) {
+    try {
+      const db = await dbPromise;
+      db.close();
+    } catch {
+      // ignore
+    }
+    dbPromise = null;
+  }
+}
+
 /** Save or overwrite a soul winning record in IndexedDB */
 export async function saveLocalRecord(record: SoulWinningRecord): Promise<SoulWinningRecord> {
   try {

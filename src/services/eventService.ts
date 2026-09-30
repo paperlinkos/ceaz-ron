@@ -33,7 +33,10 @@ export function getLocalEventConfig(): EventConfig {
         parsed.announcements = DEFAULT_EVENT_CONFIG.announcements;
         setLocalEventConfig(parsed);
       }
-      return parsed;
+      return {
+        ...DEFAULT_EVENT_CONFIG,
+        ...parsed,
+      };
     }
   } catch (err) {
     console.warn('Failed to parse local event config:', err);
@@ -57,7 +60,11 @@ export async function getEventConfig(eventId: string = DEFAULT_EVENT_CONFIG.id):
     const snap = await getDoc(docRef);
 
     if (snap.exists()) {
-      const data = snap.data() as EventConfig;
+      const raw = snap.data() as EventConfig;
+      const data: EventConfig = {
+        ...DEFAULT_EVENT_CONFIG,
+        ...raw,
+      };
       if (data.target === 40000) {
         data.target = DEFAULT_EVENT_CONFIG.target;
         data.announcements = DEFAULT_EVENT_CONFIG.announcements;
@@ -96,6 +103,7 @@ export function subscribeToEventConfig(
           const raw = snapshot.data() as EventConfig;
           // Guard: never let a stale/legacy 40000 target override the correct 50000
           const data: EventConfig = {
+            ...DEFAULT_EVENT_CONFIG,
             ...raw,
             target: (raw.target != null && raw.target >= 50000) ? raw.target : 50000,
           };

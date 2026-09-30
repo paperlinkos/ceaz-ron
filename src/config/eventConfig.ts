@@ -65,6 +65,7 @@ export interface EventConfig {
   milestoneInterval?: number; // e.g. every 10,000 souls won
   zonalMilestones?: number[]; // e.g. [10000, 20000, 30000, 40000, 50000]
   lastCelebrationTrigger?: CelebrationTrigger;
+  countdownTimerEnabled?: boolean;
 }
 
 export interface EventAuditLog {
@@ -122,6 +123,7 @@ export const DEFAULT_EVENT_CONFIG: EventConfig = {
   announcements: DEFAULT_ANNOUNCEMENTS,
   milestoneInterval: 10000,
   zonalMilestones: DEFAULT_ZONAL_MILESTONES,
+  countdownTimerEnabled: true,
 };
 
 export const REACH_OUT_NIGERIA_EVENT = {
