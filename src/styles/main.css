@@ -38,6 +38,10 @@
   --radius-lg: 20px;
   --shadow-main: 0 10px 30px rgba(0, 0, 0, 0.35);
   --shadow-light: 0 8px 24px rgba(15, 23, 42, 0.06);
+
+  /* SIDEBAR LAYOUT TOKENS */
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 72px;
 }
 
 * {
@@ -118,9 +122,15 @@ table {
   font-weight: 600;
 }
 
-/* LEFT COLLAPSIBLE SIDEBAR */
+/* LEFT COLLAPSIBLE SIDEBAR - FIXED ON DESKTOP */
 .app-sidebar {
-  width: 260px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  height: 100dvh;
   background: #0f172a;
   color: #ffffff;
   display: flex;
@@ -131,10 +141,23 @@ table {
   transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   z-index: 100;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.app-sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.app-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
 }
 
 .app-sidebar.sidebar-collapsed {
-  width: 72px;
+  width: var(--sidebar-collapsed-width);
   padding: 20px 10px;
 }
 
@@ -350,6 +373,12 @@ table {
   min-width: 0;
   min-height: 100vh;
   background: var(--color-bg-public);
+  margin-left: var(--sidebar-width);
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.layout-shell.layout-sidebar-collapsed .main-stage {
+  margin-left: var(--sidebar-collapsed-width);
 }
 
 .stage-content {
@@ -363,6 +392,9 @@ table {
 @media (max-width: 768px) {
   .app-sidebar {
     display: none;
+  }
+  .main-stage {
+    margin-left: 0 !important;
   }
   .stage-content {
     padding: 12px;
@@ -3472,8 +3504,8 @@ table {
 
 /* 768px - Tablet Breakpoint */
 @media (min-width: 768px) and (max-width: 1023px) {
-  .app-sidebar {
-    width: 220px;
+  :root {
+    --sidebar-width: 220px;
   }
 }
 
@@ -4112,14 +4144,14 @@ select {
   position: fixed !important;
   bottom: 0 !important;
   right: 0 !important;
-  left: 260px;
+  left: var(--sidebar-width);
   z-index: 90;
   transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .live-ticker-container.ticker-sidebar-collapsed,
 .layout-shell.layout-sidebar-collapsed .live-ticker-container:not(.ticker-bigscreen) {
-  left: 72px !important;
+  left: var(--sidebar-collapsed-width) !important;
 }
 
 .live-ticker-container.ticker-bigscreen {
