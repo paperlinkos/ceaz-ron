@@ -2985,68 +2985,76 @@ table {
   margin-top: 2px;
 }
 
-/* MAIN ATTRACTION: CENTER STATS GROUP */
-.spacex-center-stats-group {
+/* MASSIVE HERO SOULS WON DISPLAY STAGE - CENTRAL COMMAND ATTRACTION */
+.spacex-souls-hero-stage {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(1rem, 2.2vh, 2rem);
+  width: 100%;
   margin: auto 0;
-  width: 100%;
-}
-
-/* SPACEX COUNTDOWN HERO SECTION (TWO DISTINCT LINES) */
-.spacex-souls-hero-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin: 0;
 }
 
 .spacex-souls-col {
-  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
 }
 
 .spacex-souls-num {
   font-family: 'Orbitron', 'Oxanium', 'Chakra Petch', sans-serif;
-  font-size: clamp(4.8rem, 8.8vw, 7.5rem);
+  font-size: clamp(7.5rem, 16vw, 14.5rem);
   font-weight: 900;
-  line-height: 0.9;
-  letter-spacing: 0.03em;
+  line-height: 0.85;
+  letter-spacing: 0.02em;
   color: #008751;
-  text-shadow: 0 6px 32px rgba(0, 135, 81, 0.28);
+  text-shadow: 0 8px 48px rgba(0, 135, 81, 0.35);
 }
 
 .spacex-souls-lbl {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(0.78rem, 1.1vw, 0.96rem);
+  font-size: clamp(0.9rem, 1.35vw, 1.25rem);
   font-weight: 900;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.35em;
   color: #0f172a;
-  margin-top: 0.45rem;
+  margin-top: 0.6rem;
+  text-transform: uppercase;
+}
+
+/* LOWER SECTION: TARGET & ACHIEVED POSITIONED DIRECTLY ABOVE TOP 5 GROUPS */
+.spacex-lower-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: auto;
+  margin-bottom: 2px;
+  gap: 0.45rem;
 }
 
 .spacex-target-achieved-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(2.5rem, 6vw, 6rem);
+  gap: clamp(2rem, 5vw, 5rem);
   width: 100%;
   margin: 0;
   flex-wrap: wrap;
 }
 
 .spacex-substat-col {
-  min-width: 160px;
+  min-width: 140px;
 }
 
 .spacex-substat-num {
   font-family: 'Orbitron', 'Oxanium', 'Chakra Petch', sans-serif;
-  font-size: clamp(2.8rem, 4.8vw, 4.2rem);
+  font-size: clamp(1.9rem, 3.4vw, 3rem);
   font-weight: 900;
-  line-height: 0.9;
+  line-height: 0.95;
   letter-spacing: 0.03em;
   color: #334155;
 }
@@ -3058,7 +3066,7 @@ table {
 
 .spacex-row-divider {
   width: 2.5px;
-  height: 44px;
+  height: 38px;
   background: rgba(0, 135, 81, 0.25);
   border-radius: 2px;
 }
@@ -3068,17 +3076,17 @@ table {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  min-width: 150px;
+  min-width: 130px;
 }
 
 .spacex-stat-lbl {
   font-family: 'Orbitron', sans-serif;
-  font-size: clamp(0.68rem, 0.95vw, 0.82rem);
+  font-size: clamp(0.65rem, 0.88vw, 0.78rem);
   font-weight: 900;
   letter-spacing: 0.22em;
   color: #475569;
   text-transform: uppercase;
-  margin-top: 0.3rem;
+  margin-top: 0.25rem;
 }
 
 /* TOP 5 BOTTOM WRAPPER: RESTS RIGHT ABOVE THE MARQUEE TICKER */
@@ -3911,16 +3919,26 @@ select {
     max-height: calc(100vh - 65px) !important;
   }
 
-  .spacex-center-stats-group {
-    gap: 0.6rem !important;
+  .spacex-souls-num {
+    font-size: clamp(4.5rem, 15vh, 7.5rem) !important;
   }
 
-  .spacex-souls-num {
-    font-size: clamp(3.4rem, 8.5vh, 5.4rem) !important;
+  .spacex-souls-lbl {
+    font-size: 0.76rem !important;
+    margin-top: 0.25rem !important;
+  }
+
+  .spacex-lower-section {
+    gap: 0.25rem !important;
+    margin-bottom: 0 !important;
   }
 
   .spacex-substat-num {
-    font-size: clamp(2rem, 5vh, 3rem) !important;
+    font-size: clamp(1.6rem, 3.8vh, 2.4rem) !important;
+  }
+
+  .spacex-row-divider {
+    height: 26px !important;
   }
 
   .apple-rings-widget-container {

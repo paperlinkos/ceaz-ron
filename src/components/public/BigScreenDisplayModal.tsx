@@ -242,19 +242,18 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
               <div className="spacex-screen-subtitle">SOUL WINNING CAMPAIGN HARVEST TRACKER</div>
             </div>
 
-            {/* MAIN ATTRACTION: LARGE PROMINENT NUMBERS IN THE CENTER */}
-            <div className="spacex-center-stats-group">
-              {/* LINE 1: SOULS WON ON ONE LINE */}
-              <div className="spacex-souls-hero-row">
-                <div className="spacex-stat-col spacex-souls-col">
-                  <div className="spacex-stat-num spacex-souls-num">
-                    {counterData.totalSoulsWon.toLocaleString()}
-                  </div>
-                  <div className="spacex-stat-lbl spacex-souls-lbl">SOULS WON</div>
+            {/* MASSIVE HERO SOULS WON DISPLAY - EXPANDS ACROSS THE CENTRAL COMMAND STAGE */}
+            <div className="spacex-souls-hero-stage">
+              <div className="spacex-stat-col spacex-souls-col">
+                <div className="spacex-stat-num spacex-souls-num">
+                  {counterData.totalSoulsWon.toLocaleString()}
                 </div>
+                <div className="spacex-stat-lbl spacex-souls-lbl">SOULS WON</div>
               </div>
+            </div>
 
-              {/* LINE 2: ZONAL TARGET AND ACHIEVED ON A SEPARATE LINE */}
+            {/* LOWER SECTION: TARGET & PERCENTAGE MOVED LOWER, SITTING JUST ABOVE THE TOP 5 WIDGET */}
+            <div className="spacex-lower-section">
               <div className="spacex-target-achieved-row">
                 <div className="spacex-stat-col spacex-substat-col">
                   <div className="spacex-stat-num spacex-substat-num">
@@ -272,14 +271,14 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                   <div className="spacex-stat-lbl">ACHIEVED</div>
                 </div>
               </div>
-            </div>
 
-            {/* TOP 5 PERFORMING GROUPS - RESTS CLEANLY AT THE BOTTOM JUST ABOVE RUNNING TEXT */}
-            <div className="spacex-bottom-widget-wrap">
-              <AppleProgressRingsWidget
-                groups={topGroups && topGroups.length > 0 ? topGroups : counterData.groupCompetitors}
-                onViewAll={() => setActivePage('groups')}
-              />
+              {/* TOP 5 PERFORMING GROUPS - RESTS CLEANLY AT THE BOTTOM JUST ABOVE RUNNING TEXT */}
+              <div className="spacex-bottom-widget-wrap">
+                <AppleProgressRingsWidget
+                  groups={topGroups && topGroups.length > 0 ? topGroups : counterData.groupCompetitors}
+                  onViewAll={() => setActivePage('groups')}
+                />
+              </div>
             </div>
           </div>
         )}
