@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layers, BarChart2, Church, Trophy, Search, X, ChevronLeft, ChevronRight, LayoutList, CircleDot, Sparkles } from 'lucide-react';
-import { useEventConfig } from '../../hooks/useEventConfig';
-import { fireFullCelebration } from '../../utils/confetti';
+import { Layers, BarChart2, Church, Trophy, Search, X, ChevronLeft, ChevronRight, LayoutList, CircleDot } from 'lucide-react';
 import { AppleProgressRingsWidget } from './AppleProgressRingsWidget';
 import { UpwardRaceVisualization } from './UpwardRaceVisualization';
 import { getAllLocalRecords } from '../../services/indexedDbService';
@@ -12,7 +10,6 @@ import type { OrganizationProgress } from '../../types/target';
 import type { ZonalCounterData } from '../../services/counterService';
 import type { EventStatus } from '../../config/eventConfig';
 import { LiveUpdatesTicker } from '../common/LiveUpdatesTicker';
-import { useAuth } from '../../context/AuthContext';
 
 interface BigScreenDisplayModalProps {
   isOpen: boolean;
@@ -60,9 +57,6 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
   eventStatus,
 }) => {
   const [activePage, setActivePage] = useState<'counter' | 'groups' | 'churches'>('counter');
-  const { triggerCelebration } = useEventConfig();
-  const { role, isRoleVerified } = useAuth();
-  const isSuperAdmin = role === 'superAdmin' && isRoleVerified;
 
   const [churchStandings, setChurchStandings] = useState<ChurchStandingItem[]>(buildInitialChurchStandings);
   const [topGroups, setTopGroups] = useState<OrganizationProgress[]>([]);
@@ -70,7 +64,7 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
   const [churchViewMode, setChurchViewMode] = useState<'cards' | 'rings'>('cards');
   const [isDockCollapsed, setIsDockCollapsed] = useState<boolean>(false);
 
-  // Keyboard controls: 1 = Counter, 2 = Groups, 3 = Churches, Esc = Exit, C = Confetti (Super Admin only)
+  // Keyboard controls: 1 = Counter, 2 = Groups, 3 = Churches, Esc = Exit
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isOpen) return;
@@ -82,14 +76,11 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
         setActivePage('groups');
       } else if (e.key === '3') {
         setActivePage('churches');
-      } else if ((e.key === 'c' || e.key === 'C') && isSuperAdmin) {
-        triggerCelebration('AUDITORIUM CELEBRATION!');
-        fireFullCelebration(6000);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose, triggerCelebration, isSuperAdmin]);
+  }, [isOpen, onClose]);
 
   // Load standings for Page 1 & Page 3
   useEffect(() => {
@@ -189,30 +180,6 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
           <Church size={18} />
           {!isDockCollapsed && <span>CHURCHES STANDINGS</span>}
         </button>
-
-        {isSuperAdmin && (
-          <>
-            <div className="dock-divider" />
-            <button
-              type="button"
-              onClick={() => {
-                triggerCelebration('AUDITORIUM CELEBRATION!');
-                fireFullCelebration(6000);
-              }}
-              className="dock-btn"
-              style={{
-                background: 'rgba(255, 215, 0, 0.12)',
-                border: '1.5px solid rgba(255, 215, 0, 0.4)',
-                color: '#FFD700',
-                boxShadow: '0 0 12px rgba(255, 215, 0, 0.2)',
-              }}
-              title="Fire Confetti Celebration (Super Admin Only)"
-            >
-              <Sparkles size={18} style={{ color: '#FFD700' }} />
-              {!isDockCollapsed && <span style={{ color: '#FFD700', fontWeight: 800 }}>FIRE CONFETTI (C)</span>}
-            </button>
-          </>
-        )}
 
         <div className="dock-divider" />
 
