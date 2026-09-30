@@ -49,6 +49,7 @@ const MainContent: React.FC = () => {
   } = useSoulRecords();
 
   const { isAuthenticated, userProfile, role, isRoleVerified } = useAuth();
+  const isSuperAdmin = role === 'superAdmin' && isRoleVerified;
 
   const { eventConfig } = useEventConfig();
 
@@ -130,7 +131,7 @@ const MainContent: React.FC = () => {
             <RoleDashboardView onNavigateTab={handleSelectTab} onOpenAuth={handleOpenAuth} />
           )}
 
-          {activeTab === 'directory' && (
+          {activeTab === 'directory' && (isSuperAdmin || role === 'zoneManager' || role === 'groupManager' || role === 'churchManager') && (
             <DirectoryView />
           )}
 

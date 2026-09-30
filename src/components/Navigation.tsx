@@ -32,14 +32,6 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
           <Trophy size={18} />
           <span>RACE</span>
         </button>
-
-        <button
-          onClick={() => onSelectTab('directory')}
-          className={`nav-tab ${activeTab === 'directory' ? 'nav-tab-active' : ''}`}
-        >
-          <FolderTree size={18} />
-          <span>DIRECTORY</span>
-        </button>
       </nav>
     );
   }
@@ -82,13 +74,16 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
         <span>DASHBOARD</span>
       </button>
 
-      <button
-        onClick={() => onSelectTab('directory')}
-        className={`nav-tab ${activeTab === 'directory' ? 'nav-tab-active' : ''}`}
-      >
-        <FolderTree size={18} />
-        <span>DIRECTORY</span>
-      </button>
+      {/* Directory accessible to Super Admin, Zonal Admin, Group Manager, Church Manager */}
+      {(isSuperAdmin || role === 'zoneManager' || role === 'groupManager' || role === 'churchManager') && (
+        <button
+          onClick={() => onSelectTab('directory')}
+          className={`nav-tab ${activeTab === 'directory' ? 'nav-tab-active' : ''}`}
+        >
+          <FolderTree size={18} />
+          <span>DIRECTORY</span>
+        </button>
+      )}
 
       {isSuperAdmin && (
         <>

@@ -103,16 +103,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
         )}
 
-        {/* 3. Directory & Data Center Tab (Visible to all users) */}
-        <button
-          onClick={() => onSelectTab('directory')}
-          className={`sidebar-link ${activeTab === 'directory' ? 'sidebar-link-active' : ''}`}
-          title="Directory & Reports"
-        >
-          <FolderTree size={20} />
-          {!isCollapsed && <span>DIRECTORY & DATA</span>}
-        </button>
-
         {/* The remaining tabs are strictly for Authenticated Users */}
         {isAuthenticated && (
           <>
@@ -147,6 +137,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </span>
               )}
             </button>
+
+            {/* Directory accessible to Super Admin, Zonal Admin, Group Manager, Church Manager */}
+            {(isSuperAdmin || role === 'zoneManager' || role === 'groupManager' || role === 'churchManager') && (
+              <button
+                onClick={() => onSelectTab('directory')}
+                className={`sidebar-link ${activeTab === 'directory' ? 'sidebar-link-active' : ''}`}
+                title="Directory & Reports"
+              >
+                <FolderTree size={20} />
+                {!isCollapsed && <span>DIRECTORY & DATA</span>}
+              </button>
+            )}
 
             {isSuperAdmin && (
               <>
