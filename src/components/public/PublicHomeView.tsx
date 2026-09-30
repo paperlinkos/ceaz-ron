@@ -65,16 +65,18 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
           <span>CEAZ1 REACHOUT NIGERIA SOUL WINNING CAMPAIGN</span>
         </div>
 
-        {/* Big Screen Button */}
-        <button
-          type="button"
-          onClick={() => setIsDisplayModeOpen(true)}
-          className="display-mode-trigger-btn"
-          title="Open Big-Screen / TV Display Mode"
-        >
-          <Tv size={15} />
-          <span>BIG SCREEN MODE</span>
-        </button>
+        {/* Big Screen Button: ONLY shown in Observer Mode */}
+        {isObserverMode && (
+          <button
+            type="button"
+            onClick={() => setIsDisplayModeOpen(true)}
+            className="display-mode-trigger-btn"
+            title="Open Big-Screen / TV Display Mode"
+          >
+            <Tv size={15} />
+            <span>BIG SCREEN MODE</span>
+          </button>
+        )}
       </div>
 
       {/* DOMINANT DIGITAL LED COUNTER HERO */}
