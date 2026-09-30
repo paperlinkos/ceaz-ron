@@ -126,3 +126,16 @@ export function playCelebrationSound(): void {
     console.debug('Audio autoplay restriction, continuing visual celebration:', err);
   }
 }
+
+export const CELEBRATED_STORAGE_KEY = 'ron_celebrated_zonal_milestones';
+
+/**
+ * Resets local storage of celebrated milestones so testing or next intervals can re-trigger.
+ */
+export function resetCelebratedMilestones(): void {
+  try {
+    localStorage.removeItem(CELEBRATED_STORAGE_KEY);
+  } catch (e) {
+    console.warn('Could not reset celebrated milestones:', e);
+  }
+}

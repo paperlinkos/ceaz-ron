@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, HeartHandshake, User, Building, Trophy } from 'lucide-react';
+import { Home, HeartHandshake, User, Building, Trophy, Activity, LayoutDashboard } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export type TabType = 'home' | 'record' | 'account' | 'org' | 'race' | 'about' | 'dashboard' | 'eventControl' | 'importData';
@@ -67,14 +67,31 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
         <span>RECORD</span>
       </button>
 
+      <button
+        onClick={() => onSelectTab('dashboard')}
+        className={`nav-tab ${activeTab === 'dashboard' ? 'nav-tab-active' : ''}`}
+      >
+        <LayoutDashboard size={18} />
+        <span>DASHBOARD</span>
+      </button>
+
       {isSuperAdmin && (
-        <button
-          onClick={() => onSelectTab('org')}
-          className={`nav-tab ${activeTab === 'org' ? 'nav-tab-active' : ''}`}
-        >
-          <Building size={18} />
-          <span>ORG</span>
-        </button>
+        <>
+          <button
+            onClick={() => onSelectTab('eventControl')}
+            className={`nav-tab ${activeTab === 'eventControl' ? 'nav-tab-active' : ''}`}
+          >
+            <Activity size={18} />
+            <span>CONTROL</span>
+          </button>
+          <button
+            onClick={() => onSelectTab('org')}
+            className={`nav-tab ${activeTab === 'org' ? 'nav-tab-active' : ''}`}
+          >
+            <Building size={18} />
+            <span>ORG</span>
+          </button>
+        </>
       )}
 
       <button

@@ -134,6 +134,13 @@ export function useEventConfig() {
     [eventConfig.id, userProfile?.id]
   );
 
+  const updateMilestoneInterval = useCallback(
+    async (interval: number): Promise<boolean> => {
+      return saveSettings({ milestoneInterval: interval });
+    },
+    [saveSettings]
+  );
+
   return {
     eventConfig,
     status: eventConfig.status,
@@ -145,5 +152,6 @@ export function useEventConfig() {
     changeStatus,
     saveSettings,
     triggerCelebration,
+    updateMilestoneInterval,
   };
 }
