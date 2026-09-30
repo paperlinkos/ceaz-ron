@@ -12,7 +12,6 @@ import { UpwardRaceView } from './components/public/UpwardRaceView';
 import { AccountView } from './components/auth/AccountView';
 import { AuthModal } from './components/auth/AuthModal';
 import { OrganizationManager } from './components/admin/OrganizationManager';
-import { SoulWinnerAssigner } from './components/admin/SoulWinnerAssigner';
 import { UserManagementView } from './components/admin/UserManagementView';
 import { RoleDashboardView } from './components/dashboard/RoleDashboardView';
 import { EventControlView } from './components/admin/EventControlView';
@@ -28,7 +27,7 @@ import { Lock } from 'lucide-react';
 
 const MainContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('home');
-  const [adminTab, setAdminTab] = useState<'org' | 'users' | 'assign'>('org');
+  const [adminTab, setAdminTab] = useState<'org' | 'users'>('org');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
   const [authModalState, setAuthModalState] = useState<{
     isOpen: boolean;
@@ -214,20 +213,12 @@ const MainContent: React.FC = () => {
                 >
                   User & Role Management
                 </button>
-                <button
-                  onClick={() => setAdminTab('assign')}
-                  className={`subtab-btn ${adminTab === 'assign' ? 'subtab-active' : ''}`}
-                >
-                  Assign Soul Winners
-                </button>
               </div>
 
               {adminTab === 'org' ? (
                 <OrganizationManager />
-              ) : adminTab === 'users' ? (
-                <UserManagementView />
               ) : (
-                <SoulWinnerAssigner />
+                <UserManagementView />
               )}
             </div>
           )}
