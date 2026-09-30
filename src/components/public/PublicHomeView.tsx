@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Tv, Sparkles } from 'lucide-react';
+import { CheckCircle2, Tv } from 'lucide-react';
 import { FlipCounterDisplay } from './FlipCounterDisplay';
 import { UpwardRaceVisualization } from './UpwardRaceVisualization';
 import { BigScreenDisplayModal } from './BigScreenDisplayModal';
@@ -16,10 +16,9 @@ interface PublicHomeViewProps {
 }
 
 export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOpenAuth }) => {
-  const { eventConfig, isLive, isCompleted, triggerCelebration } = useEventConfig();
+  const { eventConfig, isLive, isCompleted } = useEventConfig();
   const { soulWinnerProfile, isAuthenticated, role } = useAuth();
   const [isDisplayModeOpen, setIsDisplayModeOpen] = useState<boolean>(false);
-  const [isTriggeringConfetti, setIsTriggeringConfetti] = useState<boolean>(false);
 
   const targetVal = eventConfig.target >= 50000 ? eventConfig.target : 50000;
   const [counterData, setCounterData] = useState<ZonalCounterData>({
@@ -66,54 +65,16 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
           <span>CEAZ1 REACHOUT NIGERIA SOUL WINNING CAMPAIGN</span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {/* Quick Confetti Trigger for Super Admin */}
-          {role === 'superAdmin' && (
-            <button
-              type="button"
-              onClick={async () => {
-                setIsTriggeringConfetti(true);
-                try {
-                  await triggerCelebration('SUPER ADMIN LIVE CELEBRATION!');
-                } catch (e) {
-                  console.error(e);
-                } finally {
-                  setIsTriggeringConfetti(false);
-                }
-              }}
-              disabled={isTriggeringConfetti}
-              style={{
-                background: 'linear-gradient(135deg, #008751 0%, #00b36b 100%)',
-                border: '1.5px solid #FFD700',
-                borderRadius: '8px',
-                padding: '6px 14px',
-                color: '#ffffff',
-                fontWeight: 800,
-                fontSize: '0.8rem',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                cursor: isTriggeringConfetti ? 'not-allowed' : 'pointer',
-                boxShadow: '0 0 12px rgba(255, 215, 0, 0.35)',
-              }}
-              title="Broadcast Confetti to all screens"
-            >
-              <Sparkles size={14} style={{ color: '#FFD700' }} />
-              <span>{isTriggeringConfetti ? 'BROADCASTING...' : '🎉 FIRE CONFETTI'}</span>
-            </button>
-          )}
-
-          {/* Big Screen Button: Accessible to everyone */}
-          <button
-            type="button"
-            onClick={() => setIsDisplayModeOpen(true)}
-            className="display-mode-trigger-btn"
-            title="Open Big-Screen / TV Display Mode"
-          >
-            <Tv size={15} />
-            <span>BIG SCREEN MODE</span>
-          </button>
-        </div>
+        {/* Big Screen Button */}
+        <button
+          type="button"
+          onClick={() => setIsDisplayModeOpen(true)}
+          className="display-mode-trigger-btn"
+          title="Open Big-Screen / TV Display Mode"
+        >
+          <Tv size={15} />
+          <span>BIG SCREEN MODE</span>
+        </button>
       </div>
 
       {/* DOMINANT DIGITAL LED COUNTER HERO */}

@@ -10,9 +10,9 @@ interface NavigationProps {
 }
 
 export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }) => {
-  const { isAuthenticated, isPendingAssignment, role } = useAuth();
+  const { isAuthenticated, isPendingAssignment, role, isRoleVerified } = useAuth();
   const isObserverMode = !isAuthenticated || !role;
-  const isSuperAdmin = role === 'superAdmin';
+  const isSuperAdmin = role === 'superAdmin' && isRoleVerified;
 
   // In Observer Mode: ONLY Home and Upward Race tabs are visible
   if (isObserverMode) {

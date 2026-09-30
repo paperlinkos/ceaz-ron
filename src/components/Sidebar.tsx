@@ -35,10 +35,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const [internalCollapsed, setInternalCollapsed] = useState<boolean>(false);
   const isCollapsed = controlledCollapsed !== undefined ? controlledCollapsed : internalCollapsed;
 
-  const { isAuthenticated, userProfile, isPendingAssignment, role, logout } = useAuth();
+  const { isAuthenticated, userProfile, isPendingAssignment, role, isRoleVerified, logout } = useAuth();
   const { isOnline } = useNetworkStatus();
   const isObserverMode = !isAuthenticated || !role;
-  const isSuperAdmin = role === 'superAdmin';
+  const isSuperAdmin = role === 'superAdmin' && isRoleVerified;
 
   const toggleSidebar = () => {
     if (onToggleCollapse) {

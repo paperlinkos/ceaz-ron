@@ -29,7 +29,8 @@ interface RoleDashboardViewProps {
 }
 
 export const RoleDashboardView: React.FC<RoleDashboardViewProps> = ({ onNavigateTab, onOpenAuth }) => {
-  const { userProfile, soulWinnerProfile, isAuthenticated } = useAuth();
+  const { userProfile, soulWinnerProfile, isAuthenticated, role, isRoleVerified } = useAuth();
+  const isSuperAdmin = role === 'superAdmin' && isRoleVerified;
 
   const [data, setData] = useState<DashboardViewData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -189,7 +190,7 @@ export const RoleDashboardView: React.FC<RoleDashboardViewProps> = ({ onNavigate
       </nav>
 
       {/* SUPER ADMIN CONFETTI CELEBRATION QUICK BAR */}
-      {userProfile?.role === 'superAdmin' && (
+      {isSuperAdmin && (
         <div
           className="account-card"
           style={{
