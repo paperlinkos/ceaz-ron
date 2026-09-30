@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Tv, Activity } from 'lucide-react';
+import { CheckCircle2, Tv } from 'lucide-react';
 import { FlipCounterDisplay } from './FlipCounterDisplay';
 import { UpwardRaceVisualization } from './UpwardRaceVisualization';
 import { BigScreenDisplayModal } from './BigScreenDisplayModal';
 import { AppleProgressRingsWidget } from './AppleProgressRingsWidget';
-import { LiveSurgeLineGraph } from './LiveSurgeLineGraph';
 import { CampaignCountdownTimer } from '../common/CampaignCountdownTimer';
 import { GroupHomeView } from '../home/GroupHomeView';
 import { ChurchHomeView } from '../home/ChurchHomeView';
@@ -65,39 +64,19 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
           <span>CEAZ1 REACHOUT NIGERIA SOUL WINNING CAMPAIGN</span>
         </div>
 
-        {/* Action Buttons: Full Screen Surge Graph & Big Screen TV Mode */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-          <button
-            type="button"
-            onClick={() => {
-              setDisplayModeInitialPage('timeline');
-              setIsDisplayModeOpen(true);
-            }}
-            className="display-mode-trigger-btn"
-            style={{
-              background: 'rgba(0, 135, 81, 0.18)',
-              border: '1px solid rgba(0, 255, 135, 0.45)',
-              color: '#00ff87',
-            }}
-            title="Open Full-Screen Live Surge Line Graph (Press 4 in Fullscreen)"
-          >
-            <Activity size={15} />
-            <span>FULL SCREEN SURGE GRAPH</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              setDisplayModeInitialPage('counter');
-              setIsDisplayModeOpen(true);
-            }}
-            className="display-mode-trigger-btn"
-            title="Open Big-Screen / TV Display Mode"
-          >
-            <Tv size={15} />
-            <span>BIG SCREEN MODE</span>
-          </button>
-        </div>
+        {/* Action Button: Big Screen TV Mode */}
+        <button
+          type="button"
+          onClick={() => {
+            setDisplayModeInitialPage('counter');
+            setIsDisplayModeOpen(true);
+          }}
+          className="display-mode-trigger-btn"
+          title="Open Big-Screen / TV Display Mode"
+        >
+          <Tv size={15} />
+          <span>BIG SCREEN MODE</span>
+        </button>
       </div>
 
       {/* CAMPAIGN LAUNCH COUNTDOWN (Visible until Oct 1, 9:00 AM) */}
@@ -173,15 +152,6 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
           variant="barChart"
           highlightGroupId={soulWinnerProfile?.groupId}
           highlightGroupName={soulWinnerProfile?.groupName}
-        />
-      </section>
-
-      {/* CAMPAIGN REAL-TIME SOUL SURGE TIMELINE & INFLOW LINE GRAPH */}
-      <section className="surge-line-graph-section" style={{ marginTop: '28px', marginBottom: '20px' }}>
-        <LiveSurgeLineGraph
-          records={counterData.allRecords}
-          isFullScreenMode={false}
-          defaultMode="velocity"
         />
       </section>
 

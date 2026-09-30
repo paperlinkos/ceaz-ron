@@ -278,33 +278,6 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                   groups={counterData.groupCompetitors}
                   onViewAll={() => setActivePage('groups')}
                 />
-
-                {/* DIRECT SHORTCUT TO LARGE SURGE LINE GRAPH */}
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-                  <button
-                    type="button"
-                    onClick={() => setActivePage('timeline')}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      background: 'rgba(0, 135, 81, 0.15)',
-                      border: '1.5px solid rgba(0, 255, 135, 0.35)',
-                      borderRadius: '12px',
-                      padding: '7px 16px',
-                      color: '#00ff87',
-                      fontSize: '0.8rem',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      boxShadow: '0 4px 16px rgba(0, 135, 81, 0.15)',
-                      transition: 'all 0.2s ease',
-                      letterSpacing: '0.03em',
-                    }}
-                  >
-                    <Activity size={15} />
-                    <span>VIEW LIVE SOUL SURGE LINE GRAPH (PRESS 4) →</span>
-                  </button>
-                </div>
               </div>
             </div>
           </div>
@@ -774,6 +747,15 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                   );
                 })()
               )}
+            </div>
+
+            {/* LIVE SOUL SURGE LINE GRAPH (DIRECTLY UNDER CHURCHES STANDINGS) */}
+            <div style={{ marginTop: '12px' }}>
+              <LiveSurgeLineGraph
+                records={counterData.allRecords}
+                isFullScreenMode={true}
+                defaultMode="velocity"
+              />
             </div>
           </div>
         )}
