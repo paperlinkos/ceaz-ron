@@ -4,14 +4,14 @@ import { registerSW } from 'virtual:pwa-register';
 import App from './App.tsx';
 import './styles/main.css';
 
-// Purge any stale legacy organization or target caches that held old 20 groups or < 129 churches
+// Purge any stale legacy organization or target caches that held old groups or < 132 churches
 try {
   const orgCacheRaw = localStorage.getItem('ron_organizations_cache');
   if (orgCacheRaw) {
     const orgCache = JSON.parse(orgCacheRaw);
-    if (!orgCache.churches || orgCache.churches.length < 129 || (orgCache.groups && orgCache.groups.length < 24)) {
+    if (!orgCache.churches || orgCache.churches.length < 132 || (orgCache.groups && orgCache.groups.length < 25)) {
       localStorage.removeItem('ron_organizations_cache');
-      console.log('[Cache] Purged outdated organization cache to load fresh 129 Churches & 24 Groups.');
+      console.log('[Cache] Purged outdated organization cache to load fresh 132 Churches & 25 Groups (including Corinthian Park).');
     }
   }
 } catch {
@@ -22,9 +22,9 @@ try {
   const targetCacheRaw = localStorage.getItem('ron_local_targets_cache');
   if (targetCacheRaw) {
     const targets = JSON.parse(targetCacheRaw);
-    if (!Array.isArray(targets) || targets.filter((t: any) => t.level === 'church').length < 129) {
+    if (!Array.isArray(targets) || targets.filter((t: any) => t.level === 'church').length < 130) {
       localStorage.removeItem('ron_local_targets_cache');
-      console.log('[Cache] Purged outdated targets cache to load fresh 129 church targets.');
+      console.log('[Cache] Purged outdated targets cache to load fresh church targets.');
     }
   }
 } catch {

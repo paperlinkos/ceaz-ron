@@ -61,17 +61,39 @@ export function calculateOrganizationProgress(input: CalculateProgressInput): Or
  * Checks targetsList first, then falls back to the exact official PDF target for that specific group.
  */
 export function calculateGroupRaceProgress(
-  records: Array<{ groupId?: string }>,
+  records: Array<{ groupId?: string; groupName?: string; churchId?: string; churchName?: string }>,
   groups: Group[],
   targetsList: Target[],
-  defaultGroupTarget?: number
+  defaultGroupTarget?: number,
+  churches?: Church[]
 ): OrganizationProgress[] {
   // 1. Calculate actual soul count per group ID from valid records
   const groupActualCounts = new Map<string, number>();
 
   records.forEach((rec) => {
-    if (rec.groupId) {
-      groupActualCounts.set(rec.groupId, (groupActualCounts.get(rec.groupId) || 0) + 1);
+    let matchedGroupId = rec.groupId;
+
+    // Fallback 1: match by churchId if parent groupId is known
+    if (!matchedGroupId && rec.churchId && churches) {
+      const ch = churches.find((c) => c.id === rec.churchId);
+      if (ch) matchedGroupId = ch.groupId;
+    }
+
+    // Fallback 2: match by groupName case-insensitively
+    if (!matchedGroupId && rec.groupName) {
+      const recGName = rec.groupName.toLowerCase().trim();
+      const g = groups.find(
+        (grp) =>
+          grp.name.toLowerCase().trim() === recGName ||
+          grp.code.toLowerCase().trim() === recGName ||
+          recGName.includes(grp.name.toLowerCase().trim()) ||
+          grp.name.toLowerCase().trim().includes(recGName)
+      );
+      if (g) matchedGroupId = g.id;
+    }
+
+    if (matchedGroupId) {
+      groupActualCounts.set(matchedGroupId, (groupActualCounts.get(matchedGroupId) || 0) + 1);
     }
   });
 
@@ -109,7 +131,7 @@ export function calculateGroupRaceProgress(
  * Checks targetsList first, then falls back to the exact official PDF target for that specific church.
  */
 export function calculateChurchRaceProgress(
-  records: Array<{ groupId?: string; churchId?: string }>,
+  records: Array<{ groupId?: string; churchId?: string; churchName?: string; groupName?: string }>,
   churches: Church[],
   targetsList: Target[],
   groupId?: string,
@@ -119,8 +141,23 @@ export function calculateChurchRaceProgress(
 
   const churchActualCounts = new Map<string, number>();
   records.forEach((rec) => {
-    if (rec.churchId) {
-      churchActualCounts.set(rec.churchId, (churchActualCounts.get(rec.churchId) || 0) + 1);
+    let matchedChurchId = rec.churchId;
+
+    // Fallback: match by churchName case-insensitively
+    if (!matchedChurchId && rec.churchName) {
+      const recCName = rec.churchName.toLowerCase().trim();
+      const ch = churches.find(
+        (c) =>
+          c.name.toLowerCase().trim() === recCName ||
+          c.code.toLowerCase().trim() === recCName ||
+          recCName.includes(c.name.toLowerCase().trim()) ||
+          c.name.toLowerCase().trim().includes(recCName)
+      );
+      if (ch) matchedChurchId = ch.id;
+    }
+
+    if (matchedChurchId) {
+      churchActualCounts.set(matchedChurchId, (churchActualCounts.get(matchedChurchId) || 0) + 1);
     }
   });
 

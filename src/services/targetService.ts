@@ -218,6 +218,12 @@ export const OFFICIAL_TARGET_MAP: { orgId: string; level: 'zone' | 'group' | 'ch
   { orgId: 'grp-wealthy-place', level: 'group', target: 1000 },
   { orgId: 'grp-city-church', level: 'group', target: 1500 },
   { orgId: 'grp-teens-church', level: 'group', target: 1500 },
+  { orgId: 'grp-corinthian-park', level: 'group', target: 1000 },
+
+  // Corinthian Park Churches
+  { orgId: 'ch-corinthian-park-1', level: 'church', target: 500 },
+  { orgId: 'ch-corinthian-park-2', level: 'church', target: 300 },
+  { orgId: 'ch-ce-corinthian-park', level: 'church', target: 200 },
 
   // Churches (127 Churches)
   // Zonal Church Group

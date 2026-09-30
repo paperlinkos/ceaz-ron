@@ -124,7 +124,7 @@ export function subscribeToZonalCounter(
 
       // 2. Aggregate Group race progress using Target + Progress Engine
       const [groupsList, churchesList] = await Promise.all([getGroups(), getChurches()]);
-      const groupProgresses = calculateGroupRaceProgress(allRecords, groupsList, targetsList);
+      const groupProgresses = calculateGroupRaceProgress(allRecords, groupsList, targetsList, undefined, churchesList);
 
       const groupCompetitors: GroupRaceCompetitor[] = groupProgresses.map((p) => {
         const churchProgresses = calculateChurchRaceProgress(allRecords, churchesList, targetsList, p.organizationId);

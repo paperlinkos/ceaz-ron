@@ -42,6 +42,7 @@ export const DEFAULT_GROUPS: Group[] = [
   { id: 'grp-wealthy-place', zoneId: 'zone-abuja-1', name: 'Wealthy Place Church', code: 'GRP-WLP', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'grp-city-church', zoneId: 'zone-abuja-1', name: 'CE Abuja City Church', code: 'GRP-CCC', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
   { id: 'grp-teens-church', zoneId: 'zone-abuja-1', name: 'Teens Church Group', code: 'GRP-TCG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'grp-corinthian-park', zoneId: 'zone-abuja-1', name: 'Corinthian Park Group', code: 'GRP-CPG', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
 ];
 
 export const DEFAULT_CHURCHES: Church[] = [
@@ -219,6 +220,11 @@ export const DEFAULT_CHURCHES: Church[] = [
 
   // Wealthy Place Church
   { id: 'ch-ce-wealthy-place', groupId: 'grp-wealthy-place', name: 'CE Wealthy Place', code: 'CH-WLP', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+
+  // Corinthian Park Group
+  { id: 'ch-corinthian-park-1', groupId: 'grp-corinthian-park', name: 'Corinthian Park Church 1', code: 'CH-CP1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-corinthian-park-2', groupId: 'grp-corinthian-park', name: 'Corinthian Park Church 2', code: 'CH-CP2', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'ch-ce-corinthian-park', groupId: 'grp-corinthian-park', name: 'CE Corinthian Park', code: 'CH-CP', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
 ];
 
 

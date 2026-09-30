@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useSoulRecords } from '../../hooks/useSoulRecords';
-import { DEFAULT_GROUPS, DEFAULT_CHURCHES } from '../../services/organizationService';
+import { DEFAULT_GROUPS, DEFAULT_CHURCHES, getGroups, getChurches } from '../../services/organizationService';
 import { saveLocalRecord } from '../../services/indexedDbService';
 import { syncPendingRecords, notifyRecordChanges } from '../../services/syncService';
 import { parseCSV } from '../../utils/csv';
@@ -85,11 +85,25 @@ export const LeaderSoulEntryView: React.FC = () => {
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [detectedOrgScope, setDetectedOrgScope] = useState<DetectedOrgScope | null>(null);
 
-  // Filtered churches list based on selected group
-  const availableGroups: Group[] = DEFAULT_GROUPS;
+  // Available groups and churches from live database / cache
+  const [availableGroups, setAvailableGroups] = useState<Group[]>(DEFAULT_GROUPS);
+  const [availableChurches, setAvailableChurches] = useState<ChurchType[]>(DEFAULT_CHURCHES);
+
+  useEffect(() => {
+    let isMounted = true;
+    Promise.all([getGroups(), getChurches()]).then(([gList, cList]) => {
+      if (isMounted) {
+        if (gList && gList.length > 0) setAvailableGroups(gList);
+        if (cList && cList.length > 0) setAvailableChurches(cList);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const getChurchesForGroup = (grpId: string): ChurchType[] => {
-    return DEFAULT_CHURCHES.filter((c) => c.groupId === grpId);
+    return availableChurches.filter((c) => c.groupId === grpId);
   };
 
   // Sync initial selections if profile updates
@@ -140,8 +154,8 @@ export const LeaderSoulEntryView: React.FC = () => {
 
     setIsSingleSubmitting(true);
     try {
-      const churchObj = DEFAULT_CHURCHES.find((c) => c.id === selectedChurchId);
-      const groupObj = DEFAULT_GROUPS.find((g) => g.id === (churchObj?.groupId || selectedGroupId));
+      const churchObj = availableChurches.find((c) => c.id === selectedChurchId);
+      const groupObj = availableGroups.find((g) => g.id === (churchObj?.groupId || selectedGroupId));
       const loc = churchObj?.name || 'Abuja';
 
       const nowIso = new Date().toISOString();
@@ -267,20 +281,34 @@ export const LeaderSoulEntryView: React.FC = () => {
       let matchedGroupName: string | undefined = undefined;
 
       if (churchNameVal.trim()) {
-        const foundCh = DEFAULT_CHURCHES.find(
+        const normVal = churchNameVal.toLowerCase().trim();
+        const foundCh = availableChurches.find(
           (c) =>
-            c.name.toLowerCase().trim() === churchNameVal.toLowerCase().trim() ||
-            c.code.toLowerCase() === churchNameVal.toLowerCase().trim()
+            c.name.toLowerCase().trim() === normVal ||
+            c.code.toLowerCase() === normVal ||
+            c.name.toLowerCase().includes(normVal) ||
+            normVal.includes(c.name.toLowerCase().trim())
         );
         if (foundCh) {
           matchedChurchId = foundCh.id;
           matchedChurchName = foundCh.name;
           matchedGroupId = foundCh.groupId;
-          const foundGrp = DEFAULT_GROUPS.find((g) => g.id === foundCh.groupId);
+          const foundGrp = availableGroups.find((g) => g.id === foundCh.groupId);
           matchedGroupName = foundGrp?.name;
         } else if (!overrideChurch) {
-          isValid = false;
-          errorMsg = `Church "${churchNameVal}" not found`;
+          if (bulkTargetChurchId || scope?.matchedChurch) {
+            const fallbackCh = availableChurches.find((c) => c.id === (scope?.matchedChurch?.id || bulkTargetChurchId));
+            if (fallbackCh) {
+              matchedChurchId = fallbackCh.id;
+              matchedChurchName = fallbackCh.name;
+              matchedGroupId = fallbackCh.groupId;
+              const foundGrp = availableGroups.find((g) => g.id === fallbackCh.groupId);
+              matchedGroupName = foundGrp?.name;
+            }
+          } else {
+            isValid = false;
+            errorMsg = `Church "${churchNameVal}" not found`;
+          }
         }
       } else if (scope?.matchedChurch) {
         matchedChurchId = scope.matchedChurch.id;
@@ -322,7 +350,7 @@ export const LeaderSoulEntryView: React.FC = () => {
       const text = evt.target?.result as string;
       if (text) {
         // Run smart detector on filename & content
-        const scope = detectOrganizationFromFilenameAndContent(file.name, text);
+        const scope = detectOrganizationFromFilenameAndContent(file.name, text, availableChurches, availableGroups);
         setDetectedOrgScope(scope);
 
         if (scope.matchedChurch) {
@@ -330,7 +358,7 @@ export const LeaderSoulEntryView: React.FC = () => {
           setBulkTargetGroupId(scope.matchedChurch.groupId);
         } else if (scope.matchedGroup) {
           setBulkTargetGroupId(scope.matchedGroup.id);
-          const groupChurches = DEFAULT_CHURCHES.filter((c) => c.groupId === scope.matchedGroup?.id);
+          const groupChurches = availableChurches.filter((c) => c.groupId === scope.matchedGroup?.id);
           if (groupChurches.length > 0) {
             setBulkTargetChurchId(groupChurches[0].id);
           }
@@ -352,8 +380,8 @@ export const LeaderSoulEntryView: React.FC = () => {
     setBulkCommitError(null);
 
     try {
-      const fallbackChurch = DEFAULT_CHURCHES.find((c) => c.id === bulkTargetChurchId);
-      const fallbackGroup = DEFAULT_GROUPS.find((g) => g.id === (fallbackChurch?.groupId || bulkTargetGroupId));
+      const fallbackChurch = availableChurches.find((c) => c.id === bulkTargetChurchId);
+      const fallbackGroup = availableGroups.find((g) => g.id === (fallbackChurch?.groupId || bulkTargetGroupId));
 
       const nowIso = new Date().toISOString();
       let addedCount = 0;
@@ -729,7 +757,7 @@ export const LeaderSoulEntryView: React.FC = () => {
                   value={templateSelectedChurchId}
                   onChange={(e) => {
                     setTemplateSelectedChurchId(e.target.value);
-                    const ch = DEFAULT_CHURCHES.find((c) => c.id === e.target.value);
+                    const ch = availableChurches.find((c) => c.id === e.target.value);
                     if (ch) setTemplateSelectedGroupId(ch.groupId);
                   }}
                   disabled={isChurchAdmin}
@@ -737,10 +765,10 @@ export const LeaderSoulEntryView: React.FC = () => {
                   style={{ fontSize: '0.84rem', padding: '8px 12px', height: '40px', background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1', borderRadius: '8px', opacity: isChurchAdmin ? 0.8 : 1 }}
                 >
                   {(isGroupAdmin
-                    ? DEFAULT_CHURCHES.filter((c) => c.groupId === (soulWinnerProfile?.groupId || bulkTargetGroupId))
+                    ? availableChurches.filter((c) => c.groupId === (soulWinnerProfile?.groupId || bulkTargetGroupId))
                     : isChurchAdmin
-                    ? DEFAULT_CHURCHES.filter((c) => c.id === (soulWinnerProfile?.churchId || templateSelectedChurchId))
-                    : DEFAULT_CHURCHES
+                    ? availableChurches.filter((c) => c.id === (soulWinnerProfile?.churchId || templateSelectedChurchId))
+                    : availableChurches
                   ).map((c) => (
                     <option key={c.id} value={c.id}>
                       {c.name} ({c.code})
@@ -793,7 +821,7 @@ export const LeaderSoulEntryView: React.FC = () => {
                 <Download size={16} />
                 <span>
                   Download Church Template (
-                  {DEFAULT_CHURCHES.find((c) => c.id === (isChurchAdmin ? soulWinnerProfile?.churchId : templateSelectedChurchId))?.name || 'Your Church'}
+                  {availableChurches.find((c) => c.id === (isChurchAdmin ? soulWinnerProfile?.churchId : templateSelectedChurchId))?.name || 'Your Church'}
                   )
                 </span>
               </button>
@@ -1049,7 +1077,7 @@ export const LeaderSoulEntryView: React.FC = () => {
                         <td style={{ padding: '8px 12px', color: '#334155' }}>{row.phone}</td>
                         <td style={{ padding: '8px 12px', color: '#334155' }}>{row.location}</td>
                         <td style={{ padding: '8px 12px', color: '#059669', fontWeight: 600 }}>
-                          {row.churchName || DEFAULT_CHURCHES.find((c) => c.id === bulkTargetChurchId)?.name || 'Default'}
+                          {row.churchName || availableChurches.find((c) => c.id === bulkTargetChurchId)?.name || 'Default'}
                         </td>
                       </tr>
                     ))}
