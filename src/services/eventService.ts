@@ -266,8 +266,16 @@ export async function updateEventConfig(
 export async function triggerLiveCelebration(
   eventId: string = DEFAULT_EVENT_CONFIG.id,
   payload: {
-    type?: 'manual' | 'milestone';
+    type?: 'manual' | 'milestone' | 'church_milestone' | 'group_milestone';
+    entityType?: 'church' | 'group' | 'zone';
+    entityId?: string;
+    entityName?: string;
+    groupName?: string;
     milestoneValue?: number;
+    actual?: number;
+    target?: number;
+    percentage?: number;
+    headline?: string;
     message?: string;
     actorId?: string;
   } = {}
@@ -280,7 +288,15 @@ export async function triggerLiveCelebration(
       type: payload.type || 'manual',
       message: payload.message || 'SPECIAL ZONAL CELEBRATION!',
       triggeredBy: payload.actorId || 'superAdmin',
+      ...(payload.entityType ? { entityType: payload.entityType } : {}),
+      ...(payload.entityId ? { entityId: payload.entityId } : {}),
+      ...(payload.entityName ? { entityName: payload.entityName } : {}),
+      ...(payload.groupName ? { groupName: payload.groupName } : {}),
       ...(payload.milestoneValue != null ? { milestoneValue: payload.milestoneValue } : {}),
+      ...(payload.actual != null ? { actual: payload.actual } : {}),
+      ...(payload.target != null ? { target: payload.target } : {}),
+      ...(payload.percentage != null ? { percentage: payload.percentage } : {}),
+      ...(payload.headline ? { headline: payload.headline } : {}),
     };
 
     await updateDoc(docRef, {

@@ -34,6 +34,10 @@ export const ConfettiCelebrationOverlay: React.FC = () => {
     title: string;
     subtitle?: string;
     badge?: string;
+    tag?: string;
+    entityName?: string;
+    groupName?: string;
+    statLine?: string;
   } | null>(null);
 
   const lastTriggerTimeRef = useRef<number>(Date.now() - 3000);
@@ -48,12 +52,20 @@ export const ConfettiCelebrationOverlay: React.FC = () => {
     return () => unsubscribe();
   }, [eventConfig.target]);
 
-  const showCelebrationBanner = (title: string, subtitle?: string, badge = '🎉') => {
-    setActiveBanner({ title, subtitle, badge });
+  const showCelebrationBanner = (data: {
+    title: string;
+    subtitle?: string;
+    badge?: string;
+    tag?: string;
+    entityName?: string;
+    groupName?: string;
+    statLine?: string;
+  }) => {
+    setActiveBanner(data);
     if (bannerTimerRef.current) clearTimeout(bannerTimerRef.current);
     bannerTimerRef.current = setTimeout(() => {
       setActiveBanner(null);
-    }, 6500);
+    }, 8500);
   };
 
   // 1. LISTEN TO REAL-TIME FIRESTORE BROADCAST TRIGGERS (FROM SUPER ADMIN OR AUTOMATION)
@@ -66,18 +78,44 @@ export const ConfettiCelebrationOverlay: React.FC = () => {
 
       // Only fire if the trigger happened in the last 20 seconds (avoids replay on stale load)
       if (Date.now() - trigger.timestamp < 20000) {
-        fireFullCelebration(6500);
+        fireFullCelebration(7500);
         playCelebrationSound();
 
-        const title = trigger.milestoneValue
-          ? `${trigger.milestoneValue.toLocaleString()} SOULS MILESTONE REACHED!`
-          : trigger.message || 'SPECIAL ZONAL CELEBRATION!';
-        
-        const subtitle = trigger.milestoneValue
-          ? 'GLORY TO GOD! The harvest continues across Abuja Zone 1!'
-          : 'Praise the Lord for extraordinary supernatural victory!';
+        if (trigger.type === 'church_milestone' || trigger.type === 'group_milestone') {
+          const badge = trigger.entityType === 'church' ? '🏛️' : '🏆';
+          const tag = trigger.entityType === 'church' ? 'CHURCH TARGET MILESTONE' : 'GROUP VICTORY MILESTONE';
+          const title = trigger.headline || (trigger.entityName ? `${trigger.entityName.toUpperCase()} CELEBRATION!` : 'SPECIAL MILESTONE!');
+          const subtitle = trigger.message || 'Praise God for glorious soul winning increase!';
+          const statLine =
+            trigger.actual != null && trigger.target != null
+              ? `${trigger.actual.toLocaleString()} / ${trigger.target.toLocaleString()} Souls Won (${trigger.percentage || 100}%)`
+              : undefined;
 
-        showCelebrationBanner(title, subtitle, '👑');
+          showCelebrationBanner({
+            title,
+            subtitle,
+            badge,
+            tag,
+            entityName: trigger.entityName,
+            groupName: trigger.groupName,
+            statLine,
+          });
+        } else {
+          const title = trigger.milestoneValue
+            ? `${trigger.milestoneValue.toLocaleString()} SOULS MILESTONE REACHED!`
+            : trigger.message || 'SPECIAL ZONAL CELEBRATION!';
+          
+          const subtitle = trigger.milestoneValue
+            ? 'GLORY TO GOD! The harvest continues across Abuja Zone 1!'
+            : 'Praise the Lord for extraordinary supernatural victory!';
+
+          showCelebrationBanner({
+            title,
+            subtitle,
+            badge: '👑',
+            tag: 'ZONAL MILESTONE CELEBRATION',
+          });
+        }
       }
     }
   }, [eventConfig.lastCelebrationTrigger]);
@@ -116,7 +154,12 @@ export const ConfettiCelebrationOverlay: React.FC = () => {
 
         const title = `${milestone.toLocaleString()} SOULS MILESTONE CONQUERED!`;
         const subtitle = `Abuja Zone 1 has officially crossed ${milestone.toLocaleString()} souls won!`;
-        showCelebrationBanner(title, subtitle, '🏆');
+        showCelebrationBanner({
+          title,
+          subtitle,
+          badge: '🏆',
+          tag: 'ZONAL MILESTONE CONQUERED',
+        });
 
         // If Super Admin is currently logged in, broadcast to all other screens in the auditorium
         if (isSuperAdmin) {
@@ -177,7 +220,7 @@ export const ConfettiCelebrationOverlay: React.FC = () => {
         </div>
 
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <span
               style={{
                 fontSize: '0.72rem',
@@ -191,14 +234,29 @@ export const ConfettiCelebrationOverlay: React.FC = () => {
                 gap: '4px',
               }}
             >
-              <Sparkles size={13} /> ZONAL MILESTONE CELEBRATION
+              <Sparkles size={13} /> {activeBanner.tag || 'ZONAL MILESTONE CELEBRATION'}
             </span>
+
+            {activeBanner.groupName && (
+              <span
+                style={{
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  color: '#ffffff',
+                  padding: '1px 8px',
+                  borderRadius: '10px',
+                  fontSize: '0.68rem',
+                  fontWeight: 800,
+                }}
+              >
+                {activeBanner.groupName}
+              </span>
+            )}
           </div>
 
           <h3
             style={{
-              margin: '3px 0 0 0',
-              fontSize: '1.15rem',
+              margin: '4px 0 2px 0',
+              fontSize: '1.18rem',
               fontWeight: '900',
               fontFamily: "'Oxanium', sans-serif",
               color: '#ffffff',
@@ -209,14 +267,34 @@ export const ConfettiCelebrationOverlay: React.FC = () => {
             {activeBanner.title}
           </h3>
 
+          {activeBanner.statLine && (
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'rgba(0, 0, 0, 0.35)',
+                border: '1px solid rgba(0, 255, 135, 0.4)',
+                borderRadius: '8px',
+                padding: '2px 8px',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                color: '#00ff87',
+                margin: '2px 0',
+              }}
+            >
+              <span>{activeBanner.statLine}</span>
+            </div>
+          )}
+
           {activeBanner.subtitle && (
             <p
               style={{
                 margin: '4px 0 0 0',
-                fontSize: '0.82rem',
-                color: 'rgba(255, 255, 255, 0.88)',
+                fontSize: '0.84rem',
+                color: 'rgba(255, 255, 255, 0.92)',
                 fontWeight: '500',
-                lineHeight: 1.3,
+                lineHeight: 1.35,
               }}
             >
               {activeBanner.subtitle}

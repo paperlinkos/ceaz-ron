@@ -11,11 +11,40 @@ export interface MilestoneConfig {
 export interface CelebrationTrigger {
   id: string;
   timestamp: number;
-  type: 'manual' | 'milestone';
+  type: 'manual' | 'milestone' | 'church_milestone' | 'group_milestone';
+  entityType?: 'church' | 'group' | 'zone';
+  entityId?: string;
+  entityName?: string;
+  groupName?: string;
   milestoneValue?: number;
+  actual?: number;
+  target?: number;
+  percentage?: number;
+  headline?: string;
   message?: string;
   triggeredBy?: string;
 }
+
+export interface MilestoneAlert {
+  id: string;
+  eventId: string;
+  entityType: 'church' | 'group';
+  entityId: string;
+  entityName: string;
+  groupName?: string;
+  milestoneType: 'percentage' | 'volume';
+  milestoneValue: number; // e.g. 50, 75, 100, 150 (percentage) or 1000, 5000 (volume)
+  actual: number;
+  target: number;
+  percentage: number;
+  headline: string;
+  subheadline: string;
+  timestamp: number;
+  status: 'pending' | 'released' | 'dismissed';
+  releasedAt?: number;
+  releasedBy?: string;
+}
+
 
 export interface EventConfig {
   id: string;

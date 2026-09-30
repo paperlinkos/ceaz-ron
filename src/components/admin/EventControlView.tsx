@@ -25,6 +25,7 @@ import {
   type ZonalCounterData,
 } from '../../services/counterService';
 import { getZones, getGroups, getChurches } from '../../services/organizationService';
+import { MilestoneCelebrationManager } from './MilestoneCelebrationManager';
 
 export const EventControlView: React.FC = () => {
   const { eventConfig, isUpcoming, isLive, isCompleted, changeStatus, saveSettings, triggerCelebration } = useEventConfig();
@@ -287,6 +288,9 @@ export const EventControlView: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* SMART CHURCH & GROUP MILESTONE CELEBRATION COMMAND CENTER */}
+      <MilestoneCelebrationManager />
 
       {/* 2. ZONAL MILESTONES & LIVE CONFETTI CELEBRATIONS PANEL */}
       <div
