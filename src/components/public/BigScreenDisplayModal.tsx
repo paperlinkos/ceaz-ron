@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Layers, BarChart2, Church, Trophy, Search, X, ChevronLeft, ChevronRight, LayoutList, CircleDot } from 'lucide-react';
+import { Layers, BarChart2, Church, Trophy, Search, X, ChevronLeft, ChevronRight, LayoutList, CircleDot, Activity } from 'lucide-react';
 import { AppleProgressRingsWidget } from './AppleProgressRingsWidget';
 import { UpwardRaceVisualization } from './UpwardRaceVisualization';
+import { LiveSurgeLineGraph } from './LiveSurgeLineGraph';
 import { DEFAULT_CHURCHES, DEFAULT_GROUPS } from '../../services/organizationService';
 import { getOfficialTarget } from '../../services/targetService';
 import type { ZonalCounterData } from '../../services/counterService';
@@ -14,6 +15,7 @@ interface BigScreenDisplayModalProps {
   onClose: () => void;
   counterData: ZonalCounterData;
   eventStatus: EventStatus;
+  initialPage?: 'counter' | 'groups' | 'churches' | 'timeline';
 }
 
 interface ChurchStandingItem {
@@ -53,8 +55,15 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
   onClose,
   counterData,
   eventStatus,
+  initialPage = 'counter',
 }) => {
-  const [activePage, setActivePage] = useState<'counter' | 'groups' | 'churches'>('counter');
+  const [activePage, setActivePage] = useState<'counter' | 'groups' | 'churches' | 'timeline'>(initialPage);
+
+  useEffect(() => {
+    if (isOpen && initialPage) {
+      setActivePage(initialPage);
+    }
+  }, [isOpen, initialPage]);
   const [churchSearchQuery, setChurchSearchQuery] = useState<string>('');
   const [churchViewMode, setChurchViewMode] = useState<'cards' | 'rings'>('cards');
   const [isDockCollapsed, setIsDockCollapsed] = useState<boolean>(false);
@@ -92,7 +101,7 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
     return buildInitialChurchStandings();
   }, [counterData.groupCompetitors]);
 
-  // Keyboard controls: 1 = Counter, 2 = Groups, 3 = Churches, Esc = Exit
+  // Keyboard controls: 1 = Counter, 2 = Groups, 3 = Churches, 4 = Timeline, Esc = Exit
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isOpen) return;
@@ -104,6 +113,8 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
         setActivePage('groups');
       } else if (e.key === '3') {
         setActivePage('churches');
+      } else if (e.key === '4') {
+        setActivePage('timeline');
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -156,6 +167,16 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
         >
           <Church size={18} />
           {!isDockCollapsed && <span>CHURCHES STANDINGS</span>}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActivePage('timeline')}
+          className={`dock-btn ${activePage === 'timeline' ? 'dock-btn-active' : ''}`}
+          title="Live Surge Line Graph (Press 4)"
+        >
+          <Activity size={18} style={{ color: activePage === 'timeline' ? '#00ff87' : 'inherit' }} />
+          {!isDockCollapsed && <span>SURGE LINE GRAPH</span>}
         </button>
 
         <div className="dock-divider" />
@@ -257,6 +278,33 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                   groups={counterData.groupCompetitors}
                   onViewAll={() => setActivePage('groups')}
                 />
+
+                {/* DIRECT SHORTCUT TO LARGE SURGE LINE GRAPH */}
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setActivePage('timeline')}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      background: 'rgba(0, 135, 81, 0.15)',
+                      border: '1.5px solid rgba(0, 255, 135, 0.35)',
+                      borderRadius: '12px',
+                      padding: '7px 16px',
+                      color: '#00ff87',
+                      fontSize: '0.8rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 16px rgba(0, 135, 81, 0.15)',
+                      transition: 'all 0.2s ease',
+                      letterSpacing: '0.03em',
+                    }}
+                  >
+                    <Activity size={15} />
+                    <span>VIEW LIVE SOUL SURGE LINE GRAPH (PRESS 4) →</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -727,6 +775,26 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                 })()
               )}
             </div>
+          </div>
+        )}
+
+        {/* PAGE 4: LIVE SOUL SURGE LINE GRAPH (LARGE FULL SCREEN VIEW) */}
+        {activePage === 'timeline' && (
+          <div
+            className="big-screen-page-timeline"
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              minHeight: 'calc(100vh - 160px)',
+            }}
+          >
+            <LiveSurgeLineGraph
+              records={counterData.allRecords}
+              isFullScreenMode={false}
+              defaultMode="velocity"
+            />
           </div>
         )}
       </div>

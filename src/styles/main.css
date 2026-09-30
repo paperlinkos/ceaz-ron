@@ -5126,6 +5126,50 @@ select {
   }
 }
 
+/* ==========================================================================
+   LIVE SOUL SURGE TIMELINE & LINE GRAPH ENHANCEMENTS
+   ========================================================================== */
+@keyframes haloPulse {
+  0% {
+    r: 10;
+    opacity: 0.8;
+  }
+  70% {
+    r: 22;
+    opacity: 0.15;
+  }
+  100% {
+    r: 26;
+    opacity: 0;
+  }
+}
 
+.pulse-halo {
+  animation: haloPulse 2.2s ease-out infinite;
+  transform-origin: center;
+}
 
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 
+.live-surge-graph-container {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.live-surge-graph-container.fullscreen-surge-view {
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.live-surge-graph-container svg {
+  touch-action: pan-y;
+}

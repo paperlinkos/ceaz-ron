@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Tv } from 'lucide-react';
+import { CheckCircle2, Tv, Activity } from 'lucide-react';
 import { FlipCounterDisplay } from './FlipCounterDisplay';
 import { UpwardRaceVisualization } from './UpwardRaceVisualization';
 import { BigScreenDisplayModal } from './BigScreenDisplayModal';
 import { AppleProgressRingsWidget } from './AppleProgressRingsWidget';
+import { LiveSurgeLineGraph } from './LiveSurgeLineGraph';
 import { CampaignCountdownTimer } from '../common/CampaignCountdownTimer';
 import { GroupHomeView } from '../home/GroupHomeView';
 import { ChurchHomeView } from '../home/ChurchHomeView';
@@ -18,8 +19,9 @@ interface PublicHomeViewProps {
 
 export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOpenAuth }) => {
   const { eventConfig, isLive, isCompleted } = useEventConfig();
-  const { soulWinnerProfile, isAuthenticated, role } = useAuth();
+  const { soulWinnerProfile, role } = useAuth();
   const [isDisplayModeOpen, setIsDisplayModeOpen] = useState<boolean>(false);
+  const [displayModeInitialPage, setDisplayModeInitialPage] = useState<'counter' | 'groups' | 'churches' | 'timeline'>('counter');
 
   const targetVal = eventConfig.target >= 50000 ? eventConfig.target : 50000;
   const [counterData, setCounterData] = useState<ZonalCounterData>({
@@ -38,9 +40,6 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
     );
     return () => unsubscribe();
   }, [targetVal]);
-
-  // Observer Mode: Unauthenticated guest viewer
-  const isObserverMode = !isAuthenticated || !role;
 
   // 1. Group Role: Render 3-section Group Home View
   if (role === 'groupManager') {
@@ -66,18 +65,39 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
           <span>CEAZ1 REACHOUT NIGERIA SOUL WINNING CAMPAIGN</span>
         </div>
 
-        {/* Big Screen Button: ONLY shown in Observer Mode */}
-        {isObserverMode && (
+        {/* Action Buttons: Full Screen Surge Graph & Big Screen TV Mode */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
           <button
             type="button"
-            onClick={() => setIsDisplayModeOpen(true)}
+            onClick={() => {
+              setDisplayModeInitialPage('timeline');
+              setIsDisplayModeOpen(true);
+            }}
+            className="display-mode-trigger-btn"
+            style={{
+              background: 'rgba(0, 135, 81, 0.18)',
+              border: '1px solid rgba(0, 255, 135, 0.45)',
+              color: '#00ff87',
+            }}
+            title="Open Full-Screen Live Surge Line Graph (Press 4 in Fullscreen)"
+          >
+            <Activity size={15} />
+            <span>FULL SCREEN SURGE GRAPH</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setDisplayModeInitialPage('counter');
+              setIsDisplayModeOpen(true);
+            }}
             className="display-mode-trigger-btn"
             title="Open Big-Screen / TV Display Mode"
           >
             <Tv size={15} />
             <span>BIG SCREEN MODE</span>
           </button>
-        )}
+        </div>
       </div>
 
       {/* CAMPAIGN LAUNCH COUNTDOWN (Visible until Oct 1, 9:00 AM) */}
@@ -156,15 +176,23 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
         />
       </section>
 
-      {/* BIG SCREEN / TV DISPLAY MODE MODAL (Only when triggered in Observer Mode) */}
-      {isObserverMode && (
-        <BigScreenDisplayModal
-          isOpen={isDisplayModeOpen}
-          onClose={() => setIsDisplayModeOpen(false)}
-          counterData={counterData}
-          eventStatus={eventConfig.status}
+      {/* CAMPAIGN REAL-TIME SOUL SURGE TIMELINE & INFLOW LINE GRAPH */}
+      <section className="surge-line-graph-section" style={{ marginTop: '28px', marginBottom: '20px' }}>
+        <LiveSurgeLineGraph
+          records={counterData.allRecords}
+          isFullScreenMode={false}
+          defaultMode="velocity"
         />
-      )}
+      </section>
+
+      {/* BIG SCREEN / TV DISPLAY MODE MODAL (With Timeline Line Graph) */}
+      <BigScreenDisplayModal
+        isOpen={isDisplayModeOpen}
+        onClose={() => setIsDisplayModeOpen(false)}
+        counterData={counterData}
+        eventStatus={eventConfig.status}
+        initialPage={displayModeInitialPage}
+      />
     </div>
   );
 };
