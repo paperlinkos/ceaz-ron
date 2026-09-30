@@ -4,6 +4,7 @@ import { FlipCounterDisplay } from './FlipCounterDisplay';
 import { UpwardRaceVisualization } from './UpwardRaceVisualization';
 import { BigScreenDisplayModal } from './BigScreenDisplayModal';
 import { AppleProgressRingsWidget } from './AppleProgressRingsWidget';
+import { CampaignCountdownTimer } from '../common/CampaignCountdownTimer';
 import { GroupHomeView } from '../home/GroupHomeView';
 import { ChurchHomeView } from '../home/ChurchHomeView';
 import { subscribeToNationalCounter, type ZonalCounterData } from '../../services/counterService';
@@ -78,6 +79,9 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
           </button>
         )}
       </div>
+
+      {/* CAMPAIGN LAUNCH COUNTDOWN (Visible until Oct 1, 9:00 AM) */}
+      <CampaignCountdownTimer variant="home" />
 
       {/* DOMINANT DIGITAL LED COUNTER HERO */}
       <section className="counter-hero-section">

@@ -7,6 +7,7 @@ import { getOfficialTarget } from '../../services/targetService';
 import type { ZonalCounterData } from '../../services/counterService';
 import type { EventStatus } from '../../config/eventConfig';
 import { LiveUpdatesTicker } from '../common/LiveUpdatesTicker';
+import { CampaignCountdownTimer } from '../common/CampaignCountdownTimer';
 
 interface BigScreenDisplayModalProps {
   isOpen: boolean;
@@ -217,6 +218,7 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
             <div style={{ textAlign: 'center', marginTop: '2px' }}>
               <h1 className="spacex-screen-title">CEAZ1 REACHOUT NIGERIA</h1>
               <div className="spacex-screen-subtitle">SOUL WINNING CAMPAIGN HARVEST TRACKER</div>
+              <CampaignCountdownTimer variant="bigScreen" />
             </div>
 
             {/* MASSIVE HERO SOULS WON DISPLAY - EXPANDS ACROSS THE CENTRAL COMMAND STAGE */}
