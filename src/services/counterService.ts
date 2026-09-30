@@ -1,6 +1,6 @@
-import { collection, onSnapshot, query } from 'firebase/firestore';
+import { collection, onSnapshot, query, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from './firebase';
-import { getAllLocalRecords } from './indexedDbService';
+import { getAllLocalRecords, deleteLocalRecord, clearAllLocalRecords } from './indexedDbService';
 import { subscribeToSyncStatus } from './syncService';
 import { getGroups, getChurches } from './organizationService';
 import { getTargets, subscribeToTargets } from './targetService';
@@ -35,6 +35,28 @@ export type NationalCounterData = ZonalCounterData;
 
 type CounterListener = (data: ZonalCounterData) => void;
 
+/** Permanently purge all soul winning records from Firestore and clear local IndexedDB */
+export async function purgeAllSoulWinningRecords(_actorId: string = 'superAdmin'): Promise<number> {
+  let count = 0;
+  try {
+    const q = query(collection(db, 'soulWinningRecords'));
+    const snapshot = await getDocs(q);
+    const deletePromises = snapshot.docs.map((d) => deleteDoc(doc(db, 'soulWinningRecords', d.id)));
+    await Promise.all(deletePromises);
+    count = snapshot.docs.length;
+  } catch (err) {
+    console.warn('Error purging Firestore soul winning records:', err);
+  }
+
+  try {
+    await clearAllLocalRecords();
+  } catch (err) {
+    console.warn('Error clearing local IndexedDB soul records:', err);
+  }
+
+  return count;
+}
+
 /** Subscribes to realtime zonal soul count, targets, and group race aggregations */
 export function subscribeToZonalCounter(
   zonalTarget: number,
@@ -57,13 +79,28 @@ export function subscribeToZonalCounter(
           const data = doc.data();
           recordMap.set(data.id || doc.id, data);
         });
-      }
 
-      localRecords.forEach((rec) => {
-        if (!recordMap.has(rec.id)) {
-          recordMap.set(rec.id, rec);
-        }
-      });
+        // Filter local records:
+        // If a record was marked 'synced' locally, but is NOT in currentFirestoreDocs,
+        // it was deleted on the server. Prune it from local IndexedDB and DO NOT resurrect it.
+        // If a record is 'pending' (offline unsynced), keep and include it.
+        localRecords.forEach((rec) => {
+          if (!recordMap.has(rec.id)) {
+            if (rec.syncStatus === 'pending') {
+              recordMap.set(rec.id, rec);
+            } else {
+              deleteLocalRecord(rec.id).catch(() => {});
+            }
+          }
+        });
+      } else {
+        // Firestore not loaded yet or offline -> use all local records
+        localRecords.forEach((rec) => {
+          if (!recordMap.has(rec.id)) {
+            recordMap.set(rec.id, rec);
+          }
+        });
+      }
 
       const allRecords = Array.from(recordMap.values());
       const totalSoulsWon = allRecords.length;

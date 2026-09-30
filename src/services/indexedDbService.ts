@@ -84,3 +84,9 @@ export async function deleteLocalRecord(id: string): Promise<void> {
   const db = await getDB();
   await db.delete('soul_records', id);
 }
+
+/** Clear all records from IndexedDB */
+export async function clearAllLocalRecords(): Promise<void> {
+  const db = await getDB();
+  await db.clear('soul_records');
+}

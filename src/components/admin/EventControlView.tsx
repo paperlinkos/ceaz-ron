@@ -11,6 +11,7 @@ import {
   AlertTriangle,
   History,
   TrendingUp,
+  RotateCcw,
 } from 'lucide-react';
 import { useEventConfig } from '../../hooks/useEventConfig';
 import { getEventAuditLogs } from '../../services/eventService';
@@ -18,6 +19,7 @@ import type { EventAuditLog, EventStatus } from '../../config/eventConfig';
 import { UpwardRaceVisualization } from '../public/UpwardRaceVisualization';
 import {
   subscribeToNationalCounter,
+  purgeAllSoulWinningRecords,
   type ZonalCounterData,
 } from '../../services/counterService';
 import { getZones, getGroups, getChurches } from '../../services/organizationService';
@@ -39,6 +41,8 @@ export const EventControlView: React.FC = () => {
     targetStatus: EventStatus | null;
   }>({ isOpen: false, targetStatus: null });
 
+  const [resetModalOpen, setResetModalOpen] = useState(false);
+  const [resetSuccessMessage, setResetSuccessMessage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [auditLogs, setAuditLogs] = useState<EventAuditLog[]>([]);
   const [counts, setCounts] = useState<{
@@ -96,6 +100,23 @@ export const EventControlView: React.FC = () => {
       }
     } catch (err) {
       console.error('Error changing event status:', err);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handlePurgeSouls = async () => {
+    setIsProcessing(true);
+    try {
+      const deletedCount = await purgeAllSoulWinningRecords('superAdmin');
+      setResetModalOpen(false);
+      setResetSuccessMessage(
+        `Successfully reset soul counter to 0 (${deletedCount} server & local records cleared).`
+      );
+      setTimeout(() => setResetSuccessMessage(null), 5000);
+      await loadAuditLogsAndCounts();
+    } catch (err) {
+      console.error('Error resetting souls:', err);
     } finally {
       setIsProcessing(false);
     }
@@ -176,33 +197,53 @@ export const EventControlView: React.FC = () => {
 
         {/* CONTROLLED ACTION BUTTONS */}
         <div className="control-actions-bar">
-          {isUpcoming && (
-            <button
-              onClick={() => handleOpenConfirm('live')}
-              className="submit-button btn-start-event"
-            >
-              <Play size={20} />
-              <span>START EVENT</span>
-            </button>
-          )}
+          <div className="control-actions-main">
+            {isUpcoming && (
+              <button
+                onClick={() => handleOpenConfirm('live')}
+                className="submit-button btn-start-event"
+              >
+                <Play size={20} />
+                <span>START EVENT</span>
+              </button>
+            )}
 
-          {isLive && (
-            <button
-              onClick={() => handleOpenConfirm('completed')}
-              className="danger-button btn-end-event"
-            >
-              <Square size={20} />
-              <span>END EVENT</span>
-            </button>
-          )}
+            {isLive && (
+              <button
+                onClick={() => handleOpenConfirm('completed')}
+                className="danger-button btn-end-event"
+              >
+                <Square size={20} />
+                <span>END EVENT</span>
+              </button>
+            )}
 
-          {isCompleted && (
-            <div className="completed-summary-pill">
-              <CheckCircle2 size={18} />
-              <span>EVENT COMPLETED — FINAL TOTALS PRESERVED</span>
-            </div>
-          )}
+            {isCompleted && (
+              <div className="completed-summary-pill">
+                <CheckCircle2 size={18} />
+                <span>EVENT COMPLETED — FINAL TOTALS PRESERVED</span>
+              </div>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setResetModalOpen(true)}
+            className="btn-reset-souls"
+            title="Reset Souls Count to Zero"
+            disabled={isProcessing}
+          >
+            <RotateCcw size={16} />
+            <span>RESET SOULS TO ZERO</span>
+          </button>
         </div>
+
+        {resetSuccessMessage && (
+          <div className="reset-feedback-banner">
+            <CheckCircle2 size={16} />
+            <span>{resetSuccessMessage}</span>
+          </div>
+        )}
       </div>
 
       {/* 2. LIVE COMMAND CENTER OPERATIONAL DASHBOARD */}
@@ -340,6 +381,38 @@ export const EventControlView: React.FC = () => {
                   : confirmModal.targetStatus === 'live'
                   ? 'CONFIRM START'
                   : 'CONFIRM END'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* RESET SOULS TO ZERO CONFIRMATION MODAL */}
+      {resetModalOpen && (
+        <div className="modal-backdrop">
+          <div className="modal-card confirm-event-modal">
+            <AlertTriangle size={36} className="text-warning mx-auto" />
+            <h3 className="modal-title text-center text-danger">RESET SOULS TO ZERO?</h3>
+            <p className="modal-subtitle text-center">
+              Are you sure you want to reset the campaign counter? This will permanently delete all soul winning submission records from the database and local storage, setting the total soul counter back to 0.
+            </p>
+
+            <div className="modal-actions-row">
+              <button
+                type="button"
+                onClick={() => setResetModalOpen(false)}
+                disabled={isProcessing}
+                className="secondary-button"
+              >
+                CANCEL
+              </button>
+              <button
+                type="button"
+                onClick={handlePurgeSouls}
+                disabled={isProcessing}
+                className="danger-button"
+              >
+                {isProcessing ? 'RESETTING...' : 'YES, RESET TO ZERO'}
               </button>
             </div>
           </div>
