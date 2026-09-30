@@ -107,11 +107,14 @@ export function useSoulRecords() {
         syncStatus: 'pending',
 
         // Automatically attached organizational references from active Soul Winner profile
-        soulWinnerId: soulWinnerProfile?.userId,
+        soulWinnerId: soulWinnerProfile?.userId || soulWinnerProfile?.id,
         pcfId: soulWinnerProfile?.pcfId,
         churchId: soulWinnerProfile?.churchId,
+        churchName: soulWinnerProfile?.churchName,
         groupId: soulWinnerProfile?.groupId,
-        zoneId: soulWinnerProfile?.zoneId,
+        groupName: soulWinnerProfile?.groupName,
+        zoneId: soulWinnerProfile?.zoneId || 'zone-abuja-1',
+        zoneName: soulWinnerProfile?.zoneName || 'Abuja Zone 1',
         // Reference the live event config rather than a hardcoded string
         eventId: eventConfig.id,
       };

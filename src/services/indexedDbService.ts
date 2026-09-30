@@ -27,6 +27,18 @@ function getDB(): Promise<IDBPDatabase<RonHarvestDB>> {
           store.createIndex('by-clientCreatedAt', 'clientCreatedAt');
         }
       },
+      blocked() {
+        console.warn('[IndexedDB] Database open request is blocked.');
+      },
+      blocking() {
+        if (dbPromise) {
+          dbPromise.then((db) => db.close()).catch(() => {});
+          dbPromise = null;
+        }
+      },
+      terminated() {
+        dbPromise = null;
+      },
     });
   }
   return dbPromise;
@@ -34,22 +46,48 @@ function getDB(): Promise<IDBPDatabase<RonHarvestDB>> {
 
 /** Save or overwrite a soul winning record in IndexedDB */
 export async function saveLocalRecord(record: SoulWinningRecord): Promise<SoulWinningRecord> {
-  const db = await getDB();
-  await db.put('soul_records', record);
+  try {
+    const db = await getDB();
+    await db.put('soul_records', record);
+  } catch (err) {
+    console.warn('Error saving local record to IndexedDB:', err);
+  }
   return record;
 }
 
 /** Retrieve all local records ordered by clientCreatedAt descending */
 export async function getAllLocalRecords(): Promise<SoulWinningRecord[]> {
-  const db = await getDB();
-  const records = await db.getAllFromIndex('soul_records', 'by-clientCreatedAt');
-  return records.reverse(); // Latest first
+  try {
+    const timeoutPromise = new Promise<SoulWinningRecord[]>((resolve) =>
+      setTimeout(() => resolve([]), 1500)
+    );
+    const fetchPromise = (async () => {
+      const db = await getDB();
+      const records = await db.getAllFromIndex('soul_records', 'by-clientCreatedAt');
+      return records.reverse(); // Latest first
+    })();
+    return await Promise.race([fetchPromise, timeoutPromise]);
+  } catch (err) {
+    console.warn('Error reading records from IndexedDB:', err);
+    return [];
+  }
 }
 
 /** Retrieve only records that are waiting to be synced to Firebase */
 export async function getPendingRecords(): Promise<SoulWinningRecord[]> {
-  const db = await getDB();
-  return db.getAllFromIndex('soul_records', 'by-syncStatus', 'pending');
+  try {
+    const timeoutPromise = new Promise<SoulWinningRecord[]>((resolve) =>
+      setTimeout(() => resolve([]), 1500)
+    );
+    const fetchPromise = (async () => {
+      const db = await getDB();
+      return db.getAllFromIndex('soul_records', 'by-syncStatus', 'pending');
+    })();
+    return await Promise.race([fetchPromise, timeoutPromise]);
+  } catch (err) {
+    console.warn('Error reading pending records from IndexedDB:', err);
+    return [];
+  }
 }
 
 /** Update sync status for a record in IndexedDB */

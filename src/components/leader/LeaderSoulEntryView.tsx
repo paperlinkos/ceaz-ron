@@ -46,7 +46,7 @@ interface ParsedSoulRow {
 }
 
 export const LeaderSoulEntryView: React.FC = () => {
-  const { userProfile, soulWinnerProfile, role } = useAuth();
+  const { currentUser, userProfile, soulWinnerProfile, role } = useAuth();
   const { records } = useSoulRecords();
 
   const [activeTab, setActiveTab] = useState<'single' | 'bulk' | 'history'>('single');
@@ -156,7 +156,7 @@ export const LeaderSoulEntryView: React.FC = () => {
         createdAt: nowIso,
         clientCreatedAt: nowIso,
         syncStatus: 'pending',
-        soulWinnerId: userProfile?.id || 'leader',
+        soulWinnerId: currentUser?.uid || userProfile?.id || soulWinnerProfile?.userId || 'leader',
         churchId: churchObj?.id || selectedChurchId,
         churchName: churchObj?.name || 'Selected Church',
         groupId: groupObj?.id || selectedGroupId,
@@ -375,7 +375,7 @@ export const LeaderSoulEntryView: React.FC = () => {
           createdAt: nowIso,
           clientCreatedAt: nowIso,
           syncStatus: 'pending',
-          soulWinnerId: userProfile?.id || 'leader',
+          soulWinnerId: currentUser?.uid || userProfile?.id || soulWinnerProfile?.userId || 'leader',
           churchId: targetChId,
           churchName: targetChName,
           groupId: targetGrpId,

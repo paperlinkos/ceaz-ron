@@ -13,6 +13,27 @@ type SyncListener = (status: {
 const listeners: Set<SyncListener> = new Set();
 let isSyncingActive = false;
 
+let syncBroadcastChannel: BroadcastChannel | null = null;
+try {
+  if (typeof BroadcastChannel !== 'undefined') {
+    syncBroadcastChannel = new BroadcastChannel('ron_sync_channel');
+    syncBroadcastChannel.onmessage = async (event) => {
+      if (event.data?.type === 'RON_RECORD_CHANGED') {
+        const updatedRecords = await getAllLocalRecords();
+        listeners.forEach((listener) => {
+          listener({
+            isSyncing: isSyncActive(),
+            lastSyncedCount: 0,
+            updatedRecords,
+          });
+        });
+      }
+    };
+  }
+} catch {
+  // BroadcastChannel unavailable
+}
+
 export function subscribeToSyncStatus(listener: SyncListener): () => void {
   listeners.add(listener);
   return () => listeners.delete(listener);
@@ -28,10 +49,21 @@ async function notifyListeners(lastSyncedCount = 0, error?: string) {
       updatedRecords,
     });
   });
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('ron_record_change'));
+  }
 }
 
 export async function notifyRecordChanges(lastSyncedCount = 0, error?: string) {
   await notifyListeners(lastSyncedCount, error);
+  if (syncBroadcastChannel) {
+    try {
+      syncBroadcastChannel.postMessage({ type: 'RON_RECORD_CHANGED' });
+    } catch {
+      // ignore
+    }
+  }
 }
 
 export function isSyncActive(): boolean {
@@ -79,6 +111,9 @@ export async function syncPendingRecords(): Promise<{ syncedCount: number; total
           name: record.name,
           phone: record.phone,
           location: record.location,
+          isBornAgain: record.isBornAgain ?? true,
+          isFilledWithHolySpirit: record.isFilledWithHolySpirit ?? true,
+          notes: record.notes || '',
           createdAt: record.createdAt,
           clientCreatedAt: record.clientCreatedAt,
           syncStatus: 'synced',
@@ -87,8 +122,11 @@ export async function syncPendingRecords(): Promise<{ syncedCount: number; total
           ...(record.soulWinnerId ? { soulWinnerId: record.soulWinnerId } : {}),
           ...(record.pcfId ? { pcfId: record.pcfId } : {}),
           ...(record.churchId ? { churchId: record.churchId } : {}),
+          ...(record.churchName ? { churchName: record.churchName } : {}),
           ...(record.groupId ? { groupId: record.groupId } : {}),
+          ...(record.groupName ? { groupName: record.groupName } : {}),
           ...(record.zoneId ? { zoneId: record.zoneId } : {}),
+          ...(record.zoneName ? { zoneName: record.zoneName } : {}),
           ...(record.eventId ? { eventId: record.eventId } : {}),
         };
 

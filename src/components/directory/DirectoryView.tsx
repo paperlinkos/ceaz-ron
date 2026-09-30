@@ -22,6 +22,7 @@ import {
   exportRecordsCSV,
   type CompleteDirectoryData,
 } from '../../services/directoryService';
+import { subscribeToSyncStatus } from '../../services/syncService';
 import { useAuth } from '../../context/AuthContext';
 import { getUserScope } from '../../services/roleScopeService';
 
@@ -100,6 +101,21 @@ export const DirectoryView: React.FC = () => {
 
   useEffect(() => {
     loadDirectory();
+
+    const unsubscribe = subscribeToSyncStatus(() => {
+      loadDirectory();
+    });
+
+    const handleRecordChange = () => {
+      loadDirectory();
+    };
+
+    window.addEventListener('ron_record_change', handleRecordChange);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('ron_record_change', handleRecordChange);
+    };
   }, []);
 
   const handleSort = (key: string) => {

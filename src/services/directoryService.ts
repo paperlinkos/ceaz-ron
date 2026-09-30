@@ -4,6 +4,7 @@ import { getAllUsers, getAllSoulWinnerProfiles } from './userService';
 import { getAllLocalRecords } from './indexedDbService';
 import { collection, getDocs, query } from 'firebase/firestore';
 import { db } from './firebase';
+import { findCanonicalGroup, findCanonicalChurch } from './targetProgressEngine';
 import { generateCSV, downloadCSVFile } from '../utils/csv';
 import type { SoulWinningRecord } from '../types/record';
 import type { UserProfile, SoulWinnerProfile } from '../types/auth';
@@ -153,11 +154,14 @@ export async function getCompleteDirectoryData(): Promise<CompleteDirectoryData>
   let holySpiritCount = 0;
 
   records.forEach((r) => {
-    if (r.groupId) {
-      soulsByGroup[r.groupId] = (soulsByGroup[r.groupId] || 0) + 1;
+    const canonicalGroup = findCanonicalGroup(r.groupId, r.groupName, r.churchId, r.churchName, groups, churches);
+    const canonicalChurch = findCanonicalChurch(r.churchId, r.churchName, churches);
+
+    if (canonicalGroup) {
+      soulsByGroup[canonicalGroup.id] = (soulsByGroup[canonicalGroup.id] || 0) + 1;
     }
-    if (r.churchId) {
-      soulsByChurch[r.churchId] = (soulsByChurch[r.churchId] || 0) + 1;
+    if (canonicalChurch) {
+      soulsByChurch[canonicalChurch.id] = (soulsByChurch[canonicalChurch.id] || 0) + 1;
     }
     if (r.soulWinnerId) {
       soulsBySoulWinner[r.soulWinnerId] = (soulsBySoulWinner[r.soulWinnerId] || 0) + 1;
@@ -245,18 +249,21 @@ export async function getCompleteDirectoryData(): Promise<CompleteDirectoryData>
 
   // 6. Build Records Directory Items
   const recordItems: SoulRecordDirectoryItem[] = records.map((r) => {
-    const church = r.churchId ? churchMap.get(r.churchId) : undefined;
-    const group = r.groupId ? groupMap.get(r.groupId) : undefined;
+    const canonicalGroup = findCanonicalGroup(r.groupId, r.groupName, r.churchId, r.churchName, groups, churches);
+    const canonicalChurch = findCanonicalChurch(r.churchId, r.churchName, churches);
+
+    const church = canonicalChurch || (r.churchId ? churchMap.get(r.churchId) : undefined);
+    const group = canonicalGroup || (r.groupId ? groupMap.get(r.groupId) : undefined);
     const sw = r.soulWinnerId ? userMap.get(r.soulWinnerId) : undefined;
     return {
       id: r.id,
       name: r.name,
       phone: r.phone,
-      location: r.location || '—',
-      churchId: r.churchId,
-      churchName: church?.name || '—',
-      groupId: r.groupId,
-      groupName: group?.name || '—',
+      location: r.location || church?.name || '—',
+      churchId: church?.id || r.churchId,
+      churchName: church?.name || r.churchName || '—',
+      groupId: group?.id || r.groupId,
+      groupName: group?.name || r.groupName || '—',
       soulWinnerId: r.soulWinnerId,
       soulWinnerName: sw?.name || 'Soul Winner',
       isBornAgain: r.isBornAgain !== false,

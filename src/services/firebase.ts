@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
-import { getFirestore, type Firestore } from 'firebase/firestore';
+import { initializeFirestore, getFirestore, type Firestore } from 'firebase/firestore';
 import { getAuth, type Auth } from 'firebase/auth';
 
 /**
@@ -50,12 +50,18 @@ let auth: Auth;
 
 try {
   app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-  db = getFirestore(app, firestoreDatabaseId);
+  try {
+    db = initializeFirestore(app, {
+      experimentalAutoDetectLongPolling: true,
+    });
+  } catch {
+    db = getFirestore(app);
+  }
   auth = getAuth(app);
 } catch (error) {
   console.warn('Firebase initialization warning:', error);
   app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-  db = getFirestore(app, firestoreDatabaseId);
+  db = getFirestore(app);
   auth = getAuth(app);
 }
 

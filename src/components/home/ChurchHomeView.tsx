@@ -64,12 +64,15 @@ export const ChurchHomeView: React.FC<ChurchHomeViewProps> = ({ onNavigate }) =>
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [records, groups, churches, targets] = await Promise.all([
-          getAllLocalRecords(),
+        const [groups, churches, targets] = await Promise.all([
           getGroups(),
           getChurches(),
           getTargets(),
         ]);
+
+        const records = (counterData.allRecords && counterData.allRecords.length > 0)
+          ? counterData.allRecords
+          : await getAllLocalRecords();
 
         setTotalChurchesCount(churches.length);
 
@@ -88,7 +91,7 @@ export const ChurchHomeView: React.FC<ChurchHomeViewProps> = ({ onNavigate }) =>
         setCurrentGroup(groupObj || null);
 
         // Calculate all churches progress
-        const churchProgresses = calculateChurchRaceProgress(records, churches, targets);
+        const churchProgresses = calculateChurchRaceProgress(records, churches, targets, undefined, undefined);
         const sortedChurchesByZone = [...churchProgresses].sort(
           (a, b) => b.percentage - a.percentage
         );
@@ -114,7 +117,7 @@ export const ChurchHomeView: React.FC<ChurchHomeViewProps> = ({ onNavigate }) =>
         setChurchGroupRank(groupRankIndex >= 0 ? groupRankIndex + 1 : 1);
 
         // Calculate parent group progress
-        const groupProgresses = calculateGroupRaceProgress(records, groups, targets);
+        const groupProgresses = calculateGroupRaceProgress(records, groups, targets, undefined, churches);
         const parentGrp = groupProgresses.find((g) => g.organizationId === targetGroupId) || null;
         setParentGroupProgress(parentGrp);
       } catch (err) {
@@ -123,7 +126,17 @@ export const ChurchHomeView: React.FC<ChurchHomeViewProps> = ({ onNavigate }) =>
     };
 
     loadData();
-  }, [soulWinnerProfile?.churchId, soulWinnerProfile?.groupId, counterData.totalSoulsWon]);
+
+    const handleRecordChange = () => {
+      loadData();
+    };
+
+    window.addEventListener('ron_record_change', handleRecordChange);
+
+    return () => {
+      window.removeEventListener('ron_record_change', handleRecordChange);
+    };
+  }, [soulWinnerProfile?.churchId, soulWinnerProfile?.groupId, counterData.totalSoulsWon, counterData.allRecords]);
 
   const churchTargetQuota = churchProgress?.target || 500;
   const churchSoulsWon = churchProgress?.actual || 0;

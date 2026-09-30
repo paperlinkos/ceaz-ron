@@ -60,18 +60,121 @@ export function calculateOrganizationProgress(input: CalculateProgressInput): Or
  * Calculates aggregate progress across groups for the Upward Race.
  * Checks targetsList first, then falls back to the exact official PDF target for that specific group.
  */
+/** Normalizes organization string: lowercase, trims, maps gwarimpa -> gwarinpa, and strips non-alphanumeric */
+export function cleanOrgString(str?: string): string {
+  return (str || '')
+    .toLowerCase()
+    .trim()
+    .replace(/gwarimpa/g, 'gwarinpa')
+    .replace(/[^a-z0-9]/g, '');
+}
+
+/** Resolves any group reference (ID, name, code, or parent of church) to the canonical Group entity */
+export function findCanonicalGroup(
+  groupId: string | undefined,
+  groupName: string | undefined,
+  churchId: string | undefined,
+  churchName: string | undefined,
+  groups: Group[],
+  churches?: Church[]
+): Group | undefined {
+  // 1. Direct or normalized Group ID match
+  if (groupId) {
+    const direct = groups.find((g) => g.id === groupId);
+    if (direct) return direct;
+
+    const cleanGId = cleanOrgString(groupId);
+    const norm = groups.find((g) => cleanOrgString(g.id) === cleanGId || cleanOrgString(g.code) === cleanGId);
+    if (norm) return norm;
+  }
+
+  // 2. Resolve via Church ID or Name if available
+  if ((churchId || churchName) && churches && churches.length > 0) {
+    const matchedChurch = findCanonicalChurch(churchId, churchName, churches);
+    if (matchedChurch?.groupId) {
+      const parentGrp = groups.find(
+        (g) => g.id === matchedChurch.groupId || cleanOrgString(g.id) === cleanOrgString(matchedChurch.groupId)
+      );
+      if (parentGrp) return parentGrp;
+    }
+  }
+
+  // 3. Match by groupName / code fuzzy
+  if (groupName) {
+    const cleanGName = cleanOrgString(groupName);
+    const byName = groups.find((g) => {
+      const gClean = cleanOrgString(g.name);
+      const codeClean = cleanOrgString(g.code);
+      return (
+        gClean === cleanGName ||
+        codeClean === cleanGName ||
+        (cleanGName.length >= 4 && (gClean.includes(cleanGName) || cleanGName.includes(gClean)))
+      );
+    });
+    if (byName) return byName;
+  }
+
+  return undefined;
+}
+
+/** Resolves any church reference (ID, name, or code) to the canonical Church entity */
+export function findCanonicalChurch(
+  churchId: string | undefined,
+  churchName: string | undefined,
+  churches: Church[]
+): Church | undefined {
+  if (churchId) {
+    const direct = churches.find((c) => c.id === churchId);
+    if (direct) return direct;
+
+    const cleanCId = cleanOrgString(churchId);
+    const norm = churches.find((c) => cleanOrgString(c.id) === cleanCId || cleanOrgString(c.code) === cleanCId);
+    if (norm) return norm;
+  }
+
+  if (churchName) {
+    const cleanCName = cleanOrgString(churchName);
+    const byName = churches.find((c) => {
+      const cClean = cleanOrgString(c.name);
+      const codeClean = cleanOrgString(c.code);
+      return (
+        cClean === cleanCName ||
+        codeClean === cleanCName ||
+        (cleanCName.length >= 4 && (cClean.includes(cleanCName) || cleanCName.includes(cClean)))
+      );
+    });
+    if (byName) return byName;
+  }
+
+  return undefined;
+}
+
+/**
+ * Calculates aggregate progress across groups for the Upward Race.
+ * Checks targetsList first, then falls back to the exact official PDF target for that specific group.
+ */
 export function calculateGroupRaceProgress(
-  records: Array<{ groupId?: string }>,
+  records: Array<{ groupId?: string; groupName?: string; churchId?: string; churchName?: string }>,
   groups: Group[],
   targetsList: Target[],
-  defaultGroupTarget?: number
+  defaultGroupTarget?: number,
+  churches?: Church[]
 ): OrganizationProgress[] {
-  // 1. Calculate actual soul count per group ID from valid records
+  // 1. Calculate actual soul count per canonical group ID from valid records
   const groupActualCounts = new Map<string, number>();
 
   records.forEach((rec) => {
-    if (rec.groupId) {
-      groupActualCounts.set(rec.groupId, (groupActualCounts.get(rec.groupId) || 0) + 1);
+    const canonicalGroup = findCanonicalGroup(
+      rec.groupId,
+      rec.groupName,
+      rec.churchId,
+      rec.churchName,
+      groups,
+      churches
+    );
+
+    if (canonicalGroup) {
+      groupActualCounts.set(canonicalGroup.id, (groupActualCounts.get(canonicalGroup.id) || 0) + 1);
     }
   });
 
@@ -109,18 +212,25 @@ export function calculateGroupRaceProgress(
  * Checks targetsList first, then falls back to the exact official PDF target for that specific church.
  */
 export function calculateChurchRaceProgress(
-  records: Array<{ groupId?: string; churchId?: string }>,
+  records: Array<{ groupId?: string; churchId?: string; churchName?: string; groupName?: string }>,
   churches: Church[],
   targetsList: Target[],
   groupId?: string,
   defaultChurchTarget?: number
 ): OrganizationProgress[] {
-  const targetChurches = groupId ? churches.filter((c) => c.groupId === groupId) : churches;
+  const targetChurches = groupId
+    ? churches.filter((c) => {
+        const cleanTargetGId = cleanOrgString(groupId);
+        return c.groupId === groupId || cleanOrgString(c.groupId) === cleanTargetGId;
+      })
+    : churches;
 
   const churchActualCounts = new Map<string, number>();
   records.forEach((rec) => {
-    if (rec.churchId) {
-      churchActualCounts.set(rec.churchId, (churchActualCounts.get(rec.churchId) || 0) + 1);
+    const canonicalChurch = findCanonicalChurch(rec.churchId, rec.churchName, churches);
+
+    if (canonicalChurch) {
+      churchActualCounts.set(canonicalChurch.id, (churchActualCounts.get(canonicalChurch.id) || 0) + 1);
     }
   });
 

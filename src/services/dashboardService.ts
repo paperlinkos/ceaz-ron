@@ -3,7 +3,12 @@ import { getGroups, getChurches, getPCFs } from './organizationService';
 import { getTargets, getOfficialTarget } from './targetService';
 import { getLocalEventConfig } from './eventService';
 import { getUserScope, isAuthorizedForOrg, type UserScope } from './roleScopeService';
-import { calculateOrganizationProgress } from './targetProgressEngine';
+import {
+  calculateOrganizationProgress,
+  findCanonicalGroup,
+  findCanonicalChurch,
+  cleanOrgString,
+} from './targetProgressEngine';
 import type { UserProfile, SoulWinnerProfile } from '../types/auth';
 import type { TargetLevel, OrganizationProgress } from '../types/target';
 import type { Group, Church, PCF } from '../types/organization';
@@ -80,14 +85,22 @@ export async function getDashboardViewData(
   if (activeLevel === 'zone') {
     activeOrgName = 'Reach Out Nigeria Zone';
   } else if (activeLevel === 'group') {
-    const g = groups.find((grp) => grp.id === activeOrgId);
+    const cleanActiveId = cleanOrgString(activeOrgId);
+    const g = groups.find((grp) => grp.id === activeOrgId || cleanOrgString(grp.id) === cleanActiveId);
     activeOrgName = g ? g.name : activeOrgId;
-    filteredRecords = records.filter((r) => r.groupId === activeOrgId);
+    filteredRecords = records.filter((r) => {
+      const canonical = findCanonicalGroup(r.groupId, r.groupName, r.churchId, r.churchName, groups, churches);
+      return canonical ? canonical.id === (g?.id || activeOrgId) : false;
+    });
   } else if (activeLevel === 'church' || activeLevel === 'pcf') {
     activeLevel = 'church';
-    const c = churches.find((ch) => ch.id === activeOrgId);
+    const cleanActiveId = cleanOrgString(activeOrgId);
+    const c = churches.find((ch) => ch.id === activeOrgId || cleanOrgString(ch.id) === cleanActiveId);
     activeOrgName = c ? c.name : activeOrgId;
-    filteredRecords = records.filter((r) => r.churchId === activeOrgId);
+    filteredRecords = records.filter((r) => {
+      const canonical = findCanonicalChurch(r.churchId, r.churchName, churches);
+      return canonical ? canonical.id === (c?.id || activeOrgId) : false;
+    });
   }
 
   const actual = filteredRecords.length;
@@ -121,7 +134,10 @@ export async function getDashboardViewData(
 
   if (activeLevel === 'zone') {
     children = groups.map((g) => {
-      const gRecords = records.filter((r) => r.groupId === g.id);
+      const gRecords = records.filter((r) => {
+        const canonical = findCanonicalGroup(r.groupId, r.groupName, r.churchId, r.churchName, groups, churches);
+        return canonical?.id === g.id;
+      });
       const gTargetObj = targets.find((t) => t.level === 'group' && t.organizationId === g.id && t.status === 'active');
       const gTarget = gTargetObj ? gTargetObj.target : (getOfficialTarget('group', g.id) ?? 2000);
       const prog = calculateOrganizationProgress({
@@ -135,9 +151,13 @@ export async function getDashboardViewData(
       return { ...prog, childCount: churches.filter((c) => c.groupId === g.id).length };
     });
   } else if (activeLevel === 'group') {
-    const childChurches = churches.filter((c) => c.groupId === activeOrgId);
+    const cleanActiveId = cleanOrgString(activeOrgId);
+    const childChurches = churches.filter((c) => c.groupId === activeOrgId || cleanOrgString(c.groupId) === cleanActiveId);
     children = childChurches.map((c) => {
-      const cRecords = records.filter((r) => r.churchId === c.id);
+      const cRecords = records.filter((r) => {
+        const canonical = findCanonicalChurch(r.churchId, r.churchName, churches);
+        return canonical?.id === c.id;
+      });
       const cTargetObj = targets.find((t) => t.level === 'church' && t.organizationId === c.id && t.status === 'active');
       const cTarget = cTargetObj ? cTargetObj.target : (getOfficialTarget('church', c.id) ?? 250);
       const prog = calculateOrganizationProgress({

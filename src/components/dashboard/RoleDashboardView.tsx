@@ -48,7 +48,17 @@ export const RoleDashboardView: React.FC<RoleDashboardViewProps> = ({ onNavigate
       loadRecords();
     });
 
-    return () => unsubscribe();
+    const handleRecordChange = () => {
+      loadDashboard();
+      loadRecords();
+    };
+
+    window.addEventListener('ron_record_change', handleRecordChange);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('ron_record_change', handleRecordChange);
+    };
   }, [userProfile, soulWinnerProfile, selectedOrgId, selectedLevel]);
 
   const loadRecords = async () => {

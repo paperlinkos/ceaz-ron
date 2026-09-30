@@ -60,14 +60,22 @@ export const GroupHomeView: React.FC<GroupHomeViewProps> = ({ onNavigate }) => {
 
   // Load Group data and churches in this group
   useEffect(() => {
+    let isMounted = true;
+
     const loadData = async () => {
       try {
-        const [records, groups, churches, targets] = await Promise.all([
-          getAllLocalRecords(),
+        const [groups, churches, targets] = await Promise.all([
           getGroups(),
           getChurches(),
           getTargets(),
         ]);
+
+        const records =
+          counterData.allRecords && counterData.allRecords.length > 0
+            ? counterData.allRecords
+            : await getAllLocalRecords();
+
+        if (!isMounted) return;
 
         // Find user's group or fallback to first group
         const targetGroupId = soulWinnerProfile?.groupId || groups[0]?.id || 'grp-karmo';
@@ -75,7 +83,7 @@ export const GroupHomeView: React.FC<GroupHomeViewProps> = ({ onNavigate }) => {
         setCurrentGroup(groupObj || null);
 
         // Calculate all group progresses
-        const groupProgresses = calculateGroupRaceProgress(records, groups, targets);
+        const groupProgresses = calculateGroupRaceProgress(records, groups, targets, undefined, churches);
         const sortedGroups = [...groupProgresses].sort((a, b) => b.percentage - a.percentage);
         setAllGroupProgresses(sortedGroups);
 
@@ -89,7 +97,7 @@ export const GroupHomeView: React.FC<GroupHomeViewProps> = ({ onNavigate }) => {
         setActiveGroupRank(rankIndex >= 0 ? rankIndex + 1 : 1);
 
         // Calculate churches in this group
-        const churchProgresses = calculateChurchRaceProgress(records, churches, targets);
+        const churchProgresses = calculateChurchRaceProgress(records, churches, targets, targetGroupId);
         const filteredChurches = churchProgresses.filter((c) => {
           const churchDef = churches.find((ch) => ch.id === c.organizationId);
           return churchDef?.groupId === targetGroupId;
@@ -103,7 +111,18 @@ export const GroupHomeView: React.FC<GroupHomeViewProps> = ({ onNavigate }) => {
     };
 
     loadData();
-  }, [soulWinnerProfile?.groupId, counterData.totalSoulsWon]);
+
+    const handleRecordChange = () => {
+      loadData();
+    };
+
+    window.addEventListener('ron_record_change', handleRecordChange);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener('ron_record_change', handleRecordChange);
+    };
+  }, [soulWinnerProfile?.groupId, counterData.totalSoulsWon, counterData.allRecords]);
 
   const targetQuota = groupProgress?.target || 4000;
   const soulsWon = groupProgress?.actual || 0;

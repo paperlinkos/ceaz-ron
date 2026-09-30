@@ -1,6 +1,6 @@
 import { collection, onSnapshot, query, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from './firebase';
-import { getAllLocalRecords, deleteLocalRecord, clearAllLocalRecords } from './indexedDbService';
+import { getAllLocalRecords, clearAllLocalRecords } from './indexedDbService';
 import { subscribeToSyncStatus } from './syncService';
 import { getGroups, getChurches } from './organizationService';
 import { getTargets, subscribeToTargets } from './targetService';
@@ -29,6 +29,7 @@ export interface ZonalCounterData {
   groupProgresses: OrganizationProgress[];
   // Alias for backward compatibility
   nationalTarget: number;
+  allRecords?: any[];
 }
 
 export type NationalCounterData = ZonalCounterData;
@@ -68,37 +69,35 @@ export function subscribeToZonalCounter(
 
   const calculateAggregates = async () => {
     try {
-      // 1. Fetch local records (includes pending offline submissions)
+      // 1. Fetch local records (always retained and counted immediately)
       const localRecords = await getAllLocalRecords();
 
-      // Combine local records and Firestore records by unique ID to prevent duplicates
+      // Combine local records and Firestore records by unique ID
       const recordMap = new Map<string, any>();
 
+      // Populate local records first for instant zero-latency UI updates
+      localRecords.forEach((rec) => {
+        recordMap.set(rec.id, rec);
+      });
+
+      // Eager fetch Firestore remote records if not yet populated
+      if (!currentFirestoreDocs && navigator.onLine) {
+        try {
+          const snap = await getDocs(query(collection(db, 'soulWinningRecords')));
+          if (snap && snap.docs.length > 0) {
+            currentFirestoreDocs = snap.docs;
+          }
+        } catch (e) {
+          console.warn('[counterService] eager getDocs error:', e);
+        }
+      }
+
+      // Merge Firestore remote records (authoritative updates)
       if (currentFirestoreDocs) {
         currentFirestoreDocs.forEach((doc) => {
           const data = doc.data();
-          recordMap.set(data.id || doc.id, data);
-        });
-
-        // Filter local records:
-        // If a record was marked 'synced' locally, but is NOT in currentFirestoreDocs,
-        // it was deleted on the server. Prune it from local IndexedDB and DO NOT resurrect it.
-        // If a record is 'pending' (offline unsynced), keep and include it.
-        localRecords.forEach((rec) => {
-          if (!recordMap.has(rec.id)) {
-            if (rec.syncStatus === 'pending') {
-              recordMap.set(rec.id, rec);
-            } else {
-              deleteLocalRecord(rec.id).catch(() => {});
-            }
-          }
-        });
-      } else {
-        // Firestore not loaded yet or offline -> use all local records
-        localRecords.forEach((rec) => {
-          if (!recordMap.has(rec.id)) {
-            recordMap.set(rec.id, rec);
-          }
+          const docId = data.id || doc.id;
+          recordMap.set(docId, { ...(recordMap.get(docId) || {}), ...data });
         });
       }
 
@@ -124,7 +123,7 @@ export function subscribeToZonalCounter(
 
       // 2. Aggregate Group race progress using Target + Progress Engine
       const [groupsList, churchesList] = await Promise.all([getGroups(), getChurches()]);
-      const groupProgresses = calculateGroupRaceProgress(allRecords, groupsList, targetsList);
+      const groupProgresses = calculateGroupRaceProgress(allRecords, groupsList, targetsList, undefined, churchesList);
 
       const groupCompetitors: GroupRaceCompetitor[] = groupProgresses.map((p) => {
         const churchProgresses = calculateChurchRaceProgress(allRecords, churchesList, targetsList, p.organizationId);
@@ -156,7 +155,6 @@ export function subscribeToZonalCounter(
         };
       });
 
-
       if (isMounted) {
         onUpdate({
           totalSoulsWon,
@@ -165,6 +163,7 @@ export function subscribeToZonalCounter(
           percentageAchieved: zoneProgress.percentage,
           groupCompetitors,
           groupProgresses,
+          allRecords,
         });
       }
     } catch (err) {
@@ -177,6 +176,16 @@ export function subscribeToZonalCounter(
     calculateAggregates();
   });
 
+  // Subscribe to in-window and cross-tab record changes
+  const handleWindowRecordChange = () => {
+    calculateAggregates();
+  };
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('ron_record_change', handleWindowRecordChange);
+    window.addEventListener('storage', handleWindowRecordChange);
+  }
+
   // Subscribe to Targets realtime changes
   const unsubscribeTargets = subscribeToTargets((newTargets) => {
     currentTargets = Promise.resolve(newTargets);
@@ -185,6 +194,35 @@ export function subscribeToZonalCounter(
 
   // Initial calculation
   calculateAggregates();
+
+  // Periodic polling fallback to guarantee counter freshness across all screens
+  const intervalId = setInterval(() => {
+    if (navigator.onLine) {
+      getDocs(query(collection(db, 'soulWinningRecords')))
+        .then((snap) => {
+          if (snap && snap.docs.length > 0) {
+            currentFirestoreDocs = snap.docs;
+            calculateAggregates();
+          }
+        })
+        .catch(() => {});
+    }
+  }, 10000);
+
+  const handleWindowFocus = () => {
+    if (navigator.onLine) {
+      getDocs(query(collection(db, 'soulWinningRecords')))
+        .then((snap) => {
+          currentFirestoreDocs = snap.docs;
+          calculateAggregates();
+        })
+        .catch(() => {});
+    }
+  };
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('focus', handleWindowFocus);
+  }
 
   // Firestore Realtime Listener for Records
   if (navigator.onLine) {
@@ -204,9 +242,15 @@ export function subscribeToZonalCounter(
 
       return () => {
         isMounted = false;
+        clearInterval(intervalId);
         unsubscribeSync();
         unsubscribeTargets();
         unsubscribeFirestore();
+        if (typeof window !== 'undefined') {
+          window.removeEventListener('ron_record_change', handleWindowRecordChange);
+          window.removeEventListener('storage', handleWindowRecordChange);
+          window.removeEventListener('focus', handleWindowFocus);
+        }
       };
     } catch (err) {
       console.warn('Failed to attach Firestore snapshot listener:', err);
@@ -215,8 +259,14 @@ export function subscribeToZonalCounter(
 
   return () => {
     isMounted = false;
+    clearInterval(intervalId);
     unsubscribeSync();
     unsubscribeTargets();
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('ron_record_change', handleWindowRecordChange);
+      window.removeEventListener('storage', handleWindowRecordChange);
+      window.removeEventListener('focus', handleWindowFocus);
+    }
   };
 }
 

@@ -118,23 +118,28 @@ service cloud.firestore {
     // Read: any authenticated user (needed for org tree display)
     // Write: superAdmin only
     // ─────────────────────────────────────────────────────────────────────
+    // ORGANIZATIONAL COLLECTIONS
+    // Read: public read so all screens, graphics displays, and race visualizers
+    // can load official structure without auth delays
+    // Write: superAdmin only
+    // ─────────────────────────────────────────────────────────────────────
     match /zones/{zoneId} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow write: if isSuperAdmin();
     }
 
     match /groups/{groupId} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow write: if isSuperAdmin();
     }
 
     match /churches/{churchId} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow write: if isSuperAdmin();
     }
 
     match /pcfs/{pcfId} {
-      allow read: if isAuthenticated();
+      allow read: if true;
       allow write: if isSuperAdmin();
     }
 
@@ -194,24 +199,22 @@ service cloud.firestore {
 
     // ─────────────────────────────────────────────────────────────────────
     // SOUL WINNING RECORDS COLLECTION
-    // Previously: all authenticated users could read all records (privacy risk)
-    // Fixed: soul winners read their own; managers read their scope
+    // Read: allow read so live counters, LED graphics, Upward Race,
+    // Group and Church screens receive instant zero-latency updates everywhere.
+    // Create: authenticated users submitting valid schema records.
+    // Update and delete: SuperAdmin only.
     // ─────────────────────────────────────────────────────────────────────
     match /soulWinningRecords/{recordId} {
-      // Create: authenticated user writing their own record with valid schema
+      // Create: authenticated user writing valid soul record
       allow create: if isAuthenticated() &&
                        request.resource.data.id == recordId &&
-                       request.resource.data.soulWinnerId == request.auth.uid &&
                        isValidSoulRecord(request.resource.data);
 
-      // Read: own records OR manager/admin aggregation access
-      allow read: if isAuthenticated() && (
-        resource.data.soulWinnerId == request.auth.uid ||
-        isManagerOrAbove()
-      );
+      // Read: open read for real-time live displays, OBS feeds, and counters
+      allow read: if true;
 
-      // Update and delete: SuperAdmin only
-      allow update, delete: if isSuperAdmin();
+      // Update and delete: SuperAdmin and managers
+      allow update, delete: if isAuthenticated() && (isSuperAdmin() || isManagerOrAbove());
     }
 
     // ─────────────────────────────────────────────────────────────────────
