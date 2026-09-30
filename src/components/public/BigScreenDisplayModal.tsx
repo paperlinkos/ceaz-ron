@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Layers, BarChart2, Church, Trophy, Search, X, ChevronLeft, ChevronRight, LayoutList, CircleDot } from 'lucide-react';
 import { AppleProgressRingsWidget } from './AppleProgressRingsWidget';
 import { UpwardRaceVisualization } from './UpwardRaceVisualization';
-import { getAllLocalRecords } from '../../services/indexedDbService';
-import { getGroups, getChurches, DEFAULT_CHURCHES, DEFAULT_GROUPS } from '../../services/organizationService';
-import { getTargets, getOfficialTarget } from '../../services/targetService';
-import { calculateChurchRaceProgress, calculateGroupRaceProgress } from '../../services/targetProgressEngine';
-import type { OrganizationProgress } from '../../types/target';
+import { DEFAULT_CHURCHES, DEFAULT_GROUPS } from '../../services/organizationService';
+import { getOfficialTarget } from '../../services/targetService';
 import type { ZonalCounterData } from '../../services/counterService';
 import type { EventStatus } from '../../config/eventConfig';
 import { LiveUpdatesTicker } from '../common/LiveUpdatesTicker';
@@ -57,12 +54,42 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
   eventStatus,
 }) => {
   const [activePage, setActivePage] = useState<'counter' | 'groups' | 'churches'>('counter');
-
-  const [churchStandings, setChurchStandings] = useState<ChurchStandingItem[]>(buildInitialChurchStandings);
-  const [topGroups, setTopGroups] = useState<OrganizationProgress[]>([]);
   const [churchSearchQuery, setChurchSearchQuery] = useState<string>('');
   const [churchViewMode, setChurchViewMode] = useState<'cards' | 'rings'>('cards');
   const [isDockCollapsed, setIsDockCollapsed] = useState<boolean>(false);
+
+  // Realtime Church Standings derived directly from live counterData.groupCompetitors
+  const churchStandings: ChurchStandingItem[] = useMemo(() => {
+    const items: ChurchStandingItem[] = [];
+
+    if (counterData.groupCompetitors && counterData.groupCompetitors.length > 0) {
+      counterData.groupCompetitors.forEach((g) => {
+        if (g.churches && g.churches.length > 0) {
+          g.churches.forEach((c) => {
+            items.push({
+              id: c.id,
+              name: c.name,
+              code: c.code,
+              groupName: g.name,
+              soulsWon: c.soulsWon,
+              target: c.target,
+              percentage: c.percentage,
+              displayPercentage: c.displayPercentage,
+              isTargetExceeded: c.isTargetExceeded,
+            });
+          });
+        }
+      });
+    }
+
+    if (items.length > 0) {
+      // Sort strictly by percentage descending, then actual souls won descending, then name ascending
+      items.sort((a, b) => b.percentage - a.percentage || b.soulsWon - a.soulsWon || a.name.localeCompare(b.name));
+      return items;
+    }
+
+    return buildInitialChurchStandings();
+  }, [counterData.groupCompetitors]);
 
   // Keyboard controls: 1 = Counter, 2 = Groups, 3 = Churches, Esc = Exit
   useEffect(() => {
@@ -81,57 +108,6 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
-
-  // Load standings for Page 1 & Page 3
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const loadStandings = async () => {
-      try {
-        const [records, groups, churches, targets] = await Promise.all([
-          getAllLocalRecords(),
-          getGroups(),
-          getChurches(),
-          getTargets(),
-        ]);
-
-        const groupProgresses = calculateGroupRaceProgress(records, groups, targets);
-        setTopGroups(groupProgresses);
-
-        const groupMap = new Map<string, string>();
-        groups.forEach((g) => groupMap.set(g.id, g.name));
-
-        const churchProgresses = calculateChurchRaceProgress(records, churches, targets);
-
-        const mapped: ChurchStandingItem[] = churchProgresses.map((cp) => {
-          const churchObj = churches.find((c) => c.id === cp.organizationId);
-          const groupName = churchObj ? (groupMap.get(churchObj.groupId) || 'Abuja Zone 1') : 'Abuja Zone 1';
-
-          return {
-            id: cp.organizationId,
-            name: cp.organizationName,
-            code: cp.organizationCode || '',
-            groupName,
-            soulsWon: cp.actual,
-            target: cp.target,
-            percentage: cp.percentage,
-            displayPercentage: cp.displayPercentage,
-            isTargetExceeded: cp.isTargetExceeded,
-          };
-        });
-
-        if (mapped.length > 0) {
-          setChurchStandings(mapped);
-        } else {
-          setChurchStandings(buildInitialChurchStandings());
-        }
-      } catch (err) {
-        console.warn('Error loading standings for projector:', err);
-      }
-    };
-
-    loadStandings();
-  }, [isOpen, counterData]);
 
   if (!isOpen) return null;
 
@@ -276,7 +252,7 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
               {/* TOP 5 PERFORMING GROUPS - RESTS CLEANLY AT THE BOTTOM JUST ABOVE RUNNING TEXT */}
               <div className="spacex-bottom-widget-wrap">
                 <AppleProgressRingsWidget
-                  groups={topGroups && topGroups.length > 0 ? topGroups : counterData.groupCompetitors}
+                  groups={counterData.groupCompetitors}
                   onViewAll={() => setActivePage('groups')}
                 />
               </div>
