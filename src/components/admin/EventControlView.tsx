@@ -17,10 +17,13 @@ import {
   Timer,
   ToggleLeft,
   ToggleRight,
+  Pencil,
+  Zap,
+  Save,
 } from 'lucide-react';
 import { useEventConfig } from '../../hooks/useEventConfig';
 import { getEventAuditLogs } from '../../services/eventService';
-import type { EventAuditLog, EventStatus } from '../../config/eventConfig';
+import type { EventConfig, EventAuditLog, EventStatus } from '../../config/eventConfig';
 import { UpwardRaceVisualization } from '../public/UpwardRaceVisualization';
 import {
   subscribeToNationalCounter,
@@ -29,6 +32,29 @@ import {
 } from '../../services/counterService';
 import { getZones, getGroups, getChurches } from '../../services/organizationService';
 import { MilestoneCelebrationManager } from './MilestoneCelebrationManager';
+
+function toDatetimeLocal(isoOrDateStr?: string): string {
+  if (!isoOrDateStr) return '';
+  try {
+    const d = new Date(isoOrDateStr);
+    if (isNaN(d.getTime())) return '';
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    const MM = pad(d.getMonth() + 1);
+    const dd = pad(d.getDate());
+    const hh = pad(d.getHours());
+    const mm = pad(d.getMinutes());
+    return `${yyyy}-${MM}-${dd}T${hh}:${mm}`;
+  } catch {
+    return '';
+  }
+}
+
+function fromDatetimeLocal(localStr: string): string {
+  if (!localStr) return '';
+  const d = new Date(localStr);
+  return d.toISOString();
+}
 
 export const EventControlView: React.FC = () => {
   const { eventConfig, isUpcoming, isLive, isCompleted, changeStatus, saveSettings, triggerCelebration } = useEventConfig();
@@ -39,6 +65,102 @@ export const EventControlView: React.FC = () => {
   const currentInterval = eventConfig.milestoneInterval || 10000;
 
   const isTimerEnabled = eventConfig.countdownTimerEnabled !== false;
+
+  // Schedule Modal State
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [formStart, setFormStart] = useState<string>('');
+  const [formEnd, setFormEnd] = useState<string>('');
+  const [formSyncCountdown, setFormSyncCountdown] = useState<boolean>(true);
+  const [isSavingSchedule, setIsSavingSchedule] = useState<boolean>(false);
+  const [scheduleFeedback, setScheduleFeedback] = useState<string | null>(null);
+
+  // Countdown Settings State
+  const [countdownTargetInput, setCountdownTargetInput] = useState<string>('');
+  const [countdownLabelInput, setCountdownLabelInput] = useState<string>('');
+  const [isSavingCountdown, setIsSavingCountdown] = useState<boolean>(false);
+  const [countdownSaveMsg, setCountdownSaveMsg] = useState<string | null>(null);
+  const [, setPreviewTick] = useState<number>(0);
+
+  // Live tick for preview inside countdown settings card
+  useEffect(() => {
+    const t = setInterval(() => setPreviewTick((s) => s + 1), 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  // Sync inputs with eventConfig
+  useEffect(() => {
+    const target =
+      eventConfig.countdownTargetTime ||
+      eventConfig.scheduledStartAt ||
+      '2026-10-01T09:00:00+01:00';
+    setCountdownTargetInput(toDatetimeLocal(target));
+    setCountdownLabelInput(eventConfig.countdownLabel || 'OCTOBER 1ST • 9:00 AM WAT');
+  }, [eventConfig.countdownTargetTime, eventConfig.scheduledStartAt, eventConfig.countdownLabel]);
+
+  const handleOpenScheduleModal = () => {
+    const currentStart =
+      eventConfig.scheduledStartAt ||
+      (eventConfig.startAt && isUpcoming ? eventConfig.startAt : null) ||
+      '2026-10-01T09:00:00+01:00';
+    const currentEnd =
+      eventConfig.scheduledEndAt ||
+      eventConfig.endAt ||
+      '2026-10-01T23:59:59+01:00';
+
+    setFormStart(toDatetimeLocal(currentStart));
+    setFormEnd(toDatetimeLocal(currentEnd));
+    setFormSyncCountdown(eventConfig.countdownSyncWithStart !== false);
+    setScheduleModalOpen(true);
+  };
+
+  const handleSaveSchedule = async () => {
+    setIsSavingSchedule(true);
+    try {
+      const startIso = formStart ? fromDatetimeLocal(formStart) : '';
+      const endIso = formEnd ? fromDatetimeLocal(formEnd) : '';
+
+      const updates: Partial<EventConfig> = {
+        scheduledStartAt: startIso || undefined,
+        scheduledEndAt: endIso || undefined,
+        countdownSyncWithStart: formSyncCountdown,
+      };
+
+      if (formSyncCountdown && startIso) {
+        updates.countdownTargetTime = startIso;
+      }
+
+      const ok = await saveSettings(updates);
+      if (ok) {
+        setScheduleModalOpen(false);
+        setScheduleFeedback('Event start & end schedule updated and broadcast in real-time!');
+        setTimeout(() => setScheduleFeedback(null), 4000);
+      }
+    } catch (err) {
+      console.error('Failed to save schedule:', err);
+    } finally {
+      setIsSavingSchedule(false);
+    }
+  };
+
+  const handleSaveCountdownSettings = async () => {
+    setIsSavingCountdown(true);
+    try {
+      const targetIso = countdownTargetInput ? fromDatetimeLocal(countdownTargetInput) : '2026-10-01T09:00:00+01:00';
+      const label = countdownLabelInput.trim() || 'OCTOBER 1ST • 9:00 AM WAT';
+      const ok = await saveSettings({
+        countdownTargetTime: targetIso,
+        countdownLabel: label,
+      });
+      if (ok) {
+        setCountdownSaveMsg('Countdown launch target and label updated across all screens!');
+        setTimeout(() => setCountdownSaveMsg(null), 4000);
+      }
+    } catch (err) {
+      console.error('Failed to save countdown settings:', err);
+    } finally {
+      setIsSavingCountdown(false);
+    }
+  };
 
   const handleToggleCountdownTimer = async () => {
     setIsTogglingTimer(true);
@@ -192,13 +314,53 @@ export const EventControlView: React.FC = () => {
     setTimeout(() => setConfettiSuccessMessage(null), 4000);
   };
 
-  const formattedStart = eventConfig.startAt
-    ? new Date(eventConfig.startAt).toLocaleString()
-    : 'Not Started';
+  const displayStart = (() => {
+    if (isLive || isCompleted) {
+      if (eventConfig.startAt) {
+        return {
+          status: isLive ? 'LIVE STARTED' : 'STARTED',
+          formatted: new Date(eventConfig.startAt).toLocaleString(),
+          isSet: true,
+        };
+      }
+    }
+    const sched = eventConfig.scheduledStartAt || (isUpcoming ? eventConfig.startAt : null);
+    if (sched) {
+      return {
+        status: 'SCHEDULED',
+        formatted: new Date(sched).toLocaleString(),
+        isSet: true,
+      };
+    }
+    return {
+      status: 'NOT STARTED',
+      formatted: 'Not Started',
+      isSet: false,
+    };
+  })();
 
-  const formattedEnd = eventConfig.endAt
-    ? new Date(eventConfig.endAt).toLocaleString()
-    : 'Not Ended';
+  const displayEnd = (() => {
+    if (isCompleted && eventConfig.endAt) {
+      return {
+        status: 'COMPLETED',
+        formatted: new Date(eventConfig.endAt).toLocaleString(),
+        isSet: true,
+      };
+    }
+    const sched = eventConfig.scheduledEndAt || eventConfig.endAt;
+    if (sched) {
+      return {
+        status: 'SCHEDULED',
+        formatted: new Date(sched).toLocaleString(),
+        isSet: true,
+      };
+    }
+    return {
+      status: 'NOT ENDED',
+      formatted: 'Not Ended',
+      isSet: false,
+    };
+  })();
 
   return (
     <div className="event-control-container">
@@ -248,19 +410,99 @@ export const EventControlView: React.FC = () => {
             </div>
           </div>
 
-          <div className="config-metric-item">
-            <span className="config-label">START TIME</span>
+          {/* INTERACTIVE START TIME CARD */}
+          <div
+            className="config-metric-item"
+            style={{ position: 'relative', cursor: 'pointer' }}
+            onClick={handleOpenScheduleModal}
+            title="Click to set or edit campaign start time"
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="config-label">START TIME</span>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenScheduleModal();
+                }}
+                style={{
+                  background: 'rgba(0, 135, 81, 0.15)',
+                  border: '1px solid rgba(0, 230, 118, 0.4)',
+                  borderRadius: '6px',
+                  padding: '2px 8px',
+                  color: '#00e676',
+                  fontSize: '0.68rem',
+                  fontWeight: 800,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  cursor: 'pointer',
+                }}
+              >
+                <Pencil size={10} />
+                <span>{displayStart.isSet ? 'EDIT' : 'SET'}</span>
+              </button>
+            </div>
             <div className="config-value-row">
-              <Clock size={16} />
-              <span className="config-subvalue">{formattedStart}</span>
+              <Clock size={16} style={{ color: displayStart.isSet ? '#008751' : '#64748b' }} />
+              <div>
+                <span className="config-subvalue" style={{ color: displayStart.isSet ? '#0f172a' : '#64748b', fontWeight: 800 }}>
+                  {displayStart.formatted}
+                </span>
+                {displayStart.isSet && (
+                  <span style={{ marginLeft: '6px', fontSize: '0.65rem', color: '#008751', background: 'rgba(0, 135, 81, 0.12)', border: '1px solid rgba(0, 135, 81, 0.3)', padding: '2px 6px', borderRadius: '4px', fontWeight: 800 }}>
+                    {displayStart.status}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="config-metric-item">
-            <span className="config-label">END TIME</span>
+          {/* INTERACTIVE END TIME CARD */}
+          <div
+            className="config-metric-item"
+            style={{ position: 'relative', cursor: 'pointer' }}
+            onClick={handleOpenScheduleModal}
+            title="Click to set or edit campaign end time"
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="config-label">END TIME</span>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenScheduleModal();
+                }}
+                style={{
+                  background: 'rgba(56, 189, 248, 0.15)',
+                  border: '1px solid rgba(56, 189, 248, 0.4)',
+                  borderRadius: '6px',
+                  padding: '2px 8px',
+                  color: '#0284c7',
+                  fontSize: '0.68rem',
+                  fontWeight: 800,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  cursor: 'pointer',
+                }}
+              >
+                <Pencil size={10} />
+                <span>{displayEnd.isSet ? 'EDIT' : 'SET'}</span>
+              </button>
+            </div>
             <div className="config-value-row">
-              <Clock size={16} />
-              <span className="config-subvalue">{formattedEnd}</span>
+              <Clock size={16} style={{ color: displayEnd.isSet ? '#0284c7' : '#64748b' }} />
+              <div>
+                <span className="config-subvalue" style={{ color: displayEnd.isSet ? '#0f172a' : '#64748b', fontWeight: 800 }}>
+                  {displayEnd.formatted}
+                </span>
+                {displayEnd.isSet && (
+                  <span style={{ marginLeft: '6px', fontSize: '0.65rem', color: '#0284c7', background: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', padding: '2px 6px', borderRadius: '4px', fontWeight: 800 }}>
+                    {displayEnd.status}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -294,6 +536,30 @@ export const EventControlView: React.FC = () => {
                 <span>EVENT COMPLETED — FINAL TOTALS PRESERVED</span>
               </div>
             )}
+
+            {/* SET START & END TIME MODAL BUTTON */}
+            <button
+              type="button"
+              onClick={handleOpenScheduleModal}
+              className="secondary-button"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'rgba(15, 23, 42, 0.7)',
+                border: '1.5px solid rgba(0, 135, 81, 0.45)',
+                borderRadius: '10px',
+                padding: '10px 18px',
+                color: '#ffffff',
+                fontWeight: 800,
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              <Clock size={16} style={{ color: '#00e676' }} />
+              <span>SET START & END TIME</span>
+            </button>
           </div>
 
           <button
@@ -308,6 +574,13 @@ export const EventControlView: React.FC = () => {
           </button>
         </div>
 
+        {scheduleFeedback && (
+          <div className="reset-feedback-banner" style={{ background: 'rgba(0, 135, 81, 0.2)', border: '1px solid #00ff87', color: '#00ff87' }}>
+            <CheckCircle2 size={16} />
+            <span>{scheduleFeedback}</span>
+          </div>
+        )}
+
         {resetSuccessMessage && (
           <div className="reset-feedback-banner">
             <CheckCircle2 size={16} />
@@ -316,19 +589,20 @@ export const EventControlView: React.FC = () => {
         )}
       </div>
 
-      {/* CAMPAIGN COUNTDOWN TIMER FEATURE SWITCH */}
+      {/* CAMPAIGN COUNTDOWN & LAUNCH SETTINGS CARD */}
       <div
         className="event-section-card"
         style={{
-          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(13, 38, 27, 0.65) 100%)',
-          border: '1.5px solid rgba(0, 135, 81, 0.3)',
+          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(13, 38, 27, 0.75) 100%)',
+          border: '1.5px solid rgba(0, 135, 81, 0.35)',
           borderRadius: '16px',
-          padding: '20px 24px',
+          padding: '24px',
           marginBottom: '24px',
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)',
+          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+        {/* TOP ROW: TITLE & MASTER TOGGLE */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px', maxWidth: '680px' }}>
             <div
               style={{
@@ -348,8 +622,8 @@ export const EventControlView: React.FC = () => {
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: '#ffffff' }}>
-                  CAMPAIGN LAUNCH COUNTDOWN TIMER
+                <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 800, color: '#ffffff' }}>
+                  CAMPAIGN LAUNCH COUNTDOWN & TARGET SETTINGS
                 </h3>
                 <span
                   style={{
@@ -367,7 +641,7 @@ export const EventControlView: React.FC = () => {
                 </span>
               </div>
               <p style={{ margin: '4px 0 0 0', fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.4 }}>
-                Controls the countdown timer banner on the <strong>Home Screen</strong> and in <strong>Big Screen / TV Mode</strong>. When turned off, the countdown is instantly hidden everywhere.
+                Configure the launch countdown target time and label. Displays on the <strong>Home Screen</strong> and in <strong>Big Screen Mode</strong> until launch.
               </p>
             </div>
           </div>
@@ -400,7 +674,246 @@ export const EventControlView: React.FC = () => {
           </button>
         </div>
 
-        {/* FEEDBACK BANNER */}
+        {/* SETTINGS CONTROLS & LIVE PREVIEW GRID */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', background: 'rgba(0, 0, 0, 0.3)', padding: '20px', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+          {/* LEFT: FORM INPUTS */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.05em', marginBottom: '6px', textTransform: 'uppercase' }}>
+                COUNTDOWN TARGET DATE & TIME
+              </label>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <input
+                  type="datetime-local"
+                  value={countdownTargetInput}
+                  onChange={(e) => setCountdownTargetInput(e.target.value)}
+                  style={{
+                    flex: 1,
+                    background: 'rgba(15, 23, 42, 0.9)',
+                    border: '1.5px solid rgba(0, 135, 81, 0.4)',
+                    borderRadius: '8px',
+                    padding: '8px 12px',
+                    color: '#ffffff',
+                    fontSize: '0.9rem',
+                    fontWeight: 700,
+                    outline: 'none',
+                  }}
+                />
+              </div>
+
+              {/* QUICK PRESETS */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
+                <button
+                  type="button"
+                  onClick={() => setCountdownTargetInput('2026-10-01T09:00')}
+                  style={{
+                    background: 'rgba(0, 135, 81, 0.15)',
+                    border: '1px solid rgba(0, 230, 118, 0.3)',
+                    color: '#00e676',
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                    padding: '4px 8px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  🎯 1 Oct 2026, 9:00 AM WAT
+                </button>
+
+                {(eventConfig.scheduledStartAt || formStart) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const start = formStart || toDatetimeLocal(eventConfig.scheduledStartAt);
+                      if (start) setCountdownTargetInput(start);
+                    }}
+                    style={{
+                      background: 'rgba(56, 189, 248, 0.15)',
+                      border: '1px solid rgba(56, 189, 248, 0.3)',
+                      color: '#38bdf8',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    ⚡ Match Scheduled Start
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const inOneHour = new Date(Date.now() + 60 * 60 * 1000);
+                    setCountdownTargetInput(toDatetimeLocal(inOneHour.toISOString()));
+                  }}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    color: '#cbd5e1',
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                    padding: '4px 8px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  ⏱️ +1 Hour (Quick Test)
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.05em', marginBottom: '6px', textTransform: 'uppercase' }}>
+                BANNER SUBTITLE / LOCATION LABEL
+              </label>
+              <input
+                type="text"
+                value={countdownLabelInput}
+                onChange={(e) => setCountdownLabelInput(e.target.value)}
+                placeholder="e.g. OCTOBER 1ST • 9:00 AM WAT"
+                style={{
+                  width: '100%',
+                  background: 'rgba(15, 23, 42, 0.9)',
+                  border: '1.5px solid rgba(0, 135, 81, 0.4)',
+                  borderRadius: '8px',
+                  padding: '8px 12px',
+                  color: '#ffffff',
+                  fontSize: '0.9rem',
+                  fontWeight: 700,
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                }}
+              />
+              <div style={{ display: 'flex', gap: '6px', marginTop: '6px', flexWrap: 'wrap' }}>
+                {['OCTOBER 1ST • 9:00 AM WAT', 'CAMPAIGN KICKOFF', 'ZONAL HARVEST LAUNCH'].map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => setCountdownLabelInput(preset)}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: '#94a3b8',
+                      fontSize: '0.7rem',
+                      fontWeight: 600,
+                      padding: '3px 7px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {preset}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* SAVE BUTTON */}
+            <div>
+              <button
+                type="button"
+                onClick={handleSaveCountdownSettings}
+                disabled={isSavingCountdown}
+                style={{
+                  background: 'linear-gradient(135deg, #008751 0%, #00b36b 100%)',
+                  border: '1.5px solid #00ff87',
+                  borderRadius: '10px',
+                  padding: '10px 20px',
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '0.88rem',
+                  cursor: isSavingCountdown ? 'not-allowed' : 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  boxShadow: '0 4px 14px rgba(0, 135, 81, 0.4)',
+                }}
+              >
+                <Save size={16} />
+                <span>{isSavingCountdown ? 'SAVING...' : 'SAVE COUNTDOWN SETTINGS'}</span>
+              </button>
+            </div>
+          </div>
+
+          {/* RIGHT: LIVE VISUAL PREVIEW */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+              LIVE PREVIEW (HOW IT LOOKS TO THE PUBLIC):
+            </span>
+
+            {/* PREVIEW CONTAINER */}
+            <div
+              style={{
+                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(13, 38, 27, 0.9) 100%)',
+                border: '1.5px solid rgba(0, 135, 81, 0.4)',
+                borderRadius: '14px',
+                padding: '16px 20px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
+                opacity: isTimerEnabled ? 1 : 0.45,
+                transition: 'opacity 0.2s ease',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00e676', display: 'inline-block', boxShadow: '0 0 8px #00e676' }} />
+                  <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.05em' }}>
+                    OFFICIAL LAUNCH COUNTDOWN
+                  </span>
+                </div>
+                <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <Zap size={11} /> {countdownLabelInput || 'OCTOBER 1ST • 9:00 AM WAT'}
+                </span>
+              </div>
+
+              {/* DIGITS ROW */}
+              {(() => {
+                const targetMs = countdownTargetInput ? new Date(countdownTargetInput).getTime() : 0;
+                const diff = targetMs ? targetMs - Date.now() : 0;
+                const pad = (n: number) => String(Math.max(0, n)).padStart(2, '0');
+                const days = diff > 0 ? Math.floor(diff / (1000 * 60 * 60 * 24)) : 0;
+                const hours = diff > 0 ? Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)) : 0;
+                const minutes = diff > 0 ? Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)) : 0;
+                const seconds = diff > 0 ? Math.floor((diff % (1000 * 60)) / 1000) : 0;
+
+                return (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                    <div style={{ background: 'rgba(0, 0, 0, 0.4)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', padding: '6px 12px', textAlign: 'center', minWidth: '48px' }}>
+                      <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', fontFamily: 'monospace' }}>{pad(days)}</div>
+                      <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8' }}>DAYS</div>
+                    </div>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#00e676' }}>:</span>
+                    <div style={{ background: 'rgba(0, 0, 0, 0.4)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', padding: '6px 12px', textAlign: 'center', minWidth: '48px' }}>
+                      <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', fontFamily: 'monospace' }}>{pad(hours)}</div>
+                      <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8' }}>HOURS</div>
+                    </div>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#00e676' }}>:</span>
+                    <div style={{ background: 'rgba(0, 0, 0, 0.4)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', padding: '6px 12px', textAlign: 'center', minWidth: '48px' }}>
+                      <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', fontFamily: 'monospace' }}>{pad(minutes)}</div>
+                      <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8' }}>MINS</div>
+                    </div>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#00e676' }}>:</span>
+                    <div style={{ background: 'rgba(0, 0, 0, 0.4)', border: '1px solid rgba(0, 230, 118, 0.3)', borderRadius: '8px', padding: '6px 12px', textAlign: 'center', minWidth: '48px' }}>
+                      <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#00e676', fontFamily: 'monospace' }}>{pad(seconds)}</div>
+                      <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#00e676' }}>SECS</div>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {!isTimerEnabled && (
+                <div style={{ fontSize: '0.72rem', color: '#fbbf24', textAlign: 'center', fontWeight: 700 }}>
+                  ⚠️ Countdown is currently disabled and hidden from users
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* FEEDBACK BANNERS */}
         {timerFeedback && (
           <div
             style={{
@@ -419,6 +932,27 @@ export const EventControlView: React.FC = () => {
           >
             <CheckCircle2 size={15} />
             <span>{timerFeedback}</span>
+          </div>
+        )}
+
+        {countdownSaveMsg && (
+          <div
+            style={{
+              marginTop: '14px',
+              background: 'rgba(0, 135, 81, 0.2)',
+              border: '1px solid #00ff87',
+              borderRadius: '8px',
+              padding: '8px 14px',
+              color: '#00ff87',
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            <CheckCircle2 size={15} />
+            <span>{countdownSaveMsg}</span>
           </div>
         )}
       </div>
@@ -724,6 +1258,245 @@ export const EventControlView: React.FC = () => {
                 className="danger-button"
               >
                 {isProcessing ? 'RESETTING...' : 'YES, RESET TO ZERO'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SET EVENT START & END SCHEDULE MODAL */}
+      {scheduleModalOpen && (
+        <div className="modal-backdrop">
+          <div className="modal-card" style={{ maxWidth: '540px', width: '100%', padding: '28px', background: '#0f172a', border: '1.5px solid rgba(0, 135, 81, 0.45)', borderRadius: '16px', boxShadow: '0 20px 50px rgba(0,0,0,0.6)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+              <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: 'rgba(0, 135, 81, 0.2)', border: '1px solid #008751', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#00e676' }}>
+                <Clock size={22} />
+              </div>
+              <div>
+                <h3 className="modal-title" style={{ margin: 0, fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>
+                  SET CAMPAIGN START & END SCHEDULE
+                </h3>
+                <p style={{ margin: '2px 0 0 0', fontSize: '0.8rem', color: '#94a3b8' }}>
+                  Configure scheduled times for Abuja Zone 1 and optionally sync the countdown timer.
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', marginTop: '16px' }}>
+              {/* START TIME FIELD */}
+              <div>
+                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', fontWeight: 800, color: '#cbd5e1', letterSpacing: '0.05em', marginBottom: '6px' }}>
+                  <span>CAMPAIGN START DATE & TIME</span>
+                  <span style={{ color: '#00e676', fontSize: '0.7rem' }}>KICKOFF</span>
+                </label>
+                <input
+                  type="datetime-local"
+                  value={formStart}
+                  onChange={(e) => setFormStart(e.target.value)}
+                  style={{
+                    width: '100%',
+                    background: 'rgba(2, 6, 23, 0.85)',
+                    border: '1.5px solid rgba(0, 135, 81, 0.5)',
+                    borderRadius: '8px',
+                    padding: '10px 12px',
+                    color: '#ffffff',
+                    fontSize: '0.95rem',
+                    fontWeight: 700,
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+                {/* PRESETS FOR START */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setFormStart('2026-10-01T09:00')}
+                    style={{
+                      background: 'rgba(0, 135, 81, 0.2)',
+                      border: '1px solid #00e676',
+                      color: '#00e676',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    📅 1 Oct 2026, 9:00 AM WAT
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const d = new Date();
+                      d.setHours(9, 0, 0, 0);
+                      setFormStart(toDatetimeLocal(d.toISOString()));
+                    }}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      color: '#cbd5e1',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    🕒 Today 9:00 AM
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormStart(toDatetimeLocal(new Date().toISOString()))}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      color: '#cbd5e1',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    ⚡ Set to Right Now
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormStart('')}
+                    style={{
+                      background: 'rgba(239, 68, 68, 0.15)',
+                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                      color: '#f87171',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    ❌ Clear Start Time
+                  </button>
+                </div>
+              </div>
+
+              {/* END TIME FIELD */}
+              <div>
+                <label style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', fontWeight: 800, color: '#cbd5e1', letterSpacing: '0.05em', marginBottom: '6px' }}>
+                  <span>CAMPAIGN END DATE & TIME</span>
+                  <span style={{ color: '#38bdf8', fontSize: '0.7rem' }}>CONCLUSION</span>
+                </label>
+                <input
+                  type="datetime-local"
+                  value={formEnd}
+                  onChange={(e) => setFormEnd(e.target.value)}
+                  style={{
+                    width: '100%',
+                    background: 'rgba(2, 6, 23, 0.85)',
+                    border: '1.5px solid rgba(56, 189, 248, 0.5)',
+                    borderRadius: '8px',
+                    padding: '10px 12px',
+                    color: '#ffffff',
+                    fontSize: '0.95rem',
+                    fontWeight: 700,
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+                {/* PRESETS FOR END */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setFormEnd('2026-10-01T23:59')}
+                    style={{
+                      background: 'rgba(56, 189, 248, 0.2)',
+                      border: '1px solid #38bdf8',
+                      color: '#38bdf8',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    📅 1 Oct 2026, 11:59 PM WAT
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (formStart) {
+                        const startD = new Date(formStart);
+                        startD.setHours(startD.getHours() + 12);
+                        setFormEnd(toDatetimeLocal(startD.toISOString()));
+                      } else {
+                        const d = new Date();
+                        d.setHours(d.getHours() + 12);
+                        setFormEnd(toDatetimeLocal(d.toISOString()));
+                      }
+                    }}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.08)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      color: '#cbd5e1',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    🕒 Start Time +12 Hours
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormEnd('')}
+                    style={{
+                      background: 'rgba(239, 68, 68, 0.15)',
+                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                      color: '#f87171',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      padding: '4px 8px',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    ❌ Clear End Time
+                  </button>
+                </div>
+              </div>
+
+              {/* SYNC COUNTDOWN TIMER TOGGLE */}
+              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', background: 'rgba(0, 135, 81, 0.12)', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(0, 135, 81, 0.25)' }}>
+                <input
+                  type="checkbox"
+                  checked={formSyncCountdown}
+                  onChange={(e) => setFormSyncCountdown(e.target.checked)}
+                  style={{ width: '18px', height: '18px', accentColor: '#008751', cursor: 'pointer' }}
+                />
+                <span style={{ fontSize: '0.82rem', color: '#e2e8f0', fontWeight: 600 }}>
+                  Automatically update <strong>Launch Countdown Timer</strong> target to match this Start Time
+                </span>
+              </label>
+            </div>
+
+            {/* ACTION BUTTONS */}
+            <div className="modal-actions-row" style={{ marginTop: '24px' }}>
+              <button
+                type="button"
+                onClick={() => setScheduleModalOpen(false)}
+                disabled={isSavingSchedule}
+                className="secondary-button"
+              >
+                CANCEL
+              </button>
+              <button
+                type="button"
+                onClick={handleSaveSchedule}
+                disabled={isSavingSchedule}
+                className="submit-button"
+                style={{ background: 'linear-gradient(135deg, #008751 0%, #00b36b 100%)', border: '1.5px solid #00ff87' }}
+              >
+                {isSavingSchedule ? 'SAVING SCHEDULE...' : 'SAVE SCHEDULE'}
               </button>
             </div>
           </div>

@@ -20,7 +20,9 @@ export interface CountdownTime {
 }
 
 function calculateCountdown(targetDateStr: string): CountdownTime {
-  const targetTime = new Date(`${targetDateStr}T00:00:00Z`).getTime();
+  const targetTime = targetDateStr.includes('T')
+    ? new Date(targetDateStr).getTime()
+    : new Date(`${targetDateStr}T00:00:00Z`).getTime();
   const now = new Date().getTime();
   const diff = targetTime - now;
 
@@ -56,8 +58,13 @@ function calculateCountdown(targetDateStr: string): CountdownTime {
 export function useEventConfig() {
   const [eventConfig, setEventConfig] = useState<EventConfig>(getLocalEventConfig());
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const countdownTarget =
+    eventConfig.countdownTargetTime ||
+    eventConfig.scheduledStartAt ||
+    (eventConfig.startAt && eventConfig.status === 'upcoming' ? eventConfig.startAt : eventConfig.eventDate);
+
   const [countdown, setCountdown] = useState<CountdownTime>(() =>
-    calculateCountdown(eventConfig.eventDate)
+    calculateCountdown(countdownTarget)
   );
 
   const { userProfile } = useAuth();
@@ -88,11 +95,11 @@ export function useEventConfig() {
   // Countdown timer effect
   useEffect(() => {
     const timer = setInterval(() => {
-      setCountdown(calculateCountdown(eventConfig.eventDate));
+      setCountdown(calculateCountdown(countdownTarget));
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [eventConfig.eventDate]);
+  }, [countdownTarget]);
 
   const changeStatus = useCallback(
     async (newStatus: EventStatus): Promise<boolean> => {

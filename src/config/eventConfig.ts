@@ -66,6 +66,11 @@ export interface EventConfig {
   zonalMilestones?: number[]; // e.g. [10000, 20000, 30000, 40000, 50000]
   lastCelebrationTrigger?: CelebrationTrigger;
   countdownTimerEnabled?: boolean;
+  countdownTargetTime?: string; // ISO string e.g. '2026-10-01T09:00:00+01:00'
+  countdownLabel?: string; // e.g. 'OCTOBER 1ST • 9:00 AM WAT'
+  scheduledStartAt?: string; // Planned start time before event goes live
+  scheduledEndAt?: string; // Planned end time
+  countdownSyncWithStart?: boolean; // Automatically sync countdown target with scheduledStartAt
 }
 
 export interface EventAuditLog {
@@ -124,6 +129,11 @@ export const DEFAULT_EVENT_CONFIG: EventConfig = {
   milestoneInterval: 10000,
   zonalMilestones: DEFAULT_ZONAL_MILESTONES,
   countdownTimerEnabled: true,
+  countdownTargetTime: '2026-10-01T09:00:00+01:00',
+  countdownLabel: 'OCTOBER 1ST • 9:00 AM WAT',
+  scheduledStartAt: '2026-10-01T09:00:00+01:00',
+  scheduledEndAt: '2026-10-01T23:59:59+01:00',
+  countdownSyncWithStart: true,
 };
 
 export const REACH_OUT_NIGERIA_EVENT = {

@@ -116,6 +116,34 @@ describe('Super Admin Settings, Milestones & Targets Engine', () => {
       const cachedAfterTurnOn = getLocalEventConfig();
       expect(cachedAfterTurnOn.countdownTimerEnabled).toBe(true);
     });
+
+    it('allows Super Admin to configure start time, end time, and countdown settings', async () => {
+      const scheduledStart = '2026-10-01T09:00:00+01:00';
+      const scheduledEnd = '2026-10-01T23:59:59+01:00';
+      const countdownTarget = '2026-10-01T09:00:00+01:00';
+      const countdownLabel = 'OCTOBER 1ST • 9:00 AM WAT';
+
+      const updateRes = await updateEventConfig(DEFAULT_EVENT_CONFIG.id, {
+        scheduledStartAt: scheduledStart,
+        scheduledEndAt: scheduledEnd,
+        countdownTargetTime: countdownTarget,
+        countdownLabel: countdownLabel,
+        countdownSyncWithStart: true,
+      });
+
+      expect(updateRes.success).toBe(true);
+      expect(updateRes.config?.scheduledStartAt).toBe(scheduledStart);
+      expect(updateRes.config?.scheduledEndAt).toBe(scheduledEnd);
+      expect(updateRes.config?.countdownTargetTime).toBe(countdownTarget);
+      expect(updateRes.config?.countdownLabel).toBe(countdownLabel);
+      expect(updateRes.config?.countdownSyncWithStart).toBe(true);
+
+      const cached = getLocalEventConfig();
+      expect(cached.scheduledStartAt).toBe(scheduledStart);
+      expect(cached.scheduledEndAt).toBe(scheduledEnd);
+      expect(cached.countdownTargetTime).toBe(countdownTarget);
+      expect(cached.countdownLabel).toBe(countdownLabel);
+    });
   });
 
   describe('Dynamic Race Color Thresholds', () => {

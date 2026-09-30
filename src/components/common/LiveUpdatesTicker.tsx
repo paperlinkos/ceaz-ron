@@ -87,8 +87,13 @@ export const LiveUpdatesTicker: React.FC<LiveUpdatesTickerProps> = ({
     const items: TickerItem[] = [];
 
     // 1. TIME TO GO & HOURLY PULSE COUNTDOWN
-    const eventDate = new Date(`${eventConfig.eventDate}T00:00:00`);
-    const diffMs = eventDate.getTime() - currentTime.getTime();
+    const targetDateStr =
+      eventConfig.countdownTargetTime ||
+      eventConfig.scheduledStartAt ||
+      (eventConfig.startAt && eventConfig.status === 'upcoming' ? eventConfig.startAt : `${eventConfig.eventDate}T09:00:00+01:00`);
+    const parsedTargetTime = new Date(targetDateStr).getTime();
+    const targetTimestamp = isNaN(parsedTargetTime) ? new Date(`${eventConfig.eventDate}T09:00:00+01:00`).getTime() : parsedTargetTime;
+    const diffMs = targetTimestamp - currentTime.getTime();
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));

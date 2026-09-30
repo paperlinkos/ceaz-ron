@@ -8,9 +8,24 @@ interface CampaignCountdownTimerProps {
   enabled?: boolean;
 }
 
-// Target: 9:00 AM on 1 October 2026 (West Africa Time / UTC+1)
-const TARGET_DATE_STRING = '2026-10-01T09:00:00+01:00';
-const TARGET_TIMESTAMP = new Date(TARGET_DATE_STRING).getTime();
+// Default fallback target: 9:00 AM on 1 October 2026 (West Africa Time / UTC+1)
+const DEFAULT_TARGET_DATE_STRING = '2026-10-01T09:00:00+01:00';
+
+function getTargetTimestamp(config?: {
+  countdownTargetTime?: string;
+  scheduledStartAt?: string;
+  startAt?: string;
+  status?: string;
+}): number {
+  const dateStr =
+    config?.countdownTargetTime ||
+    config?.scheduledStartAt ||
+    (config?.startAt && config.status === 'upcoming' ? config.startAt : null) ||
+    DEFAULT_TARGET_DATE_STRING;
+
+  const timestamp = new Date(dateStr).getTime();
+  return isNaN(timestamp) ? new Date(DEFAULT_TARGET_DATE_STRING).getTime() : timestamp;
+}
 
 export const CampaignCountdownTimer: React.FC<CampaignCountdownTimerProps> = ({
   variant = 'home',
@@ -19,6 +34,7 @@ export const CampaignCountdownTimer: React.FC<CampaignCountdownTimerProps> = ({
 }) => {
   const { eventConfig } = useEventConfig();
   const isEnabled = enabled !== undefined ? enabled : eventConfig?.countdownTimerEnabled !== false;
+  const targetLabel = eventConfig?.countdownLabel || 'OCTOBER 1ST • 9:00 AM WAT';
 
   const [timeLeft, setTimeLeft] = useState<{
     totalMs: number;
@@ -27,7 +43,8 @@ export const CampaignCountdownTimer: React.FC<CampaignCountdownTimerProps> = ({
     minutes: number;
     seconds: number;
   } | null>(() => {
-    const diff = TARGET_TIMESTAMP - Date.now();
+    const targetTimestamp = getTargetTimestamp(eventConfig);
+    const diff = targetTimestamp - Date.now();
     if (diff <= 0) return null;
     return {
       totalMs: diff,
@@ -40,8 +57,9 @@ export const CampaignCountdownTimer: React.FC<CampaignCountdownTimerProps> = ({
 
   useEffect(() => {
     const updateCountdown = () => {
+      const targetTimestamp = getTargetTimestamp(eventConfig);
       const now = Date.now();
-      const diff = TARGET_TIMESTAMP - now;
+      const diff = targetTimestamp - now;
       if (diff <= 0) {
         setTimeLeft(null);
         return;
@@ -55,10 +73,11 @@ export const CampaignCountdownTimer: React.FC<CampaignCountdownTimerProps> = ({
       });
     };
 
+    updateCountdown();
     // Run every second
     const interval = setInterval(updateCountdown, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [eventConfig?.countdownTargetTime, eventConfig?.scheduledStartAt, eventConfig?.startAt, eventConfig?.status]);
 
   // When disabled by Super Admin, or timer reaches 0, the component completely disappears
   if (!isEnabled || !timeLeft || timeLeft.totalMs <= 0) {
@@ -87,7 +106,7 @@ export const CampaignCountdownTimer: React.FC<CampaignCountdownTimerProps> = ({
         </div>
         <span className="countdown-target-subtext">
           <Zap size={11} style={{ color: '#d97706' }} />
-          <span>OCTOBER 1ST • 9:00 AM WAT</span>
+          <span>{targetLabel}</span>
         </span>
       </div>
 
