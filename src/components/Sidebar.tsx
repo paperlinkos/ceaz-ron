@@ -12,6 +12,7 @@ import {
   WifiOff,
   Activity,
   Database,
+  FolderTree,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNetworkStatus } from '../hooks/useNetworkStatus';
@@ -101,6 +102,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {!isCollapsed && <span>UPWARD RACE</span>}
           </button>
         )}
+
+        {/* 3. Directory & Data Center Tab (Visible to all users) */}
+        <button
+          onClick={() => onSelectTab('directory')}
+          className={`sidebar-link ${activeTab === 'directory' ? 'sidebar-link-active' : ''}`}
+          title="Directory & Reports"
+        >
+          <FolderTree size={20} />
+          {!isCollapsed && <span>DIRECTORY & DATA</span>}
+        </button>
 
         {/* The remaining tabs are strictly for Authenticated Users */}
         {isAuthenticated && (

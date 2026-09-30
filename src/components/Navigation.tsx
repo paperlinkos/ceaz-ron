@@ -1,8 +1,7 @@
-import React from 'react';
-import { Home, HeartHandshake, User, Building, Trophy, Activity, LayoutDashboard } from 'lucide-react';
+import { Home, HeartHandshake, User, Building, Trophy, Activity, LayoutDashboard, FolderTree } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-export type TabType = 'home' | 'record' | 'account' | 'org' | 'race' | 'about' | 'dashboard' | 'eventControl' | 'importData';
+export type TabType = 'home' | 'record' | 'account' | 'org' | 'race' | 'about' | 'dashboard' | 'eventControl' | 'importData' | 'directory';
 
 interface NavigationProps {
   activeTab: TabType;
@@ -32,6 +31,14 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
         >
           <Trophy size={18} />
           <span>RACE</span>
+        </button>
+
+        <button
+          onClick={() => onSelectTab('directory')}
+          className={`nav-tab ${activeTab === 'directory' ? 'nav-tab-active' : ''}`}
+        >
+          <FolderTree size={18} />
+          <span>DIRECTORY</span>
         </button>
       </nav>
     );
@@ -73,6 +80,14 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
       >
         <LayoutDashboard size={18} />
         <span>DASHBOARD</span>
+      </button>
+
+      <button
+        onClick={() => onSelectTab('directory')}
+        className={`nav-tab ${activeTab === 'directory' ? 'nav-tab-active' : ''}`}
+      >
+        <FolderTree size={18} />
+        <span>DIRECTORY</span>
       </button>
 
       {isSuperAdmin && (

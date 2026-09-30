@@ -18,6 +18,7 @@ import { RoleDashboardView } from './components/dashboard/RoleDashboardView';
 import { EventControlView } from './components/admin/EventControlView';
 import { BulkImportView } from './components/admin/BulkImportView';
 import { LeaderSoulEntryView } from './components/leader/LeaderSoulEntryView';
+import { DirectoryView } from './components/directory/DirectoryView';
 import { useSoulRecords } from './hooks/useSoulRecords';
 import { useEventConfig } from './hooks/useEventConfig';
 import { DevRoleSwitcher } from './components/DevRoleSwitcher';
@@ -127,6 +128,10 @@ const MainContent: React.FC = () => {
 
           {activeTab === 'dashboard' && (
             <RoleDashboardView onNavigateTab={handleSelectTab} onOpenAuth={handleOpenAuth} />
+          )}
+
+          {activeTab === 'directory' && (
+            <DirectoryView />
           )}
 
           {activeTab === 'record' && (
