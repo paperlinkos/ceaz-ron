@@ -457,13 +457,13 @@ table {
 }
 
 .spacex-hero-number {
-  font-family: 'Orbitron', 'Oxanium', 'Chakra Petch', sans-serif;
-  font-size: clamp(3.8rem, 10vw, 7.2rem);
+  font-family: 'Oxanium', 'Share Tech Mono', -apple-system, sans-serif !important;
+  font-size: clamp(5.5rem, 14vw, 9.5rem);
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.03em;
   color: #008751;
-  text-shadow: 0 4px 20px rgba(0, 135, 81, 0.2);
-  line-height: 1;
+  text-shadow: 0 4px 28px rgba(0, 135, 81, 0.3);
+  line-height: 0.88;
   text-align: center;
 }
 
@@ -3006,22 +3006,22 @@ table {
 }
 
 .spacex-souls-num {
-  font-family: 'Orbitron', 'Oxanium', 'Chakra Petch', sans-serif;
-  font-size: clamp(7.5rem, 16vw, 14.5rem);
+  font-family: 'Oxanium', 'Share Tech Mono', sans-serif !important;
+  font-size: clamp(9.5rem, 20vw, 16.5rem);
   font-weight: 900;
-  line-height: 0.85;
-  letter-spacing: 0.02em;
+  line-height: 0.82;
+  letter-spacing: 0.01em;
   color: #008751;
   text-shadow: 0 8px 48px rgba(0, 135, 81, 0.35);
 }
 
 .spacex-souls-lbl {
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(0.9rem, 1.35vw, 1.25rem);
+  font-family: 'Oxanium', 'Orbitron', sans-serif;
+  font-size: clamp(0.95rem, 1.35vw, 1.25rem);
   font-weight: 900;
   letter-spacing: 0.35em;
   color: #0f172a;
-  margin-top: 0.6rem;
+  margin-top: 0.4rem;
   text-transform: uppercase;
 }
 
@@ -3033,7 +3033,7 @@ table {
   align-items: center;
   margin-top: auto;
   margin-bottom: 2px;
-  gap: 0.45rem;
+  gap: 0.35rem;
 }
 
 .spacex-target-achieved-row {
@@ -3051,8 +3051,8 @@ table {
 }
 
 .spacex-substat-num {
-  font-family: 'Orbitron', 'Oxanium', 'Chakra Petch', sans-serif;
-  font-size: clamp(1.9rem, 3.4vw, 3rem);
+  font-family: 'Oxanium', 'Share Tech Mono', sans-serif !important;
+  font-size: clamp(1.8rem, 3.2vw, 2.8rem);
   font-weight: 900;
   line-height: 0.95;
   letter-spacing: 0.03em;
@@ -3066,7 +3066,7 @@ table {
 
 .spacex-row-divider {
   width: 2.5px;
-  height: 38px;
+  height: 34px;
   background: rgba(0, 135, 81, 0.25);
   border-radius: 2px;
 }
@@ -3080,13 +3080,13 @@ table {
 }
 
 .spacex-stat-lbl {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Oxanium', 'Orbitron', sans-serif;
   font-size: clamp(0.65rem, 0.88vw, 0.78rem);
   font-weight: 900;
   letter-spacing: 0.22em;
   color: #475569;
   text-transform: uppercase;
-  margin-top: 0.25rem;
+  margin-top: 0.2rem;
 }
 
 /* TOP 5 BOTTOM WRAPPER: RESTS RIGHT ABOVE THE MARQUEE TICKER */
@@ -3920,7 +3920,8 @@ select {
   }
 
   .spacex-souls-num {
-    font-size: clamp(4.5rem, 15vh, 7.5rem) !important;
+    font-family: 'Oxanium', 'Share Tech Mono', sans-serif !important;
+    font-size: clamp(6.5rem, 20vh, 10rem) !important;
   }
 
   .spacex-souls-lbl {

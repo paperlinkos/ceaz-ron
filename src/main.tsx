@@ -31,18 +31,26 @@ try {
   // ignore
 }
 
-// Register PWA service worker for offline support with immediate auto-refresh
+// Register PWA service worker for offline support with immediate auto-refresh in production, unregister in dev
 if ('serviceWorker' in navigator) {
-  const updateSW = registerSW({
-    immediate: true,
-    onNeedRefresh() {
-      console.log('[PWA] New version detected; refreshing...');
-      updateSW(true);
-    },
-    onOfflineReady() {
-      console.log('[PWA] App is ready for offline usage!');
-    },
-  });
+  if (import.meta.env.DEV) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (const reg of registrations) {
+        reg.unregister();
+      }
+    });
+  } else {
+    const updateSW = registerSW({
+      immediate: true,
+      onNeedRefresh() {
+        console.log('[PWA] New version detected; refreshing...');
+        updateSW(true);
+      },
+      onOfflineReady() {
+        console.log('[PWA] App is ready for offline usage!');
+      },
+    });
+  }
 }
 
 createRoot(document.getElementById('root')!).render(
