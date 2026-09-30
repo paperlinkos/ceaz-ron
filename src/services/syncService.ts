@@ -79,9 +79,6 @@ export async function syncPendingRecords(): Promise<{ syncedCount: number; total
           name: record.name,
           phone: record.phone,
           location: record.location,
-          isBornAgain: record.isBornAgain ?? true,
-          isFilledWithHolySpirit: record.isFilledWithHolySpirit ?? true,
-          notes: record.notes || '',
           createdAt: record.createdAt,
           clientCreatedAt: record.clientCreatedAt,
           syncStatus: 'synced',
@@ -90,11 +87,8 @@ export async function syncPendingRecords(): Promise<{ syncedCount: number; total
           ...(record.soulWinnerId ? { soulWinnerId: record.soulWinnerId } : {}),
           ...(record.pcfId ? { pcfId: record.pcfId } : {}),
           ...(record.churchId ? { churchId: record.churchId } : {}),
-          ...(record.churchName ? { churchName: record.churchName } : {}),
           ...(record.groupId ? { groupId: record.groupId } : {}),
-          ...(record.groupName ? { groupName: record.groupName } : {}),
           ...(record.zoneId ? { zoneId: record.zoneId } : {}),
-          ...(record.zoneName ? { zoneName: record.zoneName } : {}),
           ...(record.eventId ? { eventId: record.eventId } : {}),
         };
 

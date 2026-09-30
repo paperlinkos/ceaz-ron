@@ -132,24 +132,19 @@ function normalizeForMatching(text: string): string {
  */
 export function detectOrganizationFromFilenameAndContent(
   filename: string,
-  csvContent: string = '',
-  customChurches?: Church[],
-  customGroups?: Group[]
+  csvContent: string = ''
 ): DetectedOrgScope {
   const normFilename = normalizeForMatching(filename);
   const upperFilename = filename.toUpperCase();
-
-  const churchesList = customChurches && customChurches.length > 0 ? customChurches : DEFAULT_CHURCHES;
-  const groupsList = customGroups && customGroups.length > 0 ? customGroups : DEFAULT_GROUPS;
 
   // 1. Check for metadata header line (e.g. # SCOPE: CHURCH | CHURCH: CE Kuje (CH-KUJ1) ...)
   const lines = csvContent.split(/\r?\n/).slice(0, 5);
   for (const line of lines) {
     if (line.startsWith('#')) {
       // Check for exact Church Code in metadata
-      for (const ch of churchesList) {
+      for (const ch of DEFAULT_CHURCHES) {
         if (line.includes(`(${ch.code})`) || line.includes(ch.code)) {
-          const parentGroup = groupsList.find((g) => g.id === ch.groupId);
+          const parentGroup = DEFAULT_GROUPS.find((g) => g.id === ch.groupId);
           return {
             matchedLevel: 'church',
             confidence: 'high',
@@ -162,7 +157,7 @@ export function detectOrganizationFromFilenameAndContent(
       }
 
       // Check for exact Group Code in metadata
-      for (const grp of groupsList) {
+      for (const grp of DEFAULT_GROUPS) {
         if (line.includes(`(${grp.code})`) || line.includes(grp.code)) {
           return {
             matchedLevel: 'group',
@@ -176,8 +171,8 @@ export function detectOrganizationFromFilenameAndContent(
     }
   }
 
-  // 2. Exact Church Code in Filename (e.g. "CH-KUJ1", "CH-KBS", "CH_GWARINPA1", "CH-EXP", "CH-CP1")
-  for (const ch of churchesList) {
+  // 2. Exact Church Code in Filename (e.g. "CH-KUJ1", "CH-KBS", "CH_GWARINPA1", "CH-EXP")
+  for (const ch of DEFAULT_CHURCHES) {
     const rawCode = ch.code.toUpperCase();
     const cleanCode = rawCode.replace(/[^A-Z0-9]/g, '');
 
@@ -186,7 +181,7 @@ export function detectOrganizationFromFilenameAndContent(
       upperFilename.includes(rawCode.replace('-', '_')) ||
       (cleanCode.length >= 4 && upperFilename.includes(cleanCode))
     ) {
-      const parentGroup = groupsList.find((g) => g.id === ch.groupId);
+      const parentGroup = DEFAULT_GROUPS.find((g) => g.id === ch.groupId);
       return {
         matchedLevel: 'church',
         confidence: 'high',
@@ -198,9 +193,9 @@ export function detectOrganizationFromFilenameAndContent(
     }
   }
 
-  // 3. Exact Church Name in Filename (e.g. "Corinthian Park Church 1", "CE Kuje", "CE Karmo 1", "CE Damagaza")
+  // 3. Exact Church Name in Filename (e.g. "CE Kuje", "CE Karmo 1", "CE Airport Road 4", "CE Damagaza", "CE Bwari Main")
   // Sort churches by name length descending so longer specific names match first (e.g. "CE Karmo 2" before "CE Karmo")
-  const sortedChurches = [...churchesList].sort((a, b) => b.name.length - a.name.length);
+  const sortedChurches = [...DEFAULT_CHURCHES].sort((a, b) => b.name.length - a.name.length);
   for (const ch of sortedChurches) {
     const normChurchName = normalizeForMatching(ch.name);
     const shortNameWithoutCE = normChurchName.replace(/^ce\s+/, '').trim();
@@ -209,7 +204,7 @@ export function detectOrganizationFromFilenameAndContent(
       normFilename.includes(normChurchName) ||
       (shortNameWithoutCE.length >= 4 && normFilename.includes(shortNameWithoutCE))
     ) {
-      const parentGroup = groupsList.find((g) => g.id === ch.groupId);
+      const parentGroup = DEFAULT_GROUPS.find((g) => g.id === ch.groupId);
       return {
         matchedLevel: 'church',
         confidence: 'high',
@@ -221,8 +216,8 @@ export function detectOrganizationFromFilenameAndContent(
     }
   }
 
-  // 4. Exact Group Code in Filename (e.g. "GRP-CPG", "GRP-KAR", "GRP-KUJ")
-  for (const grp of groupsList) {
+  // 4. Exact Group Code in Filename (e.g. "GRP-KAR", "GRP-KUJ", "GRP-GWA")
+  for (const grp of DEFAULT_GROUPS) {
     const rawCode = grp.code.toUpperCase();
     if (upperFilename.includes(rawCode) || upperFilename.includes(rawCode.replace('-', '_'))) {
       return {
@@ -235,8 +230,8 @@ export function detectOrganizationFromFilenameAndContent(
     }
   }
 
-  // 5. Exact Group Name in Filename (e.g. "Corinthian Park Group", "Karmo Group", "Kuje Group")
-  const sortedGroups = [...groupsList].sort((a, b) => b.name.length - a.name.length);
+  // 5. Exact Group Name in Filename (e.g. "Karmo Group", "Kuje Group", "Gwarinpa Group", "Lokogoma Group", "Bwari Group")
+  const sortedGroups = [...DEFAULT_GROUPS].sort((a, b) => b.name.length - a.name.length);
   for (const grp of sortedGroups) {
     const normGroupName = normalizeForMatching(grp.name);
     const shortGroupName = normGroupName.replace(/\s+group$/, '').replace(/\s+sub\s+group.*$/, '').trim();
