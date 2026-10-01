@@ -6489,7 +6489,7 @@ select {
 }
 
 /* ==========================================================================
-   DEDICATED FULL SCREEN COUNTDOWN CLOCK SCREEN
+   DEDICATED FULL SCREEN COUNTDOWN CLOCK SCREEN (LIGHT THEME)
    ========================================================================== */
 .fullscreen-countdown-overlay {
   position: fixed;
@@ -6497,8 +6497,8 @@ select {
   width: 100vw;
   height: 100vh;
   z-index: 10000;
-  background: radial-gradient(circle at 50% 45%, #082115 0%, #030a06 65%, #010302 100%);
-  color: #ffffff;
+  background: radial-gradient(circle at 50% 30%, #f0fdf4 0%, #f8fafc 55%, #e2e8f0 100%);
+  color: #0f172a;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -6526,7 +6526,7 @@ select {
   height: 52px;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 2px 8px rgba(0, 135, 81, 0.15));
 }
 
 .fullscreen-countdown-brand-text {
@@ -6539,7 +6539,7 @@ select {
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.12em;
-  color: #00c853;
+  color: #008751;
   text-transform: uppercase;
 }
 
@@ -6547,7 +6547,7 @@ select {
   font-size: 1.15rem;
   font-weight: 900;
   letter-spacing: 0.04em;
-  color: #ffffff;
+  color: #0f172a;
 }
 
 .fullscreen-countdown-controls {
@@ -6562,25 +6562,26 @@ select {
   justify-content: center;
   width: 44px;
   height: 44px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #ffffff;
+  border: 1.5px solid rgba(0, 135, 81, 0.25);
   border-radius: 12px;
-  color: #cbd5e1;
+  color: #334155;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease;
 }
 
 .fullscreen-countdown-ctrl-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(0, 135, 81, 0.1);
+  color: #008751;
+  border-color: rgba(0, 135, 81, 0.45);
   transform: scale(1.05);
 }
 
 .fullscreen-countdown-close-btn:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.5);
-  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #dc2626;
 }
 
 .fullscreen-countdown-main {
@@ -6605,24 +6606,24 @@ select {
   align-items: center;
   gap: 10px;
   padding: 10px 24px;
-  background: rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: rgba(0, 135, 81, 0.1);
+  border: 1.5px solid rgba(0, 135, 81, 0.3);
   border-radius: 100px;
-  color: #fcd34d;
+  color: #008751;
   font-size: 0.95rem;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 135, 81, 0.08);
 }
 
 .fullscreen-pulse-dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #f59e0b;
-  box-shadow: 0 0 10px #f59e0b;
-  animation: pulse-ring 1.8s infinite cubic-bezier(0.45, 0, 0.55, 1);
+  background: #008751;
+  box-shadow: 0 0 10px #00b36b;
+  animation: countdownPulse 1.6s ease-in-out infinite;
 }
 
 .fullscreen-countdown-clock-grid {
@@ -6638,12 +6639,12 @@ select {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #ffffff;
+  border: 1.5px solid rgba(0, 135, 81, 0.2);
   border-radius: 24px;
   padding: clamp(20px, 3.5vw, 44px) clamp(20px, 3.5vw, 48px);
   min-width: clamp(110px, 16vw, 210px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 45px rgba(0, 135, 81, 0.08), 0 4px 12px rgba(0, 0, 0, 0.03);
   position: relative;
   overflow: hidden;
 }
@@ -6655,14 +6656,14 @@ select {
   left: 0;
   right: 0;
   height: 50%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(240, 253, 244, 0.4) 0%, transparent 100%);
   pointer-events: none;
 }
 
 .fullscreen-clock-block-secs {
-  border-color: rgba(0, 200, 83, 0.35);
-  background: linear-gradient(180deg, rgba(0, 200, 83, 0.1) 0%, rgba(0, 70, 42, 0.08) 100%);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 200, 83, 0.15);
+  border-color: rgba(0, 135, 81, 0.45);
+  background: linear-gradient(180deg, #ffffff 0%, rgba(240, 253, 244, 0.9) 100%);
+  box-shadow: 0 20px 45px rgba(0, 135, 81, 0.14), 0 0 30px rgba(0, 135, 81, 0.1);
 }
 
 .fullscreen-clock-digit {
@@ -6670,14 +6671,13 @@ select {
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.03em;
-  color: #ffffff;
+  color: #0f172a;
   font-variant-numeric: tabular-nums;
-  text-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
 }
 
 .fullscreen-digit-accent {
-  color: #00c853;
-  text-shadow: 0 0 35px rgba(0, 200, 83, 0.5), 0 6px 24px rgba(0, 0, 0, 0.6);
+  color: #008751;
+  text-shadow: 0 0 30px rgba(0, 135, 81, 0.25);
 }
 
 .fullscreen-clock-label {
@@ -6685,7 +6685,7 @@ select {
   font-size: clamp(0.72rem, 1.2vw, 1.05rem);
   font-weight: 800;
   letter-spacing: 0.18em;
-  color: #94a3b8;
+  color: #64748b;
   text-transform: uppercase;
 }
 
@@ -6693,7 +6693,7 @@ select {
   font-size: clamp(3rem, 7vw, 6.5rem);
   font-weight: 900;
   line-height: 1;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(0, 135, 81, 0.4);
   margin-top: -24px;
   animation: colon-blink 1.5s ease-in-out infinite;
 }
@@ -6714,30 +6714,31 @@ select {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #ffffff;
+  border: 1.5px solid rgba(0, 135, 81, 0.2);
   padding: 8px 18px;
   border-radius: 100px;
   font-size: 0.92rem;
   font-weight: 700;
-  color: #e2e8f0;
+  color: #334155;
   letter-spacing: 0.05em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 .target-zap-icon {
-  color: #fbbf24;
+  color: #d97706;
 }
 
 .fullscreen-target-goal {
   font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: #94a3b8;
+  color: #475569;
   text-transform: uppercase;
 }
 
 .fullscreen-target-goal strong {
-  color: #FFD700;
+  color: #008751;
   font-weight: 900;
 }
 
@@ -6749,12 +6750,12 @@ select {
 }
 
 .fullscreen-countdown-bottom-bar kbd {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   padding: 2px 6px;
   font-size: 0.75rem;
-  color: #e2e8f0;
+  color: #0f172a;
 }
 
 /* LIVE STATE FOR COUNTDOWN MODAL */
@@ -6764,6 +6765,11 @@ select {
   align-items: center;
   text-align: center;
   gap: 20px;
+  background: #ffffff;
+  border: 1.5px solid rgba(0, 135, 81, 0.25);
+  padding: 40px 60px;
+  border-radius: 28px;
+  box-shadow: 0 20px 50px rgba(0, 135, 81, 0.1);
 }
 
 .countdown-live-badge-glow {
@@ -6771,10 +6777,10 @@ select {
   align-items: center;
   gap: 8px;
   padding: 8px 20px;
-  background: rgba(0, 200, 83, 0.2);
-  border: 1px solid rgba(0, 200, 83, 0.5);
+  background: rgba(0, 135, 81, 0.12);
+  border: 1px solid rgba(0, 135, 81, 0.35);
   border-radius: 100px;
-  color: #00c853;
+  color: #008751;
   font-weight: 800;
   font-size: 0.9rem;
   letter-spacing: 0.1em;
@@ -6784,15 +6790,15 @@ select {
   font-size: clamp(3rem, 8vw, 6rem);
   font-weight: 900;
   letter-spacing: -0.02em;
-  color: #ffffff;
-  background: linear-gradient(135deg, #ffffff 0%, #00c853 100%);
+  color: #008751;
+  background: linear-gradient(135deg, #008751 0%, #004d2e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .fullscreen-countdown-live-desc {
   font-size: 1.2rem;
-  color: #94a3b8;
+  color: #475569;
   max-width: 600px;
 }
 
@@ -6810,13 +6816,13 @@ select {
   font-weight: 800;
   letter-spacing: 0.05em;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 135, 81, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 135, 81, 0.3);
   transition: all 0.2s ease;
 }
 
 .fullscreen-countdown-return-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(0, 135, 81, 0.5);
+  box-shadow: 0 12px 30px rgba(0, 135, 81, 0.45);
 }
 
 @media (max-width: 768px) {
