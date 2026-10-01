@@ -33,9 +33,13 @@ interface ActiveAddition {
 
 interface AbujaHarvestMapViewProps {
   onOpenAuth?: () => void;
+  isFullScreenMode?: boolean;
 }
 
-export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpenAuth: _onOpenAuth }) => {
+export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({
+  onOpenAuth: _onOpenAuth,
+  isFullScreenMode = false,
+}) => {
   // Map pan and zoom state
   const [zoom, setZoom] = useState<number>(1);
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -290,42 +294,49 @@ export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpen
     zonalTarget > 0 ? ((totalZonalSouls / zonalTarget) * 100).toFixed(1) : '0.0';
 
   return (
-    <div className="abuja-map-page-wrapper light-mode-map" ref={containerRef}>
-      {/* Light Mode Unified Header Strip (All on 1 Screen) */}
-      <header className="abuja-map-header">
+    <div
+      className={`abuja-map-page-wrapper light-mode-map ${
+        isFullScreenMode ? 'is-fullscreen-bigscreen' : ''
+      }`}
+      ref={containerRef}
+    >
+      {/* Light Mode Unified Header Strip (All on 1 Screen - Zero Scrolling) */}
+      <header className={`abuja-map-header ${isFullScreenMode ? 'fullscreen-map-header' : ''}`}>
         <div className="abuja-map-title-row">
           <div className="abuja-map-brand">
             <div className="abuja-map-radar-badge">
               <span className="live-radar-ping" />
-              <Radio size={14} className="radar-icon" />
+              <Radio size={13} className="radar-icon" />
               <span>LIVE HARVEST RADAR</span>
             </div>
             <h1 className="abuja-map-title">ABUJA GEOGRAPHIC CHURCH MAP</h1>
-            <p className="abuja-map-subtitle">
-              All 127 Churches Across Abuja Federal Capital Territory on One Unified Map
-            </p>
+            {!isFullScreenMode && (
+              <p className="abuja-map-subtitle">
+                All 127 Churches Across Abuja Federal Capital Territory on One Unified Map
+              </p>
+            )}
           </div>
 
           {/* Unified Zonal Metrics HUD */}
           <div className="abuja-map-stats-pills">
             <div className="map-stat-pill primary-stat-pill">
-              <Flame size={16} className="text-amber" />
+              <Flame size={14} className="text-amber" />
               <div>
                 <span className="map-stat-val">{totalZonalSouls.toLocaleString()}</span>
-                <span className="map-stat-lbl">Zonal Souls Won</span>
+                <span className="map-stat-lbl">Zonal Souls</span>
               </div>
             </div>
 
             <div className="map-stat-pill">
-              <Target size={15} className="text-blue" />
+              <Target size={14} className="text-blue" />
               <div>
                 <span className="map-stat-val">{zonalTarget.toLocaleString()}</span>
-                <span className="map-stat-lbl">Campaign Goal</span>
+                <span className="map-stat-lbl">Goal</span>
               </div>
             </div>
 
             <div className="map-stat-pill">
-              <Award size={15} className="text-emerald" />
+              <Award size={14} className="text-emerald" />
               <div>
                 <span className="map-stat-val">{percentZonalAchieved}%</span>
                 <span className="map-stat-lbl">Achieved</span>
@@ -333,10 +344,10 @@ export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpen
             </div>
 
             <div className="map-stat-pill">
-              <Building size={15} className="text-slate" />
+              <Building size={14} className="text-slate" />
               <div>
                 <span className="map-stat-val">127</span>
-                <span className="map-stat-lbl">Churches on 1 Map</span>
+                <span className="map-stat-lbl">Churches</span>
               </div>
             </div>
 
@@ -346,8 +357,8 @@ export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpen
               className="map-simulate-addition-btn"
               title="Test real-time addition radar light-up on Zonal Church 1 (Jabi)"
             >
-              <Zap size={14} />
-              <span>TEST LIVE PING (JABI)</span>
+              <Zap size={13} />
+              <span>TEST PING (JABI)</span>
             </button>
           </div>
         </div>
@@ -355,7 +366,7 @@ export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpen
         {/* Search Bar & Quick Jump (No Tabs - 1 Unified Map) */}
         <div className="abuja-map-search-strip">
           <div className="map-search-box">
-            <Search size={15} className="search-icon" />
+            <Search size={14} className="search-icon" />
             <input
               type="text"
               placeholder="Quick search any church (e.g. Zonal Church 1, Dawaki, Utako, Kubwa)..."
@@ -369,7 +380,7 @@ export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpen
                 className="search-clear-btn"
                 aria-label="Clear Search"
               >
-                <X size={13} />
+                <X size={12} />
               </button>
             )}
           </div>

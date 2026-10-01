@@ -96,7 +96,7 @@ const MainContent: React.FC = () => {
   };
 
   return (
-    <div className={`layout-shell ${isSidebarCollapsed ? 'layout-sidebar-collapsed' : ''}`}>
+    <div className={`layout-shell ${isSidebarCollapsed ? 'layout-sidebar-collapsed' : ''} ${activeTab === 'map' ? 'layout-map-view' : ''}`}>
       {/* Left Collapsible Sidebar (Desktop) & Slide-out Drawer (Mobile) */}
       <Sidebar
         activeTab={activeTab}
@@ -128,7 +128,7 @@ const MainContent: React.FC = () => {
         />
 
         {/* Tab Content Stage */}
-        <main className="stage-content">
+        <main className={`stage-content ${activeTab === 'map' ? 'stage-content-map' : ''}`}>
           {activeTab === 'home' && (
             <PublicHomeView
               onNavigate={handleSelectTab}

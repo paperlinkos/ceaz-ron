@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Layers, BarChart2, Church, Trophy, Search, X, ChevronLeft, ChevronRight, LayoutList, CircleDot, Activity } from 'lucide-react';
+import { Layers, BarChart2, Church, Trophy, Search, X, ChevronLeft, ChevronRight, LayoutList, CircleDot, Activity, MapPin } from 'lucide-react';
 import { AppleProgressRingsWidget } from './AppleProgressRingsWidget';
 import { UpwardRaceVisualization } from './UpwardRaceVisualization';
 import { LiveSurgeLineGraph } from './LiveSurgeLineGraph';
+import { AbujaHarvestMapView } from './AbujaHarvestMapView';
 import { DEFAULT_CHURCHES, DEFAULT_GROUPS } from '../../services/organizationService';
 import { getOfficialTarget } from '../../services/targetService';
 import type { ZonalCounterData } from '../../services/counterService';
@@ -15,7 +16,7 @@ interface BigScreenDisplayModalProps {
   onClose: () => void;
   counterData: ZonalCounterData;
   eventStatus: EventStatus;
-  initialPage?: 'counter' | 'groups' | 'churches' | 'timeline';
+  initialPage?: 'counter' | 'groups' | 'churches' | 'timeline' | 'map';
 }
 
 interface ChurchStandingItem {
@@ -57,7 +58,7 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
   eventStatus,
   initialPage = 'counter',
 }) => {
-  const [activePage, setActivePage] = useState<'counter' | 'groups' | 'churches' | 'timeline'>(initialPage);
+  const [activePage, setActivePage] = useState<'counter' | 'groups' | 'churches' | 'timeline' | 'map'>(initialPage);
 
   useEffect(() => {
     if (isOpen && initialPage) {
@@ -115,6 +116,8 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
         setActivePage('churches');
       } else if (e.key === '4') {
         setActivePage('timeline');
+      } else if (e.key === '5') {
+        setActivePage('map');
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -185,6 +188,16 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
         >
           <Activity size={18} style={{ color: activePage === 'timeline' ? '#00ff87' : 'inherit' }} />
           {!isDockCollapsed && <span>SURGE LINE GRAPH</span>}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActivePage('map')}
+          className={`dock-btn ${activePage === 'map' ? 'dock-btn-active' : ''}`}
+          title="Abuja Harvest Map (Press 5)"
+        >
+          <MapPin size={18} style={{ color: activePage === 'map' ? '#00ff87' : 'inherit' }} />
+          {!isDockCollapsed && <span>ABUJA HARVEST MAP</span>}
         </button>
 
         <div className="dock-divider" />
@@ -792,6 +805,24 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
               singleCardMode={true}
               defaultMode="velocity"
             />
+          </div>
+        )}
+
+        {/* PAGE 5: ABUJA HARVEST MAP (LARGE FULL SCREEN SINGLE CARD VIEW - NO SCROLLING) */}
+        {activePage === 'map' && (
+          <div
+            className="big-screen-page-map"
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              height: 'calc(100vh - 130px)',
+              maxHeight: 'calc(100vh - 130px)',
+              overflow: 'hidden',
+              borderRadius: '16px',
+            }}
+          >
+            <AbujaHarvestMapView isFullScreenMode={true} />
           </div>
         )}
       </div>
