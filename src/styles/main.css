@@ -5426,34 +5426,34 @@ select {
 }
 
 /* ==========================================================================
-   ABUJA GEOGRAPHIC HARVEST MAP & REAL-TIME ADDITIONS RADAR STYLING
+   ABUJA GEOGRAPHIC HARVEST MAP — CLEAN LIGHT MODE STYLING (NOT GREEN)
    ========================================================================== */
 
-.abuja-map-page-wrapper {
+.abuja-map-page-wrapper.light-mode-map {
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: calc(100vh - 65px - var(--ticker-height, 42px));
   width: 100%;
-  background: radial-gradient(circle at 50% 30%, #081d15 0%, #030d09 100%);
-  color: #e2e8f0;
+  background: #f1f5f9;
+  color: #0f172a;
   position: relative;
   overflow: hidden;
 }
 
-/* Top Header Strip */
-.abuja-map-header {
+/* Light Mode Header Strip */
+.abuja-map-page-wrapper.light-mode-map .abuja-map-header {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 16px 20px 12px;
-  background: rgba(6, 20, 14, 0.92);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid #133e2b;
+  padding: 16px 20px 14px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.03);
   z-index: 10;
 }
 
-.abuja-map-title-row {
+.abuja-map-page-wrapper.light-mode-map .abuja-map-title-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -5461,19 +5461,19 @@ select {
   flex-wrap: wrap;
 }
 
-.abuja-map-brand {
+.abuja-map-page-wrapper.light-mode-map .abuja-map-brand {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.abuja-map-radar-badge {
+.abuja-map-page-wrapper.light-mode-map .abuja-map-radar-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(0, 255, 135, 0.1);
-  border: 1px solid rgba(0, 255, 135, 0.35);
-  color: #00ff87;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #047857;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.8px;
@@ -5483,88 +5483,103 @@ select {
   width: fit-content;
 }
 
-.live-radar-ping {
+.abuja-map-page-wrapper.light-mode-map .live-radar-ping {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #00ff87;
-  box-shadow: 0 0 10px #00ff87;
-  animation: radar-ping-pulse 1.6s infinite;
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  animation: radar-ping-pulse-light 1.6s infinite;
 }
 
-@keyframes radar-ping-pulse {
+@keyframes radar-ping-pulse-light {
   0% { transform: scale(0.95); opacity: 0.8; }
-  50% { transform: scale(1.4); opacity: 1; box-shadow: 0 0 14px #00ff87; }
+  50% { transform: scale(1.4); opacity: 1; box-shadow: 0 0 12px rgba(16, 185, 129, 0.9); }
   100% { transform: scale(0.95); opacity: 0.8; }
 }
 
-.abuja-map-title {
+.abuja-map-page-wrapper.light-mode-map .abuja-map-title {
   margin: 0;
   font-size: 1.35rem;
   font-weight: 900;
   letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #ffffff 0%, #a7f3d0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #0f172a;
 }
 
-.abuja-map-subtitle {
+.abuja-map-page-wrapper.light-mode-map .abuja-map-subtitle {
   margin: 0;
-  font-size: 0.82rem;
-  color: #94a3b8;
+  font-size: 0.84rem;
+  color: #64748b;
   max-width: 680px;
   line-height: 1.35;
 }
 
-/* Stats Pills */
-.abuja-map-stats-pills {
+/* Light Mode Stats Pills */
+.abuja-map-page-wrapper.light-mode-map .abuja-map-stats-pills {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-.map-stat-pill {
+.abuja-map-page-wrapper.light-mode-map .map-stat-pill {
   display: flex;
   align-items: center;
   gap: 9px;
-  background: #0b2218;
-  border: 1px solid #1a4d36;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 6px 12px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
 }
 
-.map-stat-val {
+.abuja-map-page-wrapper.light-mode-map .map-stat-val {
   display: block;
   font-size: 14px;
   font-weight: 800;
-  color: #ffffff;
+  color: #0f172a;
   line-height: 1.1;
 }
 
-.map-stat-lbl {
+.abuja-map-page-wrapper.light-mode-map .map-stat-lbl {
   display: block;
   font-size: 10px;
-  font-weight: 600;
-  color: #6ee7b7;
+  font-weight: 700;
+  color: #64748b;
   text-transform: uppercase;
 }
 
-.primary-stat-pill {
-  border-color: rgba(255, 215, 0, 0.4);
-  background: rgba(255, 215, 0, 0.08);
+.abuja-map-page-wrapper.light-mode-map .primary-stat-pill {
+  border-color: #fde68a;
+  background: #fffbeb;
 }
 
-.primary-stat-pill .map-stat-val {
-  color: #FFD700;
+.abuja-map-page-wrapper.light-mode-map .primary-stat-pill .map-stat-val {
+  color: #b45309;
 }
 
-.map-simulate-addition-btn {
+.abuja-map-page-wrapper.light-mode-map .text-amber {
+  color: #d97706;
+}
+
+.abuja-map-page-wrapper.light-mode-map .text-blue {
+  color: #2563eb;
+}
+
+.abuja-map-page-wrapper.light-mode-map .text-emerald {
+  color: #059669;
+}
+
+.abuja-map-page-wrapper.light-mode-map .text-slate {
+  color: #475569;
+}
+
+.abuja-map-page-wrapper.light-mode-map .map-simulate-addition-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(135deg, #008751 0%, #059669 100%);
-  border: 1px solid #00ff87;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border: 1px solid #f59e0b;
   color: #ffffff;
   font-size: 11px;
   font-weight: 800;
@@ -5572,121 +5587,60 @@ select {
   padding: 8px 12px;
   border-radius: 9px;
   cursor: pointer;
-  box-shadow: 0 0 12px rgba(0, 255, 135, 0.25);
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.25);
   transition: all 0.2s ease;
 }
 
-.map-simulate-addition-btn:hover {
+.abuja-map-page-wrapper.light-mode-map .map-simulate-addition-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 0 18px rgba(0, 255, 135, 0.45);
-  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.4);
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
 }
 
-/* District Filter Strip & Search */
-.abuja-map-filter-strip {
+/* Search Strip (No Tabs — All 127 Churches on 1 Map) */
+.abuja-map-page-wrapper.light-mode-map .abuja-map-search-strip {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: 12px;
 }
 
-.district-chips-scroller {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  scrollbar-width: thin;
-  scrollbar-color: #1a4d36 transparent;
-  flex: 1;
-}
-
-.district-chips-scroller::-webkit-scrollbar {
-  height: 4px;
-}
-
-.district-chips-scroller::-webkit-scrollbar-thumb {
-  background: #1a4d36;
-  border-radius: 4px;
-}
-
-.district-filter-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  font-size: 11.5px;
-  font-weight: 700;
-  white-space: nowrap;
-  background: #0d271c;
-  border: 1px solid #1a4632;
-  color: #cbd5e1;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.district-filter-chip:hover {
-  background: #143b2b;
-  border-color: #2e7a57;
-  color: #ffffff;
-}
-
-.district-filter-chip.chip-active {
-  background: #008751;
-  border-color: #00ff87;
-  color: #ffffff;
-  box-shadow: 0 0 10px rgba(0, 255, 135, 0.35);
-}
-
-.district-filter-chip.chip-zonal-highlight {
-  border-color: rgba(255, 215, 0, 0.6);
-  background: rgba(255, 215, 0, 0.12);
-  color: #FFD700;
-  font-weight: 800;
-}
-
-.district-filter-chip.chip-zonal-highlight.chip-active {
-  background: #b45309;
-  border-color: #FFD700;
-  color: #ffffff;
-  box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);
-}
-
-.map-search-box {
+.abuja-map-page-wrapper.light-mode-map .map-search-box {
   position: relative;
-  min-width: 240px;
+  flex: 1;
+  max-width: 520px;
 }
 
-.map-search-box .search-icon {
+.abuja-map-page-wrapper.light-mode-map .map-search-box .search-icon {
   position: absolute;
-  left: 10px;
+  left: 11px;
   top: 50%;
   transform: translateY(-50%);
-  color: #64748b;
+  color: #94a3b8;
   pointer-events: none;
 }
 
-.map-search-input {
+.abuja-map-page-wrapper.light-mode-map .map-search-input {
   width: 100%;
-  padding: 7px 30px 7px 32px;
-  border-radius: 8px;
-  background: #092016;
-  border: 1px solid #184230;
-  color: #ffffff;
-  font-size: 12px;
+  padding: 8px 30px 8px 34px;
+  border-radius: 9px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  font-size: 12.5px;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.map-search-input:focus {
-  border-color: #00ff87;
-  box-shadow: 0 0 8px rgba(0, 255, 135, 0.2);
+.abuja-map-page-wrapper.light-mode-map .map-search-input:focus {
+  border-color: #3b82f6;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
-.search-clear-btn {
+.abuja-map-page-wrapper.light-mode-map .search-clear-btn {
   position: absolute;
-  right: 8px;
+  right: 9px;
   top: 50%;
   transform: translateY(-50%);
   background: transparent;
@@ -5696,29 +5650,52 @@ select {
   padding: 2px;
 }
 
-/* Map Canvas Container */
-.abuja-map-canvas-container {
+.abuja-map-page-wrapper.light-mode-map .map-quick-focus-jabi-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  color: #92400e;
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.abuja-map-page-wrapper.light-mode-map .map-quick-focus-jabi-btn:hover {
+  background: #fde68a;
+  border-color: #d97706;
+  color: #78350f;
+  transform: translateY(-1px);
+}
+
+/* Light Mode Map Canvas */
+.abuja-map-page-wrapper.light-mode-map .abuja-map-canvas-container {
   position: relative;
   flex: 1;
   min-height: 520px;
   width: 100%;
-  background: #030c08;
+  background: #eef2f6;
   overflow: hidden;
   user-select: none;
 }
 
-.map-svg-viewport {
+.abuja-map-page-wrapper.light-mode-map .map-svg-viewport {
   width: 100%;
   height: 100%;
   cursor: grab;
   position: relative;
 }
 
-.map-svg-viewport.viewport-dragging {
+.abuja-map-page-wrapper.light-mode-map .map-svg-viewport.viewport-dragging {
   cursor: grabbing;
 }
 
-.abuja-fct-svg {
+.abuja-map-page-wrapper.light-mode-map .abuja-fct-svg.light-svg {
   width: 100%;
   height: 100%;
   min-width: 100%;
@@ -5726,134 +5703,136 @@ select {
   display: block;
 }
 
-/* Floating Map Controls */
-.map-floating-controls {
+/* Light Mode Floating Controls */
+.abuja-map-page-wrapper.light-mode-map .map-floating-controls {
   position: absolute;
   top: 18px;
   right: 18px;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  background: rgba(6, 20, 14, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
-  border: 1px solid #184431;
+  border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 6px;
   z-index: 20;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
 }
 
-.map-ctrl-btn {
+.abuja-map-page-wrapper.light-mode-map .map-ctrl-btn {
   width: 36px;
   height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  background: #0c261b;
-  border: 1px solid #194a34;
-  color: #cbd5e1;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #334155;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
-.map-ctrl-btn:hover {
-  background: #143e2c;
-  color: #00ff87;
-  border-color: #00ff87;
+.abuja-map-page-wrapper.light-mode-map .map-ctrl-btn:hover {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #3b82f6;
 }
 
-.map-ctrl-jabi-btn {
-  border-color: rgba(255, 215, 0, 0.4);
-  color: #FFD700;
+.abuja-map-page-wrapper.light-mode-map .map-ctrl-jabi-btn {
+  border-color: #f59e0b;
+  color: #d97706;
+  background: #fef3c7;
 }
 
-.map-ctrl-jabi-btn:hover {
-  background: rgba(255, 215, 0, 0.15);
-  border-color: #FFD700;
-  color: #FFD700;
+.abuja-map-page-wrapper.light-mode-map .map-ctrl-jabi-btn:hover {
+  background: #fde68a;
+  border-color: #b45309;
+  color: #92400e;
 }
 
-/* Compass Rose */
-.map-compass-rose {
+/* Compass Rose in Light Mode */
+.abuja-map-page-wrapper.light-mode-map .map-compass-rose {
   position: absolute;
   top: 18px;
   left: 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(6, 20, 14, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
-  border: 1px solid #184431;
+  border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 6px 8px;
   z-index: 20;
   pointer-events: none;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
 }
 
-.compass-icon {
-  color: #00ff87;
+.abuja-map-page-wrapper.light-mode-map .compass-icon {
+  color: #2563eb;
 }
 
-.compass-north {
+.abuja-map-page-wrapper.light-mode-map .compass-north {
   font-size: 9px;
   font-weight: 900;
-  color: #FFD700;
+  color: #d97706;
   margin-top: 2px;
 }
 
-/* District Labels inside SVG */
-.district-label {
+/* District Labels (Crisp Dark Text on Light Map) */
+.district-label-light {
   font-size: 9px;
   font-weight: 800;
-  letter-spacing: 1px;
-  fill: #4b7a63;
+  letter-spacing: 0.8px;
+  fill: #64748b;
   text-anchor: middle;
   pointer-events: none;
 }
 
-/* Pin Micro-Text */
-.church-pin-text {
-  fill: #e2e8f0;
+/* Pin Micro-Text in Light Mode */
+.church-pin-text-light {
+  fill: #1e293b;
   letter-spacing: 0.2px;
   pointer-events: none;
   paint-order: stroke;
-  stroke: #030d09;
+  stroke: #ffffff;
   stroke-width: 2.5px;
   stroke-linecap: butt;
   stroke-linejoin: miter;
 }
 
-.church-pin-text-zonal {
-  fill: #FFD700;
+.church-pin-text-zonal-light {
+  fill: #b45309;
   font-weight: 900;
 }
 
-.church-pin-text-lit {
-  fill: #00ff87;
+.church-pin-text-lit-light {
+  fill: #d97706;
   font-weight: 900;
 }
 
-/* Real-Time Radar Expansion Shockwaves */
-.radar-expansion-ring-1 {
+/* Light Mode Radar Shockwave Rings */
+.radar-expansion-ring-light-1 {
   fill: none;
-  stroke: #FFD700;
-  animation: radarShockwave 2s infinite ease-out;
+  stroke: #f59e0b;
+  animation: radarShockwaveLight 2s infinite ease-out;
 }
 
-.radar-expansion-ring-2 {
+.radar-expansion-ring-light-2 {
   fill: none;
-  stroke: #00ff87;
-  animation: radarShockwave 2s infinite ease-out 0.4s;
+  stroke: #3b82f6;
+  animation: radarShockwaveLight 2s infinite ease-out 0.4s;
 }
 
-.radar-expansion-ring-3 {
+.radar-expansion-ring-light-3 {
   fill: none;
-  stroke: #00ffc2;
-  animation: radarShockwave 2s infinite ease-out 0.8s;
+  stroke: #10b981;
+  animation: radarShockwaveLight 2s infinite ease-out 0.8s;
 }
 
-@keyframes radarShockwave {
+@keyframes radarShockwaveLight {
   0% {
     r: 6px;
     opacity: 1;
@@ -5862,180 +5841,98 @@ select {
   100% {
     r: 44px;
     opacity: 0;
-    stroke-width: 0.5px;
+    stroke-width: 0.6px;
   }
 }
 
-.zonal-halo-spin {
-  animation: zonalHaloPulse 3s infinite alternate ease-in-out;
-}
-
-@keyframes zonalHaloPulse {
-  0% { transform: scale(0.92); opacity: 0.6; }
-  100% { transform: scale(1.15); opacity: 1; stroke-width: 1.8px; }
-}
-
-/* Floating +1 Real-Time Addition Badge */
-.floating-addition-badge-group {
-  animation: floatAdditionBadge 2.8s ease-out forwards;
-}
-
-@keyframes floatAdditionBadge {
-  0% {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  20% {
-    transform: translateY(-8px);
-    opacity: 1;
-  }
-  80% {
-    transform: translateY(-16px);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-24px);
-    opacity: 0;
-  }
-}
-
-/* Selected Church HUD Card */
-.map-church-hud-card {
+/* Light Mode HUD Detail Card */
+.map-church-hud-card.light-hud {
   position: absolute;
   top: 18px;
   left: 70px;
-  width: 320px;
-  background: rgba(6, 22, 16, 0.94);
+  width: 330px;
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
-  border: 1px solid #1e523a;
+  border: 1px solid #cbd5e1;
   border-radius: 14px;
   padding: 16px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 24px rgba(0, 255, 135, 0.15);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12), 0 0 20px rgba(37, 99, 235, 0.08);
   z-index: 25;
+  color: #0f172a;
   animation: hudCardEnter 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes hudCardEnter {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.hud-close-btn {
+.hud-close-btn.light-close-btn {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: rgba(15, 40, 29, 0.7);
-  border: 1px solid #1a4d36;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
   border-radius: 50%;
   width: 26px;
   height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #cbd5e1;
+  color: #64748b;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
-.hud-close-btn:hover {
-  background: #b91c1c;
+.hud-close-btn.light-close-btn:hover {
+  background: #ef4444;
   color: #ffffff;
-  border-color: #ef4444;
+  border-color: #dc2626;
 }
 
-.hud-header {
-  margin-bottom: 14px;
+.hud-pill-zonal-light {
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  color: #92400e;
 }
 
-.hud-badge-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 8px;
+.hud-pill-group-light {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
 }
 
-.hud-pill-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 999px;
-}
-
-.hud-pill-zonal {
-  background: rgba(255, 215, 0, 0.15);
-  border: 1px solid rgba(255, 215, 0, 0.5);
-  color: #FFD700;
-}
-
-.hud-pill-group {
-  background: rgba(0, 255, 135, 0.1);
-  border: 1px solid rgba(0, 255, 135, 0.3);
-  color: #6ee7b7;
-}
-
-.hud-pill-active-ping {
-  background: rgba(245, 158, 11, 0.15);
-  border: 1px solid #f59e0b;
-  color: #fbbf24;
+.hud-pill-active-ping-light {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
   animation: pulse 1.5s infinite;
 }
 
-.hud-church-name {
+.hud-church-name.light-name {
   margin: 0 0 4px;
   font-size: 1.15rem;
   font-weight: 800;
-  color: #ffffff;
+  color: #0f172a;
 }
 
-.hud-meta-row {
+.hud-meta-row.light-meta {
   display: flex;
   align-items: center;
   gap: 6px;
   font-size: 11px;
-  color: #94a3b8;
+  color: #64748b;
   flex-wrap: wrap;
 }
 
-.hud-church-code {
+.hud-church-code.light-code {
   font-weight: 800;
-  color: #6ee7b7;
+  color: #2563eb;
 }
 
-.hud-church-district {
-  color: #cbd5e1;
-}
-
-.hud-church-region {
-  color: #64748b;
-}
-
-/* Metrics Grid */
-.hud-metrics-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-
-.hud-metric-box {
-  background: #081d14;
-  border: 1px solid #133c29;
+.hud-metric-box.light-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 10px;
 }
 
-.hud-metric-label {
+.hud-metric-label.light-lbl {
   display: block;
   font-size: 10px;
   font-weight: 700;
@@ -6044,146 +5941,97 @@ select {
   margin-bottom: 4px;
 }
 
-.hud-metric-value-row {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
+.hud-metric-val.light-souls-val {
+  color: #059669;
 }
 
-.hud-metric-val {
-  font-size: 1.4rem;
-  font-weight: 900;
-  color: #ffffff;
-  line-height: 1;
+.hud-metric-val.light-target-val {
+  color: #0f172a;
 }
 
-.hud-souls-val {
-  color: #00ff87;
-  text-shadow: 0 0 10px rgba(0, 255, 135, 0.35);
-}
-
-.hud-souls-tag,
-.hud-target-tag {
+.hud-souls-tag.light-tag,
+.hud-target-tag.light-tag {
   font-size: 10px;
   font-weight: 700;
-  color: #94a3b8;
+  color: #64748b;
 }
 
-/* Progress bar */
-.hud-progress-block {
-  margin-bottom: 14px;
-}
-
-.hud-progress-labels {
+.hud-progress-labels.light-progress-labels {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 11px;
   font-weight: 700;
-  color: #94a3b8;
+  color: #64748b;
   margin-bottom: 6px;
 }
 
-.hud-percent-text {
-  color: #FFD700;
+.hud-percent-text.light-percent {
+  color: #d97706;
   font-weight: 900;
   font-size: 12px;
 }
 
-.hud-progress-track {
+.hud-progress-track.light-track {
   width: 100%;
   height: 8px;
-  background: #092016;
+  background: #e2e8f0;
   border-radius: 999px;
   overflow: hidden;
-  border: 1px solid #133c29;
+  border: none;
 }
 
-.hud-progress-fill {
-  height: 100%;
-  border-radius: 999px;
-  transition: width 0.4s ease;
-}
-
-/* Quick Actions */
-.hud-action-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.hud-action-btn {
-  flex: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 8px 10px;
-  border-radius: 8px;
-  font-size: 11px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.hud-simulate-btn {
-  background: linear-gradient(135deg, #008751 0%, #059669 100%);
-  border: 1px solid #00ff87;
+.hud-simulate-btn-light {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border: 1px solid #f59e0b;
   color: #ffffff;
 }
 
-.hud-simulate-btn:hover {
-  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+.hud-simulate-btn-light:hover {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
 }
 
-.hud-zoom-btn {
-  background: #0f2c1f;
-  border: 1px solid #1a4d36;
-  color: #cbd5e1;
+.hud-zoom-btn-light {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
 }
 
-.hud-zoom-btn:hover {
-  background: #174431;
-  color: #ffffff;
+.hud-zoom-btn-light:hover {
+  background: #e2e8f0;
+  color: #0f172a;
 }
 
-/* Live Feed Dock (Bottom Left) */
-.map-live-feed-dock {
+/* Light Mode Live Radar Feed Dock */
+.map-live-feed-dock.light-feed-dock {
   position: absolute;
   bottom: 16px;
   left: 18px;
   width: 290px;
-  background: rgba(6, 20, 14, 0.88);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(16px);
-  border: 1px solid #16402d;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
   padding: 10px 12px;
   z-index: 20;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
 }
 
-.feed-dock-header {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 8px;
+.feed-pulse-icon-light {
+  color: #059669;
 }
 
-.feed-pulse-icon {
-  color: #00ff87;
-}
-
-.feed-title {
+.feed-title-light {
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.8px;
-  color: #6ee7b7;
+  color: #059669;
   text-transform: uppercase;
   flex: 1;
 }
 
-.feed-count-badge {
-  background: #008751;
+.feed-count-badge-light {
+  background: #059669;
   color: #ffffff;
   font-size: 10px;
   font-weight: 900;
@@ -6191,116 +6039,103 @@ select {
   border-radius: 999px;
 }
 
-.feed-items-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.feed-empty-hint {
+.feed-empty-hint-light {
   font-size: 11px;
-  color: #64748b;
+  color: #94a3b8;
   font-style: italic;
   padding: 4px 0;
 }
 
-.feed-event-chip {
+.feed-event-chip.light-chip {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 6px 8px;
-  background: #092218;
-  border: 1px solid #133a27;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
-.feed-event-chip:hover {
-  background: #0f3525;
-  border-color: #00ff87;
+.feed-event-chip.light-chip:hover {
+  background: #eff6ff;
+  border-color: #3b82f6;
 }
 
-.feed-event-pulse {
+.feed-event-pulse-light {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #FFD700;
-  box-shadow: 0 0 6px #FFD700;
+  background: #f59e0b;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
   flex-shrink: 0;
 }
 
-.feed-event-body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-width: 0;
-}
-
-.feed-church-name {
+.feed-church-name-light {
   font-size: 11px;
   font-weight: 700;
-  color: #ffffff;
+  color: #0f172a;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.feed-delta {
+.feed-delta-light {
   font-size: 10px;
   font-weight: 800;
-  color: #00ff87;
+  color: #059669;
 }
 
-.feed-arrow {
-  color: #64748b;
-  flex-shrink: 0;
-}
-
-/* Mobile Responsiveness */
+/* Mobile Responsiveness for Light Mode */
 @media (max-width: 768px) {
-  .abuja-map-header {
+  .abuja-map-page-wrapper.light-mode-map .abuja-map-header {
     padding: 12px;
   }
 
-  .abuja-map-title-row {
+  .abuja-map-page-wrapper.light-mode-map .abuja-map-title-row {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
 
-  .abuja-map-stats-pills {
+  .abuja-map-page-wrapper.light-mode-map .abuja-map-stats-pills {
     width: 100%;
     justify-content: flex-start;
     gap: 6px;
   }
 
-  .map-stat-pill {
+  .abuja-map-page-wrapper.light-mode-map .map-stat-pill {
     padding: 5px 8px;
   }
 
-  .map-stat-val {
+  .abuja-map-page-wrapper.light-mode-map .map-stat-val {
     font-size: 12px;
   }
 
-  .map-simulate-addition-btn {
+  .abuja-map-page-wrapper.light-mode-map .map-simulate-addition-btn {
     width: 100%;
     justify-content: center;
     padding: 7px;
   }
 
-  .abuja-map-filter-strip {
+  .abuja-map-page-wrapper.light-mode-map .abuja-map-search-strip {
     flex-direction: column;
     align-items: stretch;
     gap: 8px;
   }
 
-  .map-search-box {
+  .abuja-map-page-wrapper.light-mode-map .map-search-box {
     width: 100%;
-    min-width: 100%;
+    max-width: 100%;
   }
 
-  .map-church-hud-card {
+  .abuja-map-page-wrapper.light-mode-map .map-quick-focus-jabi-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .abuja-map-page-wrapper.light-mode-map .map-church-hud-card.light-hud {
     top: auto;
     bottom: 12px;
     left: 12px;
@@ -6310,18 +6145,19 @@ select {
     overflow-y: auto;
   }
 
-  .map-live-feed-dock {
-    display: none; /* Hide feed drawer on narrow mobile screens to leave maximum map space */
+  .abuja-map-page-wrapper.light-mode-map .map-live-feed-dock.light-feed-dock {
+    display: none;
   }
 
-  .map-floating-controls {
+  .abuja-map-page-wrapper.light-mode-map .map-floating-controls {
     top: 12px;
     right: 12px;
   }
 
-  .map-compass-rose {
+  .abuja-map-page-wrapper.light-mode-map .map-compass-rose {
     top: 12px;
     left: 12px;
   }
 }
+
 
