@@ -12,6 +12,7 @@ import {
   fetchSoulWinnerProfile,
   clearCachedProfiles,
 } from '../services/userService';
+import { recordAccountLogin } from '../services/loginTrackerService';
 import { DEFAULT_GROUPS, DEFAULT_CHURCHES } from '../services/organizationService';
 import type { UserProfile, SoulWinnerProfile, UserRole, AccountStatus } from '../types/auth';
 
@@ -60,6 +61,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     ]);
     setUserProfile(uProf);
     setSoulWinnerProfile(swProf);
+    if (uProf) {
+      recordAccountLogin({
+        userId: uid,
+        name: uProf.name,
+        email: uProf.email,
+        role: uProf.role,
+        churchName: swProf?.churchName,
+        churchId: swProf?.churchId,
+        groupName: swProf?.groupName,
+        groupId: swProf?.groupId,
+      }).catch(() => {});
+    }
   };
 
   useEffect(() => {

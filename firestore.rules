@@ -177,6 +177,17 @@ service cloud.firestore {
     }
 
     // ─────────────────────────────────────────────────────────────────────
+    // ACCOUNT LOGINS TRACKER
+    // Tracks when accounts authenticate into the system
+    // Read: SuperAdmin only
+    // Write: Any authenticated user recording their login
+    // ─────────────────────────────────────────────────────────────────────
+    match /accountLogins/{loginId} {
+      allow read: if isSuperAdmin();
+      allow write: if isAuthenticated();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
     // CHURCH ACCOUNTS
     // Pre-provisioned representative accounts, created only by the
     // /api/church-accounts function (Admin SDK, which bypasses these rules).

@@ -18,6 +18,7 @@ import { BulkImportView } from './components/admin/BulkImportView';
 import { LeaderSoulEntryView } from './components/leader/LeaderSoulEntryView';
 import { DirectoryView } from './components/directory/DirectoryView';
 import { AbujaHarvestMapView } from './components/public/AbujaHarvestMapView';
+import { AccountLoginTrackerView } from './components/admin/AccountLoginTrackerView';
 import { useSoulRecords } from './hooks/useSoulRecords';
 import { useEventConfig } from './hooks/useEventConfig';
 import { DevRoleSwitcher } from './components/DevRoleSwitcher';
@@ -212,7 +213,11 @@ const MainContent: React.FC = () => {
           )}
 
           {activeTab === 'account' && (
-            <AccountView onOpenAuth={handleOpenAuth} />
+            <AccountView onOpenAuth={handleOpenAuth} onNavigate={setActiveTab} />
+          )}
+
+          {activeTab === 'loginTracker' && userProfile?.role === 'superAdmin' && isRoleVerified && (
+            <AccountLoginTrackerView onNavigate={setActiveTab} />
           )}
 
           {activeTab === 'org' && userProfile?.role === 'superAdmin' && isRoleVerified && (

@@ -15,6 +15,7 @@ import {
   FolderTree,
   X,
   MapPin,
+  ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNetworkStatus } from '../hooks/useNetworkStatus';
@@ -251,6 +252,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 >
                   <Database size={20} />
                   {(!isCollapsed || isMobileOpen) && <span>IMPORT DATA</span>}
+                </button>
+
+                <button
+                  onClick={() => handleItemClick('loginTracker')}
+                  className={`sidebar-link ${activeTab === 'loginTracker' ? 'sidebar-link-active' : ''}`}
+                  title="Account Login & Access Tracker"
+                >
+                  <ShieldCheck size={20} />
+                  {(!isCollapsed || isMobileOpen) && <span>LOGIN TRACKER</span>}
                 </button>
               </>
             )}
