@@ -6325,4 +6325,530 @@ select {
   }
 }
 
+/* ==========================================================================
+   SIDEBAR PWA OFFLINE APP PROMPT CARD & COLLAPSED ICON
+   ========================================================================== */
+.sidebar-pwa-card {
+  margin-top: auto;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, rgba(0, 135, 81, 0.16) 0%, rgba(0, 70, 42, 0.28) 100%);
+  border: 1px solid rgba(0, 135, 81, 0.35);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.25s ease;
+}
+
+.sidebar-pwa-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar-pwa-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(0, 135, 81, 0.3);
+  color: #00c853;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-pwa-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.sidebar-pwa-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #f8fafc;
+  line-height: 1.2;
+}
+
+.sidebar-pwa-sub {
+  font-size: 0.68rem;
+  color: #94a3b8;
+  line-height: 1.2;
+}
+
+.sidebar-pwa-dismiss {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.sidebar-pwa-dismiss:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-pwa-action-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #008751 0%, #006e42 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 135, 81, 0.35);
+}
+
+.sidebar-pwa-action-btn:hover {
+  background: linear-gradient(135deg, #00995c 0%, #007a4a 100%);
+  transform: translateY(-1px);
+}
+
+.sidebar-pwa-collapsed {
+  margin-top: auto;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-pwa-collapsed-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(0, 135, 81, 0.2);
+  border: 1px solid rgba(0, 135, 81, 0.4);
+  color: #00c853;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar-pwa-collapsed-btn:hover {
+  background: #008751;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   COUNTDOWN SCREEN TRIGGER BUTTON BESIDE BIG SCREEN MODE BUTTON
+   ========================================================================== */
+.countdown-mode-trigger-btn {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(217, 119, 6, 0.2) 100%) !important;
+  border: 1px solid rgba(217, 119, 6, 0.6) !important;
+  color: #92400e !important;
+  font-weight: 800 !important;
+}
+
+.countdown-mode-trigger-btn:hover {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22) 0%, rgba(217, 119, 6, 0.32) 100%) !important;
+  border-color: rgba(180, 83, 9, 0.8) !important;
+  color: #78350f !important;
+  transform: translateY(-1px);
+}
+
+.countdown-mode-trigger-btn-dark {
+  background: rgba(245, 158, 11, 0.15) !important;
+  border: 1px solid rgba(245, 158, 11, 0.4) !important;
+  color: #fbbf24 !important;
+}
+
+.countdown-mode-trigger-btn-dark:hover {
+  background: rgba(245, 158, 11, 0.28) !important;
+  border-color: rgba(245, 158, 11, 0.7) !important;
+  color: #fef3c7 !important;
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   DEDICATED FULL SCREEN COUNTDOWN CLOCK SCREEN
+   ========================================================================== */
+.fullscreen-countdown-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  background: radial-gradient(circle at 50% 45%, #082115 0%, #030a06 65%, #010302 100%);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 48px;
+  box-sizing: border-box;
+  overflow: hidden;
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.fullscreen-countdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.fullscreen-countdown-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.fullscreen-countdown-logo {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+}
+
+.fullscreen-countdown-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fullscreen-countdown-zone {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #00c853;
+  text-transform: uppercase;
+}
+
+.fullscreen-countdown-campaign {
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+}
+
+.fullscreen-countdown-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fullscreen-countdown-ctrl-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fullscreen-countdown-ctrl-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: scale(1.05);
+}
+
+.fullscreen-countdown-close-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+}
+
+.fullscreen-countdown-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.fullscreen-countdown-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.fullscreen-countdown-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 24px;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 100px;
+  color: #fcd34d;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+}
+
+.fullscreen-pulse-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 10px #f59e0b;
+  animation: pulse-ring 1.8s infinite cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+.fullscreen-countdown-clock-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2.5vw, 36px);
+  width: 100%;
+}
+
+.fullscreen-clock-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: clamp(20px, 3.5vw, 44px) clamp(20px, 3.5vw, 48px);
+  min-width: clamp(110px, 16vw, 210px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.fullscreen-clock-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.fullscreen-clock-block-secs {
+  border-color: rgba(0, 200, 83, 0.35);
+  background: linear-gradient(180deg, rgba(0, 200, 83, 0.1) 0%, rgba(0, 70, 42, 0.08) 100%);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 200, 83, 0.15);
+}
+
+.fullscreen-clock-digit {
+  font-size: clamp(3.5rem, 9.5vw, 8.5rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
+}
+
+.fullscreen-digit-accent {
+  color: #00c853;
+  text-shadow: 0 0 35px rgba(0, 200, 83, 0.5), 0 6px 24px rgba(0, 0, 0, 0.6);
+}
+
+.fullscreen-clock-label {
+  margin-top: 14px;
+  font-size: clamp(0.72rem, 1.2vw, 1.05rem);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.fullscreen-clock-colon {
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  font-weight: 900;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: -24px;
+  animation: colon-blink 1.5s ease-in-out infinite;
+}
+
+@keyframes colon-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.fullscreen-countdown-footer-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.fullscreen-target-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #e2e8f0;
+  letter-spacing: 0.05em;
+}
+
+.target-zap-icon {
+  color: #fbbf24;
+}
+
+.fullscreen-target-goal {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.fullscreen-target-goal strong {
+  color: #FFD700;
+  font-weight: 900;
+}
+
+.fullscreen-countdown-bottom-bar {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #64748b;
+  letter-spacing: 0.04em;
+}
+
+.fullscreen-countdown-bottom-bar kbd {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  color: #e2e8f0;
+}
+
+/* LIVE STATE FOR COUNTDOWN MODAL */
+.fullscreen-countdown-live-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+}
+
+.countdown-live-badge-glow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: rgba(0, 200, 83, 0.2);
+  border: 1px solid rgba(0, 200, 83, 0.5);
+  border-radius: 100px;
+  color: #00c853;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+}
+
+.fullscreen-countdown-live-title {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ffffff 0%, #00c853 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.fullscreen-countdown-live-desc {
+  font-size: 1.2rem;
+  color: #94a3b8;
+  max-width: 600px;
+}
+
+.fullscreen-countdown-return-btn {
+  margin-top: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 36px;
+  background: linear-gradient(135deg, #008751 0%, #006e42 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 14px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 135, 81, 0.4);
+  transition: all 0.2s ease;
+}
+
+.fullscreen-countdown-return-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 135, 81, 0.5);
+}
+
+@media (max-width: 768px) {
+  .fullscreen-countdown-overlay {
+    padding: 20px 16px;
+  }
+  .fullscreen-countdown-brand-text {
+    display: none;
+  }
+  .fullscreen-countdown-clock-grid {
+    gap: 6px;
+  }
+  .fullscreen-clock-block {
+    padding: 16px 10px;
+    min-width: 64px;
+    border-radius: 14px;
+  }
+  .fullscreen-clock-digit {
+    font-size: 2.5rem;
+  }
+  .fullscreen-clock-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+  .fullscreen-clock-colon {
+    font-size: 2rem;
+    margin-top: -12px;
+  }
+  .fullscreen-countdown-pill {
+    font-size: 0.78rem;
+    padding: 6px 14px;
+  }
+  .fullscreen-target-tag {
+    font-size: 0.78rem;
+    text-align: center;
+  }
+  .fullscreen-target-goal {
+    font-size: 0.9rem;
+    text-align: center;
+  }
+}
+
+
 

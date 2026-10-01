@@ -4,7 +4,6 @@ import { Header } from './components/Header';
 import { StatusBanner } from './components/StatusBanner';
 import { SoulRecordForm } from './components/SoulRecordForm';
 import { RecentSubmissions } from './components/RecentSubmissions';
-import { PwaInstallPrompt } from './components/PwaInstallPrompt';
 import { type TabType } from './components/Navigation';
 import { Sidebar } from './components/Sidebar';
 import { PublicHomeView } from './components/public/PublicHomeView';
@@ -251,9 +250,6 @@ const MainContent: React.FC = () => {
         isOpen={authModalState.isOpen}
         onClose={() => setAuthModalState({ isOpen: false, mode: 'login' })}
       />
-
-      {/* PWA Banner */}
-      <PwaInstallPrompt />
 
       {/* Dev Role Switcher — ONLY shown in development builds, never in production */}
       {import.meta.env.DEV && <DevRoleSwitcher />}

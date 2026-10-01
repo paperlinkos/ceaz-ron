@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Download, X } from 'lucide-react';
+import { Download, X, Smartphone } from 'lucide-react';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
-export const PwaInstallPrompt: React.FC = () => {
+interface PwaInstallPromptProps {
+  isCollapsed?: boolean;
+}
+
+export const PwaInstallPrompt: React.FC<PwaInstallPromptProps> = ({ isCollapsed = false }) => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isInstalling, setIsInstalling] = useState<boolean>(false);
@@ -26,8 +30,6 @@ export const PwaInstallPrompt: React.FC = () => {
   }, []);
 
   const handleInstall = async () => {
-    // Guard against a double click: prompt() rejects if it is called twice in
-    // the same page load, which previously surfaced as an unhandled rejection.
     if (!deferredPrompt || isInstalling) return;
     setIsInstalling(true);
     try {
@@ -51,22 +53,47 @@ export const PwaInstallPrompt: React.FC = () => {
     return null;
   }
 
+  if (isCollapsed) {
+    return (
+      <div className="sidebar-pwa-collapsed" title="Install CEAZ1 Reachout Nigeria App for fast offline recording">
+        <button
+          onClick={handleInstall}
+          className="sidebar-pwa-collapsed-btn"
+          aria-label="Install App"
+        >
+          <Download size={18} />
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="pwa-install-bar" role="status" aria-live="polite">
-      <div className="pwa-install-content">
-        <Download size={18} aria-hidden="true" />
-        <span>
-          Install <strong>CEAZ1 Reachout Nigeria</strong> app for fast offline recording
-        </span>
-      </div>
-      <div className="pwa-install-actions">
-        <button onClick={handleInstall} className="pwa-install-btn" disabled={isInstalling}>
-          {isInstalling ? 'Installing…' : 'Install App'}
+    <div className="sidebar-pwa-card" role="status" aria-live="polite">
+      <div className="sidebar-pwa-header">
+        <div className="sidebar-pwa-icon">
+          <Smartphone size={16} />
+        </div>
+        <div className="sidebar-pwa-info">
+          <span className="sidebar-pwa-title">Install CEAZ1 App</span>
+          <span className="sidebar-pwa-sub">Fast offline recording</span>
+        </div>
+        <button
+          onClick={handleDismiss}
+          className="sidebar-pwa-dismiss"
+          title="Dismiss install prompt"
+          aria-label="Dismiss"
+        >
+          <X size={14} />
         </button>
-        <button onClick={handleDismiss} className="pwa-dismiss-btn" aria-label="Dismiss install prompt">
-          <X size={16} aria-hidden="true" />
-        </button>
       </div>
+      <button
+        onClick={handleInstall}
+        className="sidebar-pwa-action-btn"
+        disabled={isInstalling}
+      >
+        <Download size={14} />
+        <span>{isInstalling ? 'Installing…' : 'Install App'}</span>
+      </button>
     </div>
   );
 };

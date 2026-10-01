@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Tv } from 'lucide-react';
+import { CheckCircle2, Tv, Timer } from 'lucide-react';
 import { FlipCounterDisplay } from './FlipCounterDisplay';
 import { UpwardRaceVisualization } from './UpwardRaceVisualization';
 import { BigScreenDisplayModal } from './BigScreenDisplayModal';
+import { FullScreenCountdownModal } from './FullScreenCountdownModal';
 import { AppleProgressRingsWidget } from './AppleProgressRingsWidget';
 import { CampaignCountdownTimer } from '../common/CampaignCountdownTimer';
 import { GroupHomeView } from '../home/GroupHomeView';
@@ -20,6 +21,7 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
   const { eventConfig, isLive, isCompleted } = useEventConfig();
   const { soulWinnerProfile, role } = useAuth();
   const [isDisplayModeOpen, setIsDisplayModeOpen] = useState<boolean>(false);
+  const [isCountdownFullScreenOpen, setIsCountdownFullScreenOpen] = useState<boolean>(false);
   const [displayModeInitialPage, setDisplayModeInitialPage] = useState<'counter' | 'groups' | 'churches' | 'timeline'>('counter');
 
   const targetVal = eventConfig.target >= 50000 ? eventConfig.target : 50000;
@@ -64,19 +66,31 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
           <span>CEAZ1 REACHOUT NIGERIA SOUL WINNING CAMPAIGN</span>
         </div>
 
-        {/* Action Button: Big Screen TV Mode */}
-        <button
-          type="button"
-          onClick={() => {
-            setDisplayModeInitialPage('counter');
-            setIsDisplayModeOpen(true);
-          }}
-          className="display-mode-trigger-btn"
-          title="Open Big-Screen / TV Display Mode"
-        >
-          <Tv size={15} />
-          <span>BIG SCREEN MODE</span>
-        </button>
+        {/* Action Buttons: Countdown Screen & Big Screen TV Mode */}
+        <div className="event-date-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button
+            type="button"
+            onClick={() => setIsCountdownFullScreenOpen(true)}
+            className="display-mode-trigger-btn countdown-mode-trigger-btn"
+            title="Open Fullscreen Campaign Countdown Clock"
+          >
+            <Timer size={15} />
+            <span>COUNTDOWN SCREEN</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setDisplayModeInitialPage('counter');
+              setIsDisplayModeOpen(true);
+            }}
+            className="display-mode-trigger-btn"
+            title="Open Big-Screen / TV Display Mode"
+          >
+            <Tv size={15} />
+            <span>BIG SCREEN MODE</span>
+          </button>
+        </div>
       </div>
 
       {/* CAMPAIGN LAUNCH COUNTDOWN (Visible until Oct 1, 9:00 AM) */}
@@ -162,6 +176,12 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
         counterData={counterData}
         eventStatus={eventConfig.status}
         initialPage={displayModeInitialPage}
+      />
+
+      {/* DEDICATED FULL SCREEN COUNTDOWN CLOCK */}
+      <FullScreenCountdownModal
+        isOpen={isCountdownFullScreenOpen}
+        onClose={() => setIsCountdownFullScreenOpen(false)}
       />
     </div>
   );

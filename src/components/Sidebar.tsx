@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNetworkStatus } from '../hooks/useNetworkStatus';
+import { PwaInstallPrompt } from './PwaInstallPrompt';
 import type { TabType } from './Navigation';
 
 interface SidebarProps {
@@ -270,6 +271,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </>
         )}
       </nav>
+
+      {/* PWA Offline App Install Box in Sidebar */}
+      <PwaInstallPrompt isCollapsed={isCollapsed && !isMobileOpen} />
 
       {/* Sidebar Footer / User Account Section */}
       <div className="sidebar-footer">
