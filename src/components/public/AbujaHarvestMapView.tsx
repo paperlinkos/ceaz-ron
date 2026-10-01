@@ -457,7 +457,11 @@ export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpen
               </radialGradient>
 
               <filter id="lightDropShadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="4" stdDeviation="8" floodColor="#0f172a" floodOpacity="0.08" />
+                <feDropShadow dx="0" dy="6" stdDeviation="14" floodColor="#0f172a" floodOpacity="0.20" />
+              </filter>
+
+              <filter id="boldBorderShadow" x="-10%" y="-10%" width="120%" height="120%">
+                <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#0f172a" floodOpacity="0.30" />
               </filter>
 
               <filter id="pinGlow" x="-50%" y="-50%" width="200%" height="200%">
@@ -479,8 +483,11 @@ export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpen
               </filter>
             </defs>
 
-            {/* Subtle Light Grid Lines */}
-            <g className="map-grid-layer" opacity="0.45">
+            {/* SURROUNDING STATE BUFFER / OUTSIDE CANVAS (Provides high contrast for Abuja FCT) */}
+            <rect width="1200" height="900" fill="#e2e8f0" />
+
+            {/* Subtle Cross Grid for Cartographic Precision */}
+            <g className="map-grid-layer" opacity="0.65">
               {Array.from({ length: 13 }).map((_, i) => (
                 <line
                   key={`v-${i}`}
@@ -488,9 +495,9 @@ export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpen
                   y1="0"
                   x2={i * 100}
                   y2="900"
-                  stroke="#e2e8f0"
-                  strokeWidth="0.8"
-                  strokeDasharray="4,8"
+                  stroke="#cbd5e1"
+                  strokeWidth="1"
+                  strokeDasharray="4,6"
                 />
               ))}
               {Array.from({ length: 10 }).map((_, i) => (
@@ -500,56 +507,178 @@ export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpen
                   y1={i * 100}
                   x2="1200"
                   y2={i * 100}
-                  stroke="#e2e8f0"
-                  strokeWidth="0.8"
-                  strokeDasharray="4,8"
+                  stroke="#cbd5e1"
+                  strokeWidth="1"
+                  strokeDasharray="4,6"
                 />
               ))}
             </g>
 
-            {/* FCT Abuja Outer Perimeter Boundary Shape (Light Mode) */}
+            {/* NEIGHBORING STATE REGION LABELS (OUTSIDE FCT PERIMETER) */}
+            <g className="map-neighboring-states-layer">
+              {/* North: Kaduna State */}
+              <g transform="translate(520, 36)">
+                <rect width="160" height="26" rx="6" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.4" filter="url(#boldBorderShadow)" />
+                <text x="80" y="17" textAnchor="middle" fontSize="10" fontWeight="900" fill="#334155" letterSpacing="1">
+                  ⬆️ KADUNA STATE
+                </text>
+              </g>
+
+              {/* East: Nasarawa State */}
+              <g transform="translate(1000, 240)">
+                <rect width="170" height="26" rx="6" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.4" filter="url(#boldBorderShadow)" />
+                <text x="85" y="17" textAnchor="middle" fontSize="10" fontWeight="900" fill="#334155" letterSpacing="1">
+                  ➡️ NASARAWA STATE
+                </text>
+              </g>
+
+              <g transform="translate(950, 580)">
+                <rect width="175" height="26" rx="6" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.4" filter="url(#boldBorderShadow)" />
+                <text x="87" y="17" textAnchor="middle" fontSize="10" fontWeight="900" fill="#334155" letterSpacing="1">
+                  ↘️ NASARAWA (KARSHI)
+                </text>
+              </g>
+
+              {/* South: Kogi State */}
+              <g transform="translate(440, 855)">
+                <rect width="150" height="26" rx="6" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.4" filter="url(#boldBorderShadow)" />
+                <text x="75" y="17" textAnchor="middle" fontSize="10" fontWeight="900" fill="#334155" letterSpacing="1">
+                  ⬇️ KOGI STATE
+                </text>
+              </g>
+
+              {/* West: Niger State */}
+              <g transform="translate(30, 530)">
+                <rect width="150" height="26" rx="6" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.4" filter="url(#boldBorderShadow)" />
+                <text x="75" y="17" textAnchor="middle" fontSize="10" fontWeight="900" fill="#334155" letterSpacing="1">
+                  ⬅️ NIGER STATE
+                </text>
+              </g>
+
+              {/* North-West: Niger State / Suleja Border */}
+              <g transform="translate(120, 195)">
+                <rect width="180" height="26" rx="6" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.4" filter="url(#boldBorderShadow)" />
+                <text x="90" y="17" textAnchor="middle" fontSize="10" fontWeight="900" fill="#334155" letterSpacing="1">
+                  ↖️ NIGER (SULEJA)
+                </text>
+              </g>
+            </g>
+
+            {/* FCT ABUJA OFFICIAL TERRITORY BOUNDARY (BOLD, CRISP, HIGH-CONTRAST BORDER) */}
             <g className="map-fct-boundary-layer" filter="url(#lightDropShadow)">
+              {/* Solid High-Definition White Landmass of Abuja FCT */}
               <path
                 d="M 280,180 Q 420,120 600,100 Q 820,70 950,110 Q 1060,170 1020,340 Q 990,480 940,620 Q 880,780 720,840 Q 520,860 360,820 Q 180,780 120,680 Q 80,560 140,420 Q 190,260 280,180 Z"
                 fill="#ffffff"
-                stroke="#cbd5e1"
-                strokeWidth="2"
               />
-              {/* Inner Municipal Density Zone */}
+
+              {/* Prominent Outer Dark Border Line (Bold Definition) */}
+              <path
+                d="M 280,180 Q 420,120 600,100 Q 820,70 950,110 Q 1060,170 1020,340 Q 990,480 940,620 Q 880,780 720,840 Q 520,860 360,820 Q 180,780 120,680 Q 80,560 140,420 Q 190,260 280,180 Z"
+                fill="none"
+                stroke="#0f172a"
+                strokeWidth="5.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+
+              {/* Inner Official Administrative Border Stripe */}
+              <path
+                d="M 280,180 Q 420,120 600,100 Q 820,70 950,110 Q 1060,170 1020,340 Q 990,480 940,620 Q 880,780 720,840 Q 520,860 360,820 Q 180,780 120,680 Q 80,560 140,420 Q 190,260 280,180 Z"
+                fill="none"
+                stroke="#2563eb"
+                strokeWidth="2.5"
+                strokeDasharray="10,6"
+              />
+
+              {/* Inner Municipal Density Zone (AMAC Core) */}
               <path
                 d="M 440,240 Q 580,210 740,220 Q 890,260 880,410 Q 860,570 780,680 Q 640,710 500,680 Q 380,620 400,470 Q 410,330 440,240 Z"
                 fill="#f8fafc"
-                stroke="#e2e8f0"
-                strokeWidth="1.5"
+                stroke="#64748b"
+                strokeWidth="1.8"
+                strokeDasharray="6,4"
               />
             </g>
 
-            {/* Major Arteries / Expressways (Crisp Road Colors) */}
+            {/* Area Council Administrative Division Boundaries (Dashed Lines & Tags) */}
+            <g className="map-area-councils-layer">
+              {/* Bwari / AMAC boundary line */}
+              <path d="M 520,200 Q 680,240 850,220 Q 960,200 1000,160" fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="5,5" />
+              <text x="800" y="215" className="area-council-tag">BWARI AREA COUNCIL</text>
+
+              {/* AMAC (Abuja Municipal) tag */}
+              <text x="830" y="380" className="area-council-tag">ABUJA MUNICIPAL (AMAC)</text>
+
+              {/* Gwagwalada boundary line */}
+              <path d="M 200,450 Q 340,480 430,550 Q 380,680 320,800" fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="5,5" />
+              <text x="260" y="530" className="area-council-tag">GWAGWALADA AREA COUNCIL</text>
+
+              {/* Kuje boundary line */}
+              <path d="M 430,550 Q 520,680 500,860" fill="none" stroke="#94a3b8" strokeWidth="2" strokeDasharray="5,5" />
+              <text x="470" y="780" className="area-council-tag">KUJE AREA COUNCIL</text>
+            </g>
+
+            {/* TOPOGRAPHICAL LANDMARKS (Aso Rock & Zuma Rock) */}
+            <g className="map-topography-layer">
+              {/* Aso Rock (Behind Three Arms Zone / CBD) */}
+              <path
+                d="M 870,440 L 890,410 L 910,415 L 930,440 Z"
+                fill="#475569"
+                stroke="#0f172a"
+                strokeWidth="1.8"
+              />
+              <text x="900" y="402" className="mountain-label">⛰️ ASO ROCK (400m)</text>
+
+              {/* Zuma Rock (Border landmark near Zuba) */}
+              <path
+                d="M 310,245 L 330,215 L 350,220 L 365,245 Z"
+                fill="#475569"
+                stroke="#0f172a"
+                strokeWidth="1.8"
+              />
+              <text x="338" y="208" className="mountain-label">⛰️ ZUMA ROCK (725m)</text>
+            </g>
+
+            {/* Major Arteries / Expressways (Crisp High-Contrast Road Cartography) */}
             <g className="map-highways-layer">
               {/* Outer Northern Expressway / Kubwa Expressway */}
               <path
                 d="M 330,280 Q 420,270 515,260 Q 580,310 600,370 Q 640,430 730,460 Q 790,485 850,505"
                 fill="none"
-                stroke="#94a3b8"
-                strokeWidth="4"
+                stroke="#0f172a"
+                strokeWidth="6.5"
                 strokeLinecap="round"
               />
               <path
                 d="M 330,280 Q 420,270 515,260 Q 580,310 600,370 Q 640,430 730,460 Q 790,485 850,505"
                 fill="none"
                 stroke="#ffffff"
-                strokeWidth="1.2"
+                strokeWidth="4"
+                strokeLinecap="round"
+              />
+              <path
+                d="M 330,280 Q 420,270 515,260 Q 580,310 600,370 Q 640,430 730,460 Q 790,485 850,505"
+                fill="none"
+                stroke="#f59e0b"
+                strokeWidth="1.5"
                 strokeDasharray="6,6"
               />
 
-              {/* Airport Road / Umaru Musa Yar'Adua Way (Amber Highway) */}
+              {/* Airport Road / Umaru Musa Yar'Adua Way (Vibrant Amber Highway) */}
+              <path
+                d="M 460,700 Q 530,640 560,610 Q 610,570 650,530 Q 700,500 785,485"
+                fill="none"
+                stroke="#78350f"
+                strokeWidth="6"
+                strokeLinecap="round"
+              />
               <path
                 d="M 460,700 Q 530,640 560,610 Q 610,570 650,530 Q 700,500 785,485"
                 fill="none"
                 stroke="#f59e0b"
-                strokeWidth="3.5"
+                strokeWidth="3.8"
                 strokeLinecap="round"
-                opacity="0.85"
               />
               <path
                 d="M 460,700 Q 530,640 560,610 Q 610,570 650,530 Q 700,500 785,485"
@@ -563,18 +692,30 @@ export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpen
               <path
                 d="M 600,370 Q 650,410 660,450 Q 710,520 780,550 Q 820,530 830,470 Q 800,420 740,390 Z"
                 fill="none"
-                stroke="#cbd5e1"
-                strokeWidth="2.5"
-                strokeDasharray="4,4"
+                stroke="#1e293b"
+                strokeWidth="5"
+              />
+              <path
+                d="M 600,370 Q 650,410 660,450 Q 710,520 780,550 Q 820,530 830,470 Q 800,420 740,390 Z"
+                fill="none"
+                stroke="#e2e8f0"
+                strokeWidth="3"
+                strokeDasharray="6,4"
               />
 
               {/* Obafemi Awolowo Way (Linking Jabi directly to Central Area) */}
               <path
                 d="M 640,465 L 720,455 L 785,485"
                 fill="none"
-                stroke="#3b82f6"
-                strokeWidth="2"
-                strokeDasharray="4,4"
+                stroke="#1d4ed8"
+                strokeWidth="3.5"
+              />
+              <path
+                d="M 640,465 L 720,455 L 785,485"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="1.2"
+                strokeDasharray="5,4"
               />
             </g>
 
@@ -583,15 +724,15 @@ export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpen
               <path
                 d="M 648,460 C 655,445 675,448 688,455 C 702,462 708,476 695,488 C 682,500 660,498 646,485 C 636,475 640,466 648,460 Z"
                 fill="url(#lakeWaterLightGradient)"
-                stroke="#0284c7"
-                strokeWidth="1.5"
+                stroke="#0369a1"
+                strokeWidth="2.5"
               />
               <text
                 x="672"
                 y="476"
                 textAnchor="middle"
-                fontSize="7.5"
-                fontWeight="800"
+                fontSize="8.5"
+                fontWeight="900"
                 fill="#ffffff"
                 letterSpacing="1"
               >
@@ -607,25 +748,25 @@ export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpen
                 width="84"
                 height="72"
                 rx="14"
-                fill="rgba(254, 243, 199, 0.65)"
-                stroke="#f59e0b"
-                strokeWidth="1.5"
-                strokeDasharray="4,3"
+                fill="rgba(254, 243, 199, 0.85)"
+                stroke="#d97706"
+                strokeWidth="2.2"
+                strokeDasharray="5,4"
               />
               <text
                 x="674"
                 y="444"
                 textAnchor="middle"
-                fontSize="8"
+                fontSize="8.5"
                 fontWeight="900"
-                fill="#b45309"
+                fill="#92400e"
                 letterSpacing="0.8"
               >
                 🏛️ ZONAL CHURCH GROUP HQ (JABI)
               </text>
             </g>
 
-            {/* District Landmarks Labels (Crisp Dark Text) */}
+            {/* District Landmarks Labels (Bold High-Contrast Text with Crisp White Outline) */}
             <g className="map-district-labels-layer">
               <text x="590" y="358" className="district-label-light">GWARINPA ESTATE</text>
               <text x="520" y="248" className="district-label-light">KUBWA</text>
@@ -818,6 +959,29 @@ export const AbujaHarvestMapView: React.FC<AbujaHarvestMapViewProps> = ({ onOpen
               })}
             </g>
           </svg>
+        </div>
+
+        {/* Floating Map Cartographic Key / Legend (Bottom Left) */}
+        <div className="map-cartographic-legend" aria-label="Map Key">
+          <div className="legend-header-title">FCT ABUJA MAP KEY</div>
+          <div className="legend-items-list">
+            <div className="legend-key-row">
+              <span className="key-line fct-border-key" />
+              <span className="key-text">FCT Boundary (Official Border)</span>
+            </div>
+            <div className="legend-key-row">
+              <span className="key-line expressway-key" />
+              <span className="key-text">Major Arteries (Kubwa / Airport Rd)</span>
+            </div>
+            <div className="legend-key-row">
+              <span className="key-dot zonal-key" />
+              <span className="key-text">Zonal Church Group HQ (Jabi)</span>
+            </div>
+            <div className="legend-key-row">
+              <span className="key-dot church-key" />
+              <span className="key-text">CEAZ1 Churches (All 127 on 1 Map)</span>
+            </div>
+          </div>
         </div>
 
         {/* Selected Church Detail Card — Clean White HUD */}
