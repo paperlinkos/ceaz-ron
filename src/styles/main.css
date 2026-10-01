@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap');
+
 :root {
   /* DARK THEME TOKENS (Used for Admin / Form views) */
   --color-bg: #071710;
@@ -32,7 +34,10 @@
   --color-error: #dc2626;
   --color-error-bg: rgba(220, 38, 38, 0.12);
   
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-sans: 'Orbitron', 'Share Tech Mono', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-orbitron: 'Orbitron', sans-serif;
+  --font-mono: 'Orbitron', 'Share Tech Mono', monospace;
+  --mono: 'Orbitron', 'Share Tech Mono', monospace;
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 20px;
@@ -44,10 +49,14 @@
   --sidebar-collapsed-width: 72px;
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html, body, button, input, select, textarea, optgroup, table, th, td, h1, h2, h3, h4, h5, h6, p, span, a, label {
+  font-family: 'Orbitron', 'Share Tech Mono', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 body {
@@ -663,7 +672,7 @@ table {
 }
 
 .spacex-hero-number {
-  font-family: 'Oxanium', 'Share Tech Mono', -apple-system, sans-serif !important;
+  font-family: 'Orbitron', sans-serif !important;
   font-size: clamp(5.5rem, 14vw, 9.5rem);
   font-weight: 900;
   letter-spacing: 0.03em;
@@ -3171,7 +3180,7 @@ table {
 }
 
 .spacex-screen-title {
-  font-family: 'Orbitron', 'Oxanium', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   font-size: clamp(0.92rem, 1.3vw, 1.2rem);
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -3212,7 +3221,7 @@ table {
 }
 
 .spacex-souls-num {
-  font-family: 'Oxanium', 'Share Tech Mono', sans-serif !important;
+  font-family: 'Orbitron', sans-serif !important;
   font-size: clamp(9.5rem, 20vw, 16.5rem);
   font-weight: 900;
   line-height: 0.82;
@@ -3222,7 +3231,7 @@ table {
 }
 
 .spacex-souls-lbl {
-  font-family: 'Oxanium', 'Orbitron', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   font-size: clamp(0.95rem, 1.35vw, 1.25rem);
   font-weight: 900;
   letter-spacing: 0.35em;
@@ -3257,7 +3266,7 @@ table {
 }
 
 .spacex-substat-num {
-  font-family: 'Oxanium', 'Share Tech Mono', sans-serif !important;
+  font-family: 'Orbitron', sans-serif !important;
   font-size: clamp(1.8rem, 3.2vw, 2.8rem);
   font-weight: 900;
   line-height: 0.95;
@@ -3286,7 +3295,7 @@ table {
 }
 
 .spacex-stat-lbl {
-  font-family: 'Oxanium', 'Orbitron', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   font-size: clamp(0.65rem, 0.88vw, 0.78rem);
   font-weight: 900;
   letter-spacing: 0.22em;
@@ -3421,14 +3430,14 @@ table {
 }
 
 .apple-ring-rank-text {
-  font-family: 'Orbitron', 'Oxanium', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   font-size: 0.8rem;
   font-weight: 900;
   color: #008751;
 }
 
 .apple-ring-percentage {
-  font-family: 'Orbitron', 'Oxanium', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   font-size: 0.95rem;
   font-weight: 900;
   margin-top: 0.25rem;
@@ -4147,7 +4156,7 @@ select {
   }
 
   .spacex-souls-num {
-    font-family: 'Oxanium', 'Share Tech Mono', sans-serif !important;
+    font-family: 'Orbitron', sans-serif !important;
     font-size: clamp(6.5rem, 20vh, 10rem) !important;
   }
 

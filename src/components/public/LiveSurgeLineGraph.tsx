@@ -179,7 +179,7 @@ export const LiveSurgeLineGraph: React.FC<LiveSurgeLineGraphProps> = ({
         flexDirection: 'column',
         background: 'linear-gradient(180deg, #090e17 0%, #0d1523 50%, #070b12 100%)',
         color: '#f8fafc',
-        fontFamily: "'Inter', -apple-system, sans-serif",
+        fontFamily: "'Orbitron', 'Share Tech Mono', sans-serif",
         position: 'relative',
         overflow: singleCardMode ? 'hidden' : 'auto',
         borderRadius: isFullScreenMode ? '0' : '20px',

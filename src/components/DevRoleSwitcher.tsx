@@ -69,7 +69,7 @@ export const DevRoleSwitcher: React.FC = () => {
         bottom: '46px',
         right: '16px',
         zIndex: 9999,
-        fontFamily: 'sans-serif',
+        fontFamily: "'Orbitron', sans-serif",
       }}
     >
       {!isOpen ? (

@@ -882,22 +882,22 @@ export const EventControlView: React.FC = () => {
                 return (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
                     <div style={{ background: 'rgba(0, 0, 0, 0.4)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', padding: '6px 12px', textAlign: 'center', minWidth: '48px' }}>
-                      <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', fontFamily: 'monospace' }}>{pad(days)}</div>
+                      <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', fontFamily: "'Orbitron', sans-serif" }}>{pad(days)}</div>
                       <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8' }}>DAYS</div>
                     </div>
-                    <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#00e676' }}>:</span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#00e676', fontFamily: "'Orbitron', sans-serif" }}>:</span>
                     <div style={{ background: 'rgba(0, 0, 0, 0.4)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', padding: '6px 12px', textAlign: 'center', minWidth: '48px' }}>
-                      <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', fontFamily: 'monospace' }}>{pad(hours)}</div>
+                      <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', fontFamily: "'Orbitron', sans-serif" }}>{pad(hours)}</div>
                       <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8' }}>HOURS</div>
                     </div>
-                    <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#00e676' }}>:</span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#00e676', fontFamily: "'Orbitron', sans-serif" }}>:</span>
                     <div style={{ background: 'rgba(0, 0, 0, 0.4)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '8px', padding: '6px 12px', textAlign: 'center', minWidth: '48px' }}>
-                      <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', fontFamily: 'monospace' }}>{pad(minutes)}</div>
+                      <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#ffffff', fontFamily: "'Orbitron', sans-serif" }}>{pad(minutes)}</div>
                       <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#94a3b8' }}>MINS</div>
                     </div>
-                    <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#00e676' }}>:</span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 900, color: '#00e676', fontFamily: "'Orbitron', sans-serif" }}>:</span>
                     <div style={{ background: 'rgba(0, 0, 0, 0.4)', border: '1px solid rgba(0, 230, 118, 0.3)', borderRadius: '8px', padding: '6px 12px', textAlign: 'center', minWidth: '48px' }}>
-                      <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#00e676', fontFamily: 'monospace' }}>{pad(seconds)}</div>
+                      <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#00e676', fontFamily: "'Orbitron', sans-serif" }}>{pad(seconds)}</div>
                       <div style={{ fontSize: '0.62rem', fontWeight: 700, color: '#00e676' }}>SECS</div>
                     </div>
                   </div>
