@@ -5424,3 +5424,904 @@ select {
 .live-surge-graph-container svg {
   touch-action: pan-y;
 }
+
+/* ==========================================================================
+   ABUJA GEOGRAPHIC HARVEST MAP & REAL-TIME ADDITIONS RADAR STYLING
+   ========================================================================== */
+
+.abuja-map-page-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: calc(100vh - 65px - var(--ticker-height, 42px));
+  width: 100%;
+  background: radial-gradient(circle at 50% 30%, #081d15 0%, #030d09 100%);
+  color: #e2e8f0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top Header Strip */
+.abuja-map-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px 12px;
+  background: rgba(6, 20, 14, 0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid #133e2b;
+  z-index: 10;
+}
+
+.abuja-map-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.abuja-map-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.abuja-map-radar-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 255, 135, 0.1);
+  border: 1px solid rgba(0, 255, 135, 0.35);
+  color: #00ff87;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  width: fit-content;
+}
+
+.live-radar-ping {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #00ff87;
+  box-shadow: 0 0 10px #00ff87;
+  animation: radar-ping-pulse 1.6s infinite;
+}
+
+@keyframes radar-ping-pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.4); opacity: 1; box-shadow: 0 0 14px #00ff87; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.abuja-map-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 0%, #a7f3d0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.abuja-map-subtitle {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  max-width: 680px;
+  line-height: 1.35;
+}
+
+/* Stats Pills */
+.abuja-map-stats-pills {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.map-stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: #0b2218;
+  border: 1px solid #1a4d36;
+  border-radius: 10px;
+  padding: 6px 12px;
+}
+
+.map-stat-val {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.map-stat-lbl {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: #6ee7b7;
+  text-transform: uppercase;
+}
+
+.primary-stat-pill {
+  border-color: rgba(255, 215, 0, 0.4);
+  background: rgba(255, 215, 0, 0.08);
+}
+
+.primary-stat-pill .map-stat-val {
+  color: #FFD700;
+}
+
+.map-simulate-addition-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #008751 0%, #059669 100%);
+  border: 1px solid #00ff87;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 8px 12px;
+  border-radius: 9px;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(0, 255, 135, 0.25);
+  transition: all 0.2s ease;
+}
+
+.map-simulate-addition-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 18px rgba(0, 255, 135, 0.45);
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+}
+
+/* District Filter Strip & Search */
+.abuja-map-filter-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.district-chips-scroller {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: #1a4d36 transparent;
+  flex: 1;
+}
+
+.district-chips-scroller::-webkit-scrollbar {
+  height: 4px;
+}
+
+.district-chips-scroller::-webkit-scrollbar-thumb {
+  background: #1a4d36;
+  border-radius: 4px;
+}
+
+.district-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  background: #0d271c;
+  border: 1px solid #1a4632;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.district-filter-chip:hover {
+  background: #143b2b;
+  border-color: #2e7a57;
+  color: #ffffff;
+}
+
+.district-filter-chip.chip-active {
+  background: #008751;
+  border-color: #00ff87;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 255, 135, 0.35);
+}
+
+.district-filter-chip.chip-zonal-highlight {
+  border-color: rgba(255, 215, 0, 0.6);
+  background: rgba(255, 215, 0, 0.12);
+  color: #FFD700;
+  font-weight: 800;
+}
+
+.district-filter-chip.chip-zonal-highlight.chip-active {
+  background: #b45309;
+  border-color: #FFD700;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.45);
+}
+
+.map-search-box {
+  position: relative;
+  min-width: 240px;
+}
+
+.map-search-box .search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  pointer-events: none;
+}
+
+.map-search-input {
+  width: 100%;
+  padding: 7px 30px 7px 32px;
+  border-radius: 8px;
+  background: #092016;
+  border: 1px solid #184230;
+  color: #ffffff;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.map-search-input:focus {
+  border-color: #00ff87;
+  box-shadow: 0 0 8px rgba(0, 255, 135, 0.2);
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 2px;
+}
+
+/* Map Canvas Container */
+.abuja-map-canvas-container {
+  position: relative;
+  flex: 1;
+  min-height: 520px;
+  width: 100%;
+  background: #030c08;
+  overflow: hidden;
+  user-select: none;
+}
+
+.map-svg-viewport {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  position: relative;
+}
+
+.map-svg-viewport.viewport-dragging {
+  cursor: grabbing;
+}
+
+.abuja-fct-svg {
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  display: block;
+}
+
+/* Floating Map Controls */
+.map-floating-controls {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(6, 20, 14, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid #184431;
+  border-radius: 10px;
+  padding: 6px;
+  z-index: 20;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.map-ctrl-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #0c261b;
+  border: 1px solid #194a34;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.map-ctrl-btn:hover {
+  background: #143e2c;
+  color: #00ff87;
+  border-color: #00ff87;
+}
+
+.map-ctrl-jabi-btn {
+  border-color: rgba(255, 215, 0, 0.4);
+  color: #FFD700;
+}
+
+.map-ctrl-jabi-btn:hover {
+  background: rgba(255, 215, 0, 0.15);
+  border-color: #FFD700;
+  color: #FFD700;
+}
+
+/* Compass Rose */
+.map-compass-rose {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(6, 20, 14, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid #184431;
+  border-radius: 10px;
+  padding: 6px 8px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.compass-icon {
+  color: #00ff87;
+}
+
+.compass-north {
+  font-size: 9px;
+  font-weight: 900;
+  color: #FFD700;
+  margin-top: 2px;
+}
+
+/* District Labels inside SVG */
+.district-label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  fill: #4b7a63;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+/* Pin Micro-Text */
+.church-pin-text {
+  fill: #e2e8f0;
+  letter-spacing: 0.2px;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: #030d09;
+  stroke-width: 2.5px;
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+}
+
+.church-pin-text-zonal {
+  fill: #FFD700;
+  font-weight: 900;
+}
+
+.church-pin-text-lit {
+  fill: #00ff87;
+  font-weight: 900;
+}
+
+/* Real-Time Radar Expansion Shockwaves */
+.radar-expansion-ring-1 {
+  fill: none;
+  stroke: #FFD700;
+  animation: radarShockwave 2s infinite ease-out;
+}
+
+.radar-expansion-ring-2 {
+  fill: none;
+  stroke: #00ff87;
+  animation: radarShockwave 2s infinite ease-out 0.4s;
+}
+
+.radar-expansion-ring-3 {
+  fill: none;
+  stroke: #00ffc2;
+  animation: radarShockwave 2s infinite ease-out 0.8s;
+}
+
+@keyframes radarShockwave {
+  0% {
+    r: 6px;
+    opacity: 1;
+    stroke-width: 2.5px;
+  }
+  100% {
+    r: 44px;
+    opacity: 0;
+    stroke-width: 0.5px;
+  }
+}
+
+.zonal-halo-spin {
+  animation: zonalHaloPulse 3s infinite alternate ease-in-out;
+}
+
+@keyframes zonalHaloPulse {
+  0% { transform: scale(0.92); opacity: 0.6; }
+  100% { transform: scale(1.15); opacity: 1; stroke-width: 1.8px; }
+}
+
+/* Floating +1 Real-Time Addition Badge */
+.floating-addition-badge-group {
+  animation: floatAdditionBadge 2.8s ease-out forwards;
+}
+
+@keyframes floatAdditionBadge {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  20% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(-16px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-24px);
+    opacity: 0;
+  }
+}
+
+/* Selected Church HUD Card */
+.map-church-hud-card {
+  position: absolute;
+  top: 18px;
+  left: 70px;
+  width: 320px;
+  background: rgba(6, 22, 16, 0.94);
+  backdrop-filter: blur(20px);
+  border: 1px solid #1e523a;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), 0 0 24px rgba(0, 255, 135, 0.15);
+  z-index: 25;
+  animation: hudCardEnter 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes hudCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.hud-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(15, 40, 29, 0.7);
+  border: 1px solid #1a4d36;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hud-close-btn:hover {
+  background: #b91c1c;
+  color: #ffffff;
+  border-color: #ef4444;
+}
+
+.hud-header {
+  margin-bottom: 14px;
+}
+
+.hud-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.hud-pill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.hud-pill-zonal {
+  background: rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  color: #FFD700;
+}
+
+.hud-pill-group {
+  background: rgba(0, 255, 135, 0.1);
+  border: 1px solid rgba(0, 255, 135, 0.3);
+  color: #6ee7b7;
+}
+
+.hud-pill-active-ping {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid #f59e0b;
+  color: #fbbf24;
+  animation: pulse 1.5s infinite;
+}
+
+.hud-church-name {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.hud-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #94a3b8;
+  flex-wrap: wrap;
+}
+
+.hud-church-code {
+  font-weight: 800;
+  color: #6ee7b7;
+}
+
+.hud-church-district {
+  color: #cbd5e1;
+}
+
+.hud-church-region {
+  color: #64748b;
+}
+
+/* Metrics Grid */
+.hud-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.hud-metric-box {
+  background: #081d14;
+  border: 1px solid #133c29;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.hud-metric-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.hud-metric-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.hud-metric-val {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.hud-souls-val {
+  color: #00ff87;
+  text-shadow: 0 0 10px rgba(0, 255, 135, 0.35);
+}
+
+.hud-souls-tag,
+.hud-target-tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+/* Progress bar */
+.hud-progress-block {
+  margin-bottom: 14px;
+}
+
+.hud-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+
+.hud-percent-text {
+  color: #FFD700;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.hud-progress-track {
+  width: 100%;
+  height: 8px;
+  background: #092016;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid #133c29;
+}
+
+.hud-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* Quick Actions */
+.hud-action-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-action-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hud-simulate-btn {
+  background: linear-gradient(135deg, #008751 0%, #059669 100%);
+  border: 1px solid #00ff87;
+  color: #ffffff;
+}
+
+.hud-simulate-btn:hover {
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+}
+
+.hud-zoom-btn {
+  background: #0f2c1f;
+  border: 1px solid #1a4d36;
+  color: #cbd5e1;
+}
+
+.hud-zoom-btn:hover {
+  background: #174431;
+  color: #ffffff;
+}
+
+/* Live Feed Dock (Bottom Left) */
+.map-live-feed-dock {
+  position: absolute;
+  bottom: 16px;
+  left: 18px;
+  width: 290px;
+  background: rgba(6, 20, 14, 0.88);
+  backdrop-filter: blur(16px);
+  border: 1px solid #16402d;
+  border-radius: 12px;
+  padding: 10px 12px;
+  z-index: 20;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.feed-dock-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.feed-pulse-icon {
+  color: #00ff87;
+}
+
+.feed-title {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #6ee7b7;
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.feed-count-badge {
+  background: #008751;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+
+.feed-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.feed-empty-hint {
+  font-size: 11px;
+  color: #64748b;
+  font-style: italic;
+  padding: 4px 0;
+}
+
+.feed-event-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: #092218;
+  border: 1px solid #133a27;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.feed-event-chip:hover {
+  background: #0f3525;
+  border-color: #00ff87;
+}
+
+.feed-event-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #FFD700;
+  box-shadow: 0 0 6px #FFD700;
+  flex-shrink: 0;
+}
+
+.feed-event-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.feed-church-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.feed-delta {
+  font-size: 10px;
+  font-weight: 800;
+  color: #00ff87;
+}
+
+.feed-arrow {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .abuja-map-header {
+    padding: 12px;
+  }
+
+  .abuja-map-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .abuja-map-stats-pills {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 6px;
+  }
+
+  .map-stat-pill {
+    padding: 5px 8px;
+  }
+
+  .map-stat-val {
+    font-size: 12px;
+  }
+
+  .map-simulate-addition-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 7px;
+  }
+
+  .abuja-map-filter-strip {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .map-search-box {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .map-church-hud-card {
+    top: auto;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-height: 48vh;
+    overflow-y: auto;
+  }
+
+  .map-live-feed-dock {
+    display: none; /* Hide feed drawer on narrow mobile screens to leave maximum map space */
+  }
+
+  .map-floating-controls {
+    top: 12px;
+    right: 12px;
+  }
+
+  .map-compass-rose {
+    top: 12px;
+    left: 12px;
+  }
+}
+

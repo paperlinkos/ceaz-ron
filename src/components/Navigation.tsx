@@ -1,7 +1,7 @@
-import { Home, HeartHandshake, User, Building, Trophy, Activity, LayoutDashboard, FolderTree } from 'lucide-react';
+import { Home, HeartHandshake, User, Building, Trophy, Activity, LayoutDashboard, FolderTree, MapPin } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-export type TabType = 'home' | 'record' | 'account' | 'org' | 'race' | 'about' | 'dashboard' | 'eventControl' | 'importData' | 'directory';
+export type TabType = 'home' | 'record' | 'account' | 'org' | 'race' | 'about' | 'dashboard' | 'eventControl' | 'importData' | 'directory' | 'map';
 
 interface NavigationProps {
   activeTab: TabType;
@@ -13,7 +13,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
   const isObserverMode = !isAuthenticated || !role;
   const isSuperAdmin = role === 'superAdmin' && isRoleVerified;
 
-  // In Observer Mode: ONLY Home and Upward Race tabs are visible
+  // In Observer Mode: ONLY Home, Upward Race, and Abuja Map tabs are visible
   if (isObserverMode) {
     return (
       <nav className="bottom-nav">
@@ -31,6 +31,14 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
         >
           <Trophy size={18} />
           <span>RACE</span>
+        </button>
+
+        <button
+          onClick={() => onSelectTab('map')}
+          className={`nav-tab ${activeTab === 'map' ? 'nav-tab-active' : ''}`}
+        >
+          <MapPin size={18} />
+          <span>MAP</span>
         </button>
       </nav>
     );

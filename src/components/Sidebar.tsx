@@ -14,6 +14,7 @@ import {
   Database,
   FolderTree,
   X,
+  MapPin,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNetworkStatus } from '../hooks/useNetworkStatus';
@@ -160,6 +161,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
           >
             <Trophy size={20} />
             {(!isCollapsed || isMobileOpen) && <span>UPWARD RACE</span>}
+          </button>
+        )}
+
+        {/* 3. Abuja Harvest Map (Strictly in Observer View ONLY) */}
+        {isObserverMode && (
+          <button
+            onClick={() => handleItemClick('map')}
+            className={`sidebar-link ${activeTab === 'map' ? 'sidebar-link-active' : ''}`}
+            title="Abuja Church Harvest Map (Realtime Church Locations & Progress)"
+          >
+            <MapPin size={20} />
+            {(!isCollapsed || isMobileOpen) && <span>ABUJA MAP</span>}
           </button>
         )}
 

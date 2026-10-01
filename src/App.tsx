@@ -18,6 +18,7 @@ import { EventControlView } from './components/admin/EventControlView';
 import { BulkImportView } from './components/admin/BulkImportView';
 import { LeaderSoulEntryView } from './components/leader/LeaderSoulEntryView';
 import { DirectoryView } from './components/directory/DirectoryView';
+import { AbujaHarvestMapView } from './components/public/AbujaHarvestMapView';
 import { useSoulRecords } from './hooks/useSoulRecords';
 import { useEventConfig } from './hooks/useEventConfig';
 import { DevRoleSwitcher } from './components/DevRoleSwitcher';
@@ -50,10 +51,18 @@ const MainContent: React.FC = () => {
 
   const { isAuthenticated, userProfile, role, isRoleVerified } = useAuth();
   const isSuperAdmin = role === 'superAdmin' && isRoleVerified;
+  const isObserverMode = !isAuthenticated || !role;
 
   const { eventConfig } = useEventConfig();
 
   const prevAuthRef = useRef<boolean>(isAuthenticated);
+
+  // Guard: Map page is strictly for Observer View ONLY
+  useEffect(() => {
+    if (activeTab === 'map' && !isObserverMode) {
+      setActiveTab('home');
+    }
+  }, [activeTab, isObserverMode]);
 
   // Automatically trigger Sign In modal whenever user logs out
   useEffect(() => {
@@ -129,6 +138,10 @@ const MainContent: React.FC = () => {
 
           {activeTab === 'race' && role !== 'soulWinner' && (
             <UpwardRaceView />
+          )}
+
+          {activeTab === 'map' && isObserverMode && (
+            <AbujaHarvestMapView onOpenAuth={handleOpenAuth} />
           )}
 
           {activeTab === 'dashboard' && (
