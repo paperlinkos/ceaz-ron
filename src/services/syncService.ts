@@ -89,6 +89,13 @@ export async function syncPendingRecords(): Promise<{ syncedCount: number; total
     return { syncedCount: 0, totalPending: 0 };
   }
 
+  // Prevent record writes to Firestore before the official countdown launch at 9:00 AM WAT
+  const launchTimestamp = new Date('2026-10-01T09:00:00+01:00').getTime();
+  if (Date.now() < launchTimestamp) {
+    console.log('[SyncService] Campaign countdown active. Holding synchronization until official launch at 9:00 AM WAT.');
+    return { syncedCount: 0, totalPending: pending.length };
+  }
+
   isSyncingActive = true;
   await notifyListeners();
 

@@ -4,6 +4,8 @@ import { registerSW } from 'virtual:pwa-register';
 import App from './App.tsx';
 import './styles/main.css';
 
+import { clearAllLocalRecords } from './services/indexedDbService';
+
 // Purge any stale legacy organization or target caches that held old 20 groups or < 129 churches
 try {
   const orgCacheRaw = localStorage.getItem('ron_organizations_cache');
@@ -26,6 +28,16 @@ try {
       localStorage.removeItem('ron_local_targets_cache');
       console.log('[Cache] Purged outdated targets cache to load fresh 129 church targets.');
     }
+  }
+} catch {
+  // ignore
+}
+
+// Purge any pre-launch local test soul records so all devices start clean at 0 souls
+try {
+  const launchTimestamp = new Date('2026-10-01T09:00:00+01:00').getTime();
+  if (Date.now() < launchTimestamp) {
+    clearAllLocalRecords().catch(() => {});
   }
 } catch {
   // ignore

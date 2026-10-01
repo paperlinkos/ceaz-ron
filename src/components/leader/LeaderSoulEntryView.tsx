@@ -12,9 +12,12 @@ import {
   Phone,
   FileText,
   Sparkles,
+  Lock,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useSoulRecords } from '../../hooks/useSoulRecords';
+import { useEventConfig } from '../../hooks/useEventConfig';
+import { CampaignCountdownTimer } from '../common/CampaignCountdownTimer';
 import { DEFAULT_GROUPS, DEFAULT_CHURCHES } from '../../services/organizationService';
 import { saveLocalRecord } from '../../services/indexedDbService';
 import { syncPendingRecords, notifyRecordChanges } from '../../services/syncService';
@@ -48,6 +51,14 @@ interface ParsedSoulRow {
 export const LeaderSoulEntryView: React.FC = () => {
   const { currentUser, userProfile, soulWinnerProfile, role } = useAuth();
   const { records } = useSoulRecords();
+  const { eventConfig, countdown } = useEventConfig();
+
+  const launchTimestamp = new Date(
+    eventConfig?.countdownTargetTime ||
+    eventConfig?.scheduledStartAt ||
+    '2026-10-01T09:00:00+01:00'
+  ).getTime();
+  const isBeforeLaunch = Date.now() < launchTimestamp && !countdown.hasStarted;
 
   const [activeTab, setActiveTab] = useState<'single' | 'bulk' | 'history'>('single');
 
@@ -124,6 +135,11 @@ export const LeaderSoulEntryView: React.FC = () => {
     e.preventDefault();
     setSingleSuccess(null);
     setSingleError(null);
+
+    if (isBeforeLaunch) {
+      setSingleError('Soul recording is locked until the official launch countdown finishes at 9:00 AM WAT.');
+      return;
+    }
 
     if (!isNonEmptyText(singleName)) {
       setSingleError("Please enter the soul's full name.");
@@ -344,6 +360,11 @@ export const LeaderSoulEntryView: React.FC = () => {
 
   // Commit Valid Bulk Records to Database
   const handleCommitBulk = async () => {
+    if (isBeforeLaunch) {
+      setBulkCommitError('Bulk soul imports are locked until the official launch countdown finishes at 9:00 AM WAT.');
+      return;
+    }
+
     const validRows = parsedRows.filter((r) => r.isValid);
     if (validRows.length === 0) return;
 
@@ -456,6 +477,34 @@ export const LeaderSoulEntryView: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* PRE-LAUNCH COUNTDOWN LOCK NOTICE */}
+      {isBeforeLaunch && (
+        <div
+          style={{
+            background: 'linear-gradient(135deg, rgba(254, 243, 199, 0.95) 0%, rgba(254, 252, 232, 0.95) 100%)',
+            border: '1.5px solid #d97706',
+            borderRadius: '16px',
+            padding: '18px 24px',
+            marginBottom: '24px',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '12px',
+            boxShadow: '0 4px 16px rgba(217, 119, 6, 0.1)',
+          }}
+        >
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#b45309', fontWeight: 900, fontSize: '0.96rem', letterSpacing: '0.04em' }}>
+            <Lock size={20} color="#b45309" />
+            <span>CAMPAIGN LAUNCH COUNTDOWN IN PROGRESS</span>
+          </div>
+          <p style={{ margin: 0, fontSize: '0.88rem', color: '#451a03', maxWidth: '620px', lineHeight: 1.5 }}>
+            Soul winning recording is temporarily locked. All soul entries and bulk CSV uploads will automatically open once the countdown reaches 0 at <strong>9:00 AM WAT</strong>.
+          </p>
+          <CampaignCountdownTimer className="my-1" />
+        </div>
+      )}
 
       {/* SUB-TABS NAV BAR */}
       <div className="record-subnav" style={{ marginBottom: '20px' }}>
@@ -676,9 +725,24 @@ export const LeaderSoulEntryView: React.FC = () => {
               />
             </div>
 
-            <button type="submit" disabled={isSingleSubmitting} className="submit-button" style={{ marginTop: '12px' }}>
-              <UserPlus size={18} />
-              <span>{isSingleSubmitting ? 'RECORDING SOUL...' : 'RECORD SOUL NOW'}</span>
+            <button
+              type="submit"
+              disabled={isSingleSubmitting || isBeforeLaunch}
+              className="submit-button"
+              style={{
+                marginTop: '12px',
+                opacity: isBeforeLaunch ? 0.6 : 1,
+                cursor: isBeforeLaunch ? 'not-allowed' : 'pointer',
+              }}
+            >
+              {isBeforeLaunch ? <Lock size={18} /> : <UserPlus size={18} />}
+              <span>
+                {isBeforeLaunch
+                  ? 'RECORDING LOCKED UNTIL 9:00 AM WAT'
+                  : isSingleSubmitting
+                  ? 'RECORDING SOUL...'
+                  : 'RECORD SOUL NOW'}
+              </span>
             </button>
           </form>
         </div>
@@ -1060,13 +1124,19 @@ export const LeaderSoulEntryView: React.FC = () => {
               <button
                 type="button"
                 onClick={handleCommitBulk}
-                disabled={validRowsCount === 0 || isCommitingBulk}
+                disabled={validRowsCount === 0 || isCommitingBulk || isBeforeLaunch}
                 className="submit-button"
-                style={{ marginTop: '16px' }}
+                style={{
+                  marginTop: '16px',
+                  opacity: isBeforeLaunch ? 0.6 : 1,
+                  cursor: isBeforeLaunch ? 'not-allowed' : 'pointer',
+                }}
               >
-                <Upload size={18} />
+                {isBeforeLaunch ? <Lock size={18} /> : <Upload size={18} />}
                 <span>
-                  {isCommitingBulk
+                  {isBeforeLaunch
+                    ? 'BULK IMPORTS LOCKED UNTIL 9:00 AM WAT'
+                    : isCommitingBulk
                     ? 'COMMITTING BULK IMPORT...'
                     : `COMMIT BULK IMPORT (${validRowsCount} VALID SOULS)`}
                 </span>

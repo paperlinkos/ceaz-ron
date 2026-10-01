@@ -102,6 +102,35 @@ export const SoulRecordForm: React.FC<SoulRecordFormProps> = ({
     }, 50);
   };
 
+  const launchTimestamp = new Date('2026-10-01T09:00:00+01:00').getTime();
+  const isBeforeLaunch = Date.now() < launchTimestamp || eventStatus === 'upcoming';
+
+  if (isBeforeLaunch) {
+    return (
+      <div className="form-card rapid-record-card event-completed-card">
+        <div className="completed-lock-badge" style={{ background: 'rgba(0, 135, 81, 0.1)', border: '1.5px solid rgba(0, 135, 81, 0.3)' }}>
+          <Lock size={36} style={{ color: '#008751' }} />
+        </div>
+        <h2 className="form-title text-center">CAMPAIGN LAUNCH COUNTDOWN</h2>
+        <p className="form-lead text-center">
+          Soul winning recording is locked until the official campaign launch at 9:00 AM WAT when the countdown ends.
+        </p>
+        {onViewHistory && (
+          <div className="form-footer-link-row">
+            <button
+              type="button"
+              onClick={onViewHistory}
+              className="text-link-subtle"
+            >
+              <History size={15} />
+              <span>View My Submissions</span>
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
   if (eventStatus === 'completed') {
     return (
       <div className="form-card rapid-record-card event-completed-card">
