@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Tv, Timer, Flame, ChevronDown, ChevronUp, Church, Search, X } from 'lucide-react';
+import { Trophy, Tv, Timer, Flame, ChevronDown, ChevronUp, Church, Search, X, Swords } from 'lucide-react';
 import { UpwardRaceVisualization } from './UpwardRaceVisualization';
 import { BigScreenDisplayModal } from './BigScreenDisplayModal';
 import { FullScreenCountdownModal } from './FullScreenCountdownModal';
 import { subscribeToNationalCounter, type ZonalCounterData } from '../../services/counterService';
 import { useEventConfig } from '../../hooks/useEventConfig';
 import { useAuth } from '../../context/AuthContext';
+import type { TabType } from '../Navigation';
 
-export const UpwardRaceView: React.FC = () => {
+interface UpwardRaceViewProps {
+  onNavigateTab?: (tab: TabType) => void;
+}
+
+export const UpwardRaceView: React.FC<UpwardRaceViewProps> = ({ onNavigateTab }) => {
   const { eventConfig } = useEventConfig();
   const { isAuthenticated, role } = useAuth();
   const [isDisplayModeOpen, setIsDisplayModeOpen] = useState<boolean>(false);
@@ -62,30 +67,52 @@ export const UpwardRaceView: React.FC = () => {
             </p>
           </div>
 
-          {isObserverMode && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            {onNavigateTab && (
               <button
                 type="button"
-                onClick={() => setIsCountdownFullScreenOpen(true)}
-                className="submit-button countdown-mode-trigger-btn-dark"
-                style={{ padding: '10px 18px', fontSize: '0.85rem' }}
-                title="Open Fullscreen Campaign Countdown Clock"
-              >
-                <Timer size={16} />
-                <span>COUNTDOWN SCREEN</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setIsDisplayModeOpen(true)}
+                onClick={() => onNavigateTab('pcfArena')}
                 className="submit-button"
-                style={{ padding: '10px 18px', fontSize: '0.85rem' }}
+                style={{
+                  padding: '10px 18px',
+                  fontSize: '0.85rem',
+                  background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
+                  borderColor: '#f59e0b',
+                  color: '#ffffff',
+                  boxShadow: '0 4px 12px rgba(217, 119, 6, 0.35)',
+                }}
+                title="Open Standalone PCF Arena Head-to-Head Clash"
               >
-                <Tv size={16} />
-                <span>PROJECT ON TV / BIG SCREEN</span>
+                <Swords size={16} />
+                <span>PCF ARENA</span>
               </button>
-            </div>
-          )}
+            )}
+
+            {isObserverMode && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setIsCountdownFullScreenOpen(true)}
+                  className="submit-button countdown-mode-trigger-btn-dark"
+                  style={{ padding: '10px 18px', fontSize: '0.85rem' }}
+                  title="Open Fullscreen Campaign Countdown Clock"
+                >
+                  <Timer size={16} />
+                  <span>COUNTDOWN SCREEN</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsDisplayModeOpen(true)}
+                  className="submit-button"
+                  style={{ padding: '10px 18px', fontSize: '0.85rem' }}
+                >
+                  <Tv size={16} />
+                  <span>PROJECT ON TV / BIG SCREEN</span>
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
         {/* RACE SUMMARY METRICS */}

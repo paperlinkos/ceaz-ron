@@ -1,4 +1,4 @@
-import { Home, HeartHandshake, User, Building, Trophy, Activity, LayoutDashboard, FolderTree, MapPin } from 'lucide-react';
+import { Home, HeartHandshake, User, Building, Trophy, Activity, LayoutDashboard, FolderTree, MapPin, Swords } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export type TabType = 'home' | 'record' | 'account' | 'org' | 'race' | 'pcfArena' | 'about' | 'dashboard' | 'eventControl' | 'importData' | 'directory' | 'map' | 'loginTracker';
@@ -13,7 +13,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
   const isObserverMode = !isAuthenticated || !role;
   const isSuperAdmin = role === 'superAdmin' && isRoleVerified;
 
-  // In Observer Mode: ONLY Home, Upward Race, and Abuja Map tabs are visible
+  // In Observer Mode: Home, Upward Race, PCF Arena, and Abuja Map tabs are visible
   if (isObserverMode) {
     return (
       <nav className="bottom-nav">
@@ -31,6 +31,14 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
         >
           <Trophy size={18} />
           <span>RACE</span>
+        </button>
+
+        <button
+          onClick={() => onSelectTab('pcfArena')}
+          className={`nav-tab ${activeTab === 'pcfArena' ? 'nav-tab-active' : ''}`}
+        >
+          <Swords size={18} />
+          <span>ARENA</span>
         </button>
 
         <button
@@ -57,13 +65,23 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onSelectTab }
       </button>
 
       {showRaceTab && (
-        <button
-          onClick={() => onSelectTab('race')}
-          className={`nav-tab ${activeTab === 'race' ? 'nav-tab-active' : ''}`}
-        >
-          <Trophy size={18} />
-          <span>RACE</span>
-        </button>
+        <>
+          <button
+            onClick={() => onSelectTab('race')}
+            className={`nav-tab ${activeTab === 'race' ? 'nav-tab-active' : ''}`}
+          >
+            <Trophy size={18} />
+            <span>RACE</span>
+          </button>
+
+          <button
+            onClick={() => onSelectTab('pcfArena')}
+            className={`nav-tab ${activeTab === 'pcfArena' ? 'nav-tab-active' : ''}`}
+          >
+            <Swords size={18} />
+            <span>ARENA</span>
+          </button>
+        </>
       )}
 
       <button

@@ -138,7 +138,7 @@ const MainContent: React.FC = () => {
           )}
 
           {activeTab === 'race' && role !== 'soulWinner' && (
-            <UpwardRaceView />
+            <UpwardRaceView onNavigateTab={handleSelectTab} />
           )}
 
           {activeTab === 'pcfArena' && role !== 'soulWinner' && (

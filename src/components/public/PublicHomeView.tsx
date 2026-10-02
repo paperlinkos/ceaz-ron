@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Tv, Timer } from 'lucide-react';
+import { CheckCircle2, Tv, Timer, Swords } from 'lucide-react';
 import { FlipCounterDisplay } from './FlipCounterDisplay';
 import { UpwardRaceVisualization } from './UpwardRaceVisualization';
 import { BigScreenDisplayModal } from './BigScreenDisplayModal';
@@ -11,9 +11,10 @@ import { ChurchHomeView } from '../home/ChurchHomeView';
 import { subscribeToNationalCounter, type ZonalCounterData } from '../../services/counterService';
 import { useEventConfig } from '../../hooks/useEventConfig';
 import { useAuth } from '../../context/AuthContext';
+import type { TabType } from '../Navigation';
 
 interface PublicHomeViewProps {
-  onNavigate?: (tab: 'home' | 'record' | 'account' | 'org' | 'race' | 'dashboard') => void;
+  onNavigate?: (tab: TabType) => void;
   onOpenAuth?: () => void;
 }
 
@@ -66,8 +67,26 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
           <span>CEAZ1 REACHOUT NIGERIA SOUL WINNING CAMPAIGN</span>
         </div>
 
-        {/* Action Buttons: Countdown Screen & Big Screen TV Mode */}
-        <div className="event-date-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        {/* Action Buttons: PCF Arena, Countdown Screen & Big Screen TV Mode */}
+        <div className="event-date-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          {onNavigate && (
+            <button
+              type="button"
+              onClick={() => onNavigate('pcfArena')}
+              className="display-mode-trigger-btn"
+              style={{
+                background: 'linear-gradient(135deg, rgba(217, 119, 6, 0.25) 0%, rgba(180, 83, 9, 0.25) 100%)',
+                borderColor: 'rgba(245, 158, 11, 0.5)',
+                color: '#f59e0b',
+                fontWeight: 700,
+              }}
+              title="Open PCF Arena Head-to-Head Clash"
+            >
+              <Swords size={15} />
+              <span>PCF ARENA</span>
+            </button>
+          )}
+
           <button
             type="button"
             onClick={() => setIsCountdownFullScreenOpen(true)}
