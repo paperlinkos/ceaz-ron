@@ -67,7 +67,7 @@ export const LeaderSoulEntryView: React.FC = () => {
   // Single Entry Form State
   const [selectedGroupId, setSelectedGroupId] = useState<string>(soulWinnerProfile?.groupId || 'grp-gwarinpa');
   const [selectedChurchId, setSelectedChurchId] = useState<string>(soulWinnerProfile?.churchId || 'ch-ce-gwarinpa-1');
-  const [singlePcf, setSinglePcf] = useState<string>('');
+  const [singlePcf, setSinglePcf] = useState<string>(soulWinnerProfile?.pcfName || '');
   const [singleName, setSingleName] = useState<string>('');
   const [singlePhone, setSinglePhone] = useState<string>('');
   const [singleIsBornAgain, setSingleIsBornAgain] = useState<boolean>(true);
@@ -76,6 +76,12 @@ export const LeaderSoulEntryView: React.FC = () => {
   const [singleSuccess, setSingleSuccess] = useState<string | null>(null);
   const [singleError, setSingleError] = useState<string | null>(null);
   const [isSingleSubmitting, setIsSingleSubmitting] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (soulWinnerProfile?.pcfName && !singlePcf) {
+      setSinglePcf(soulWinnerProfile.pcfName);
+    }
+  }, [soulWinnerProfile?.pcfName]);
 
   // Bulk Upload State
   const [bulkTargetGroupId, setBulkTargetGroupId] = useState<string>(soulWinnerProfile?.groupId || 'grp-gwarinpa');
@@ -195,7 +201,7 @@ export const LeaderSoulEntryView: React.FC = () => {
       setSingleSuccess(`Successfully recorded ${singleName} for ${churchObj?.name || 'Church'}!`);
       setSingleName('');
       setSinglePhone('');
-      setSinglePcf('');
+      setSinglePcf(soulWinnerProfile?.pcfName || '');
       setSingleIsBornAgain(true);
       setSingleIsFilledWithHolySpirit(true);
       setSingleNotes('');
@@ -693,7 +699,7 @@ export const LeaderSoulEntryView: React.FC = () => {
             {/* PCF / FELLOWSHIP FIELD */}
             <div className="form-group">
               <label htmlFor="single-pcf" className="form-label">
-                PCF / FELLOWSHIP (OPTIONAL - E.G. DYNAMIC PCF, HUIOS)
+                PCF / FELLOWSHIP (OPTIONAL - E.G. BITW FIRST SERVICE, DYNAMIC PCF, HUIOS)
               </label>
               <div className="input-wrapper">
                 <Users size={18} className="input-icon" />
@@ -702,9 +708,17 @@ export const LeaderSoulEntryView: React.FC = () => {
                   type="text"
                   value={singlePcf}
                   onChange={(e) => setSinglePcf(e.target.value)}
-                  placeholder="e.g. Dynamic PCF, Huios PCF, Grace Fellowship..."
+                  placeholder="e.g. BITW First Service, Dynamic PCF, Huios PCF..."
                   className="form-input"
+                  list="pcf-preset-list"
                 />
+                <datalist id="pcf-preset-list">
+                  <option value="BITW First Service" />
+                  <option value="Dynamic PCF" />
+                  <option value="Huios PCF" />
+                  <option value="Victory Fellowship" />
+                  <option value="Grace PCF" />
+                </datalist>
               </div>
             </div>
 

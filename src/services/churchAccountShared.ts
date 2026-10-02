@@ -71,6 +71,21 @@ export function generateStrongPassword(): string {
  * e.g. CH-KBS -> ch-kbs@ron.org
  */
 export function churchCodeToAuthEmail(code: string): string {
+  const clean = code
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '');
+
+  if (clean === 'bitw' || clean === 'bitw1' || clean === 'chbitw' || clean === 'chbitw1' || clean === 'chznc1bitw' || clean === 'bitwfirstservice') {
+    return `ch-znc1-bitw@${RON_AUTH_DOMAIN}`;
+  }
+  if (clean === 'dynamic' || clean === 'dynamicpcf' || clean === 'chdynamic' || clean === 'chznc1dyn') {
+    return `ch-znc1-dyn@${RON_AUTH_DOMAIN}`;
+  }
+  if (clean === 'huios' || clean === 'huiospcf' || clean === 'chhuios' || clean === 'chznc1huios') {
+    return `ch-znc1-huios@${RON_AUTH_DOMAIN}`;
+  }
+
   const local = code
     .trim()
     .toLowerCase()

@@ -55,10 +55,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isRoleVerified, setIsRoleVerified] = useState<boolean>(false);
 
   const loadProfiles = async (uid: string) => {
-    const [uProf, swProf] = await Promise.all([
+    let [uProf, swProf] = await Promise.all([
       fetchUserProfile(uid),
       fetchSoulWinnerProfile(uid),
     ]);
+
+    const userEmail = currentUser?.email || auth.currentUser?.email;
+    if (userEmail) {
+      const lower = userEmail.toLowerCase();
+      if (lower === 'ch-znc1-bitw@ron.org' || lower.includes('bitw')) {
+        const nowIso = new Date().toISOString();
+        if (!uProf) {
+          uProf = {
+            id: uid,
+            name: 'BITW First Service Representative',
+            email: userEmail,
+            phone: '+234 803 000 0001',
+            role: 'churchManager',
+            status: 'active',
+            createdAt: nowIso,
+            updatedAt: nowIso,
+          };
+        }
+        if (!swProf) {
+          swProf = {
+            id: uid,
+            userId: uid,
+            zoneId: 'zone-abuja-1',
+            zoneName: 'Abuja Zone 1',
+            groupId: 'grp-zonal-church',
+            groupName: 'Zonal Church Group',
+            churchId: 'ch-zonal-church-1',
+            churchName: 'Zonal Church 1',
+            pcfId: 'pcf-bitw-1',
+            pcfName: 'BITW First Service',
+            status: 'active',
+            createdAt: nowIso,
+            updatedAt: nowIso,
+          };
+        } else {
+          swProf.pcfName = 'BITW First Service';
+          swProf.pcfId = 'pcf-bitw-1';
+          swProf.churchId = 'ch-zonal-church-1';
+          swProf.churchName = 'Zonal Church 1';
+          swProf.groupId = 'grp-zonal-church';
+          swProf.groupName = 'Zonal Church Group';
+        }
+      }
+    }
+
     setUserProfile(uProf);
     setSoulWinnerProfile(swProf);
     if (uProf) {
@@ -170,22 +215,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const nowIso = new Date().toISOString();
 
     if (targetRole === 'churchManager') {
-      const church = DEFAULT_CHURCHES.find(
-        (c) => c.id === specificChurchOrGroupId || c.code === specificChurchOrGroupId
-      ) || DEFAULT_CHURCHES[0];
+      const isBitw =
+        specificChurchOrGroupId === 'pcf-bitw-1' ||
+        specificChurchOrGroupId === 'CH-ZNC1-BITW' ||
+        specificChurchOrGroupId === 'ch-znc1-bitw' ||
+        specificChurchOrGroupId === 'bitw';
+
+      const church = isBitw
+        ? DEFAULT_CHURCHES.find((c) => c.id === 'ch-zonal-church-1')!
+        : DEFAULT_CHURCHES.find(
+            (c) => c.id === specificChurchOrGroupId || c.code === specificChurchOrGroupId
+          ) || DEFAULT_CHURCHES[0];
       const group = DEFAULT_GROUPS.find((g) => g.id === church.groupId);
 
-      const mockUid = `church-${church.code.toLowerCase()}`;
+      const mockUid = isBitw ? 'church-ch-znc1-bitw' : `church-${church.code.toLowerCase()}`;
+      const mockEmail = isBitw ? 'ch-znc1-bitw@ron.org' : `${church.code.toLowerCase()}@ron.org`;
+      const mockName = isBitw ? 'BITW First Service Representative' : `${church.name} Representative`;
+
       const mockUser = {
         uid: mockUid,
-        email: `${church.code.toLowerCase()}@ron.org`,
-        displayName: `${church.name} Representative`,
+        email: mockEmail,
+        displayName: mockName,
       } as FirebaseUser;
 
       const uProf: UserProfile = {
         id: mockUid,
-        name: `${church.name} Representative`,
-        email: `${church.code.toLowerCase()}@ron.org`,
+        name: mockName,
+        email: mockEmail,
         phone: '+234 803 123 4567',
         role: 'churchManager',
         status: 'active',
@@ -202,6 +258,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         groupName: group?.name || 'Group',
         churchId: church.id,
         churchName: church.name,
+        pcfId: isBitw ? 'pcf-bitw-1' : undefined,
+        pcfName: isBitw ? 'BITW First Service' : undefined,
         status: 'active',
         createdAt: nowIso,
         updatedAt: nowIso,

@@ -70,9 +70,9 @@ export function downloadCustomizedSoulTemplate(options: TemplateOptions): void {
     metadataHeader = `# SCOPE: CHURCH | CHURCH: ${churchName} (${churchCode}) | GROUP: ${groupName} | ZONE: ${zoneName}\n`;
     headers = ['PCF / Fellowship', 'Name', 'Phone Number', 'Born Again', 'Filled with the Spirit', 'Location', 'Notes'];
     sampleRows = [
-      ['Dynamic PCF', 'Brother Emmanuel David', '08031234567', 'Yes', 'Yes', 'Central Market Outreach', 'New convert eager for foundation school'],
-      ['Huios PCF', 'Sister Grace Okon', '08029876543', 'Yes', 'No', 'Community Youth Center', 'Received Rhapsody of Realities, requested follow-up call'],
-      ['Victory Fellowship', 'Brother Samuel Adebayo', '08145556677', 'Yes', 'Yes', 'Housing Estate Outreach', 'Gave life to Christ during morning evangelism'],
+      ['BITW First Service', 'Brother Emmanuel David', '08031234567', 'Yes', 'Yes', 'Central Market Outreach', 'New convert eager for foundation school'],
+      ['Dynamic PCF', 'Sister Grace Okon', '08029876543', 'Yes', 'No', 'Community Youth Center', 'Received Rhapsody of Realities, requested follow-up call'],
+      ['Huios PCF', 'Brother Samuel Adebayo', '08145556677', 'Yes', 'Yes', 'Housing Estate Outreach', 'Gave life to Christ during morning evangelism'],
       ['Grace PCF', 'Sister Maryam Danjuma', '09012348899', 'Yes', 'Yes', 'Main Town Bus Stop', 'Filled with the Holy Ghost on the spot'],
     ];
   } else if (level === 'group') {
@@ -91,9 +91,9 @@ export function downloadCustomizedSoulTemplate(options: TemplateOptions): void {
     const sampleCode2 = memberChurches[1]?.code || memberChurches[0]?.code || 'CH-KAR2';
 
     sampleRows = [
-      [sampleCh1, sampleCode1, 'Dynamic PCF', 'Brother David Emmanuel', '08031234567', 'Yes', 'Yes', 'Group Mega Crusade', 'Baptized in the Holy Ghost'],
-      [sampleCh1, sampleCode1, 'Huios PCF', 'Sister Blessing Udoh', '08029876543', 'Yes', 'Yes', 'Market Square Outreach', 'Received Healing and Salvation'],
-      [sampleCh2, sampleCode2, 'Victory PCF', 'Brother Michael Eze', '08145556677', 'Yes', 'No', 'Community Center', 'Enrolled in Believers LoveWorld class'],
+      [sampleCh1, sampleCode1, 'BITW First Service', 'Brother David Emmanuel', '08031234567', 'Yes', 'Yes', 'Group Mega Crusade', 'Baptized in the Holy Ghost'],
+      [sampleCh1, sampleCode1, 'Dynamic PCF', 'Sister Blessing Udoh', '08029876543', 'Yes', 'Yes', 'Market Square Outreach', 'Received Healing and Salvation'],
+      [sampleCh2, sampleCode2, 'Huios PCF', 'Brother Michael Eze', '08145556677', 'Yes', 'No', 'Community Center', 'Enrolled in Believers LoveWorld class'],
       [sampleCh2, sampleCode2, 'Shining Light PCF', 'Sister Sarah John', '09012348899', 'Yes', 'Yes', 'Campus Hall ReachOut', 'Led to Christ by Cell Leader'],
     ];
   } else {
@@ -101,8 +101,9 @@ export function downloadCustomizedSoulTemplate(options: TemplateOptions): void {
     metadataHeader = `# SCOPE: ZONAL | ZONE: ${zoneName} | CAMPAIGN: CEAZ1 REACHOUT NIGERIA\n`;
     headers = ['Group Name', 'Church Name', 'Church Code', 'PCF / Fellowship', 'Name', 'Phone Number', 'Born Again', 'Filled with the Spirit', 'Location', 'Notes'];
     sampleRows = [
-      ['Zonal Church Group', 'Zonal Church 1', 'CH-ZNC1', 'Dynamic PCF', 'Brother Emmanuel David', '08031234567', 'Yes', 'Yes', 'Zonal Mega Outreach', 'Gave life to Christ'],
-      ['Zonal Church Group', 'Zonal Church 1', 'CH-ZNC1', 'Huios PCF', 'Sister Grace Okon', '08029876543', 'Yes', 'Yes', 'City Center Outreach', 'Received Holy Spirit'],
+      ['Zonal Church Group', 'Zonal Church 1', 'CH-ZNC1', 'BITW First Service', 'Brother Emmanuel David', '08031234567', 'Yes', 'Yes', 'Zonal Mega Outreach', 'Gave life to Christ'],
+      ['Zonal Church Group', 'Zonal Church 1', 'CH-ZNC1', 'Dynamic PCF', 'Sister Grace Okon', '08029876543', 'Yes', 'Yes', 'City Center Outreach', 'Received Holy Spirit'],
+      ['Zonal Church Group', 'Zonal Church 1', 'CH-ZNC1', 'Huios PCF', 'Sister Blessing Udoh', '08029876543', 'Yes', 'Yes', 'Market Outreach', 'Baptized in Spirit'],
       ['Karmo Group', 'CE Karmo 1', 'CH-KAR1', 'Grace Fellowship', 'Brother Samuel Adebayo', '08145556677', 'Yes', 'No', 'Karmo District Campaign', 'Follow-up visit scheduled'],
       ['Kuje Group', 'CE Kuje', 'CH-KUJ1', 'LoveWorld PCF', 'Sister Fatima Bello', '09012348899', 'Yes', 'Yes', 'Kuje Market Crusade', 'New cell member'],
     ];

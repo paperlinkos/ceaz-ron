@@ -221,6 +221,22 @@ export const DEFAULT_CHURCHES: Church[] = [
   { id: 'ch-ce-wealthy-place', groupId: 'grp-wealthy-place', name: 'CE Wealthy Place', code: 'CH-WLP', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
 ];
 
+export const DEFAULT_PCFS: PCF[] = [
+  { id: 'pcf-bitw-1', churchId: 'ch-zonal-church-1', name: 'BITW First Service', code: 'PCF-BITW1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'pcf-dynamic-1', churchId: 'ch-zonal-church-1', name: 'Dynamic PCF', code: 'PCF-DYN1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+  { id: 'pcf-huios-1', churchId: 'ch-zonal-church-1', name: 'Huios PCF', code: 'PCF-HUI1', status: 'active', createdAt: '2026-01-01T00:00:00.000Z' },
+];
+
+function mergePcfsWithDefaults(stored: PCF[]): PCF[] {
+  const map = new Map<string, PCF>();
+  for (const p of DEFAULT_PCFS) {
+    map.set(p.id, p);
+  }
+  for (const s of stored) {
+    map.set(s.id, s);
+  }
+  return Array.from(map.values());
+}
 
 function getLocalOrgCache(): LocalOrgCache {
   try {
@@ -230,7 +246,7 @@ function getLocalOrgCache(): LocalOrgCache {
         zones: DEFAULT_ZONES,
         groups: DEFAULT_GROUPS,
         churches: DEFAULT_CHURCHES,
-        pcfs: [],
+        pcfs: DEFAULT_PCFS,
       };
       saveLocalOrgCache(initial);
       return initial;
@@ -249,7 +265,11 @@ function getLocalOrgCache(): LocalOrgCache {
       parsed.churches = mergeChurchesWithDefaults(parsed.churches || []);
       cacheChanged = true;
     }
-    if (!parsed.pcfs) parsed.pcfs = [];
+    const cachedPcfIds = new Set((parsed.pcfs || []).map((p) => p.id));
+    if (!parsed.pcfs || DEFAULT_PCFS.some((p) => !cachedPcfIds.has(p.id))) {
+      parsed.pcfs = mergePcfsWithDefaults(parsed.pcfs || []);
+      cacheChanged = true;
+    }
     if (cacheChanged) {
       saveLocalOrgCache(parsed);
     }
@@ -259,7 +279,7 @@ function getLocalOrgCache(): LocalOrgCache {
       zones: DEFAULT_ZONES,
       groups: DEFAULT_GROUPS,
       churches: DEFAULT_CHURCHES,
-      pcfs: [],
+      pcfs: DEFAULT_PCFS,
     };
   }
 }
@@ -526,22 +546,23 @@ export async function updateChurchStatus(churchId: string, status: EntityStatus,
 // PCFs
 export async function getPCFs(churchId?: string): Promise<PCF[]> {
   if (!navigator.onLine) {
-    const all = getLocalOrgCache().pcfs;
+    const all = mergePcfsWithDefaults(getLocalOrgCache().pcfs || []);
     return churchId ? all.filter((p) => p.churchId === churchId) : all;
   }
   try {
     const colRef = collection(db, 'pcfs');
     const q = churchId ? query(colRef, where('churchId', '==', churchId)) : colRef;
     const snapshot = await getDocs(q);
-    const pcfs = snapshot.docs.map((d) => d.data() as PCF);
+    const firestorePcfs = snapshot.docs.map((d) => d.data() as PCF);
+    const merged = mergePcfsWithDefaults(firestorePcfs);
     
     const cache = getLocalOrgCache();
-    if (!churchId) cache.pcfs = pcfs;
+    if (!churchId) cache.pcfs = merged;
     saveLocalOrgCache(cache);
-    return pcfs;
+    return churchId ? merged.filter((p) => p.churchId === churchId) : merged;
   } catch (err) {
     console.warn('Error fetching PCFs from Firestore:', err);
-    const all = getLocalOrgCache().pcfs;
+    const all = mergePcfsWithDefaults(getLocalOrgCache().pcfs || []);
     return churchId ? all.filter((p) => p.churchId === churchId) : all;
   }
 }
