@@ -35,6 +35,9 @@ export interface SoulWinningRecord {
   // Organizational hierarchy references automatically attached from Soul Winner profile
   soulWinnerId?: string;
   pcfId?: string;
+  pcfName?: string;
+  uploadedBy?: string;
+  uploadedByEmail?: string;
   churchId?: string;
   groupId?: string;
   zoneId?: string;

@@ -58,6 +58,10 @@ export interface SoulRecordDirectoryItem {
   churchName?: string;
   groupId?: string;
   groupName?: string;
+  pcfId?: string;
+  pcfName?: string;
+  uploadedBy?: string;
+  uploadedByEmail?: string;
   soulWinnerId?: string;
   soulWinnerName?: string;
   isBornAgain: boolean;
@@ -264,6 +268,10 @@ export async function getCompleteDirectoryData(): Promise<CompleteDirectoryData>
       churchName: church?.name || r.churchName || '—',
       groupId: group?.id || r.groupId,
       groupName: group?.name || r.groupName || '—',
+      pcfId: r.pcfId,
+      pcfName: r.pcfName || r.notes?.match(/PCF:\s*([^\n,]+)/i)?.[1]?.trim() || '',
+      uploadedBy: r.uploadedBy,
+      uploadedByEmail: r.uploadedByEmail,
       soulWinnerId: r.soulWinnerId,
       soulWinnerName: sw?.name || 'Soul Winner',
       isBornAgain: r.isBornAgain !== false,
@@ -355,6 +363,7 @@ export function exportRecordsCSV(records: SoulRecordDirectoryItem[], filename = 
     'Convert Name',
     'Phone Number',
     'Location',
+    'PCF / Fellowship',
     'Church',
     'Group',
     'Recorded By',
@@ -367,6 +376,7 @@ export function exportRecordsCSV(records: SoulRecordDirectoryItem[], filename = 
     r.name,
     r.phone,
     r.location,
+    r.pcfName || '',
     r.churchName || '',
     r.groupName || '',
     r.soulWinnerName || '',

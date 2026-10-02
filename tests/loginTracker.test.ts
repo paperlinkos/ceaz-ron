@@ -1,5 +1,20 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+vi.mock('firebase/firestore', async (importOriginal) => {
+  const actual = await importOriginal<Record<string, any>>();
+  return {
+    ...actual,
+    doc: vi.fn(),
+    getDoc: vi.fn().mockResolvedValue({ exists: () => false, data: () => ({}) }),
+    setDoc: vi.fn().mockResolvedValue(undefined),
+    updateDoc: vi.fn().mockResolvedValue(undefined),
+    collection: vi.fn(),
+    getDocs: vi.fn().mockResolvedValue({ forEach: vi.fn(), docs: [] }),
+    increment: vi.fn((n) => n),
+  };
+});
+
 import {
   recordAccountLogin,
   getAllAccountsWithLoginStatus,

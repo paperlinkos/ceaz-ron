@@ -66,8 +66,34 @@ export const DirectoryView: React.FC = () => {
   const [selectedChurchFilter, setSelectedChurchFilter] = useState<string>(
     isChurchAdmin && userScope.churchId ? userScope.churchId : 'all'
   );
+  const [selectedPcfFilter, setSelectedPcfFilter] = useState<string>('all');
   const [achievementFilter, setAchievementFilter] = useState<'all' | 'targetMet' | 'inProgress'>('all');
   const [spiritualFilter, setSpiritualFilter] = useState<'all' | 'bornAgain' | 'holySpirit'>('all');
+
+  // Dynamically extract unique PCF names present in the records
+  const availablePcfs = useMemo(() => {
+    if (!data) return [];
+    const set = new Set<string>();
+    data.records.forEach((r) => {
+      if (r.pcfName && r.pcfName.trim() && r.pcfName !== '—') {
+        set.add(r.pcfName.trim());
+      }
+    });
+    return Array.from(set).sort();
+  }, [data]);
+
+  // Zonal Church privacy and master admin checks
+  const isZonalChurchMember =
+    userScope.groupId === 'grp-zonal-church' ||
+    userScope.churchId === 'ch-zonal-church-1' ||
+    userScope.churchId === 'ch-zonal-church-2';
+
+  const isMasterAdmin =
+    userProfile?.email === 'zonal-church-admin@ron.org' ||
+    userProfile?.email === 'ch-znc-admin@ron.org' ||
+    isSuperAdmin ||
+    isZoneAdmin ||
+    userProfile?.email === 'grp-zcg-admin@ron.org';
 
   // Sorting state
   const [sortKey, setSortKey] = useState<string>(isChurchAdmin ? 'createdAt' : 'soulsWon');
@@ -189,7 +215,7 @@ export const DirectoryView: React.FC = () => {
       });
   }, [data, isGroupAdmin, userScope.groupId, selectedGroupFilter, searchQuery, achievementFilter, sortKey, sortDirection]);
 
-  // 3. Filtered Souls Records (Scoped: Church Admin sees church souls, Group Admin sees group souls)
+  // 3. Filtered Souls Records (Scoped: Church Admin sees church souls, Group Admin sees group souls, PCF scoped for Zonal Church)
   const filteredSouls = useMemo(() => {
     if (!data) return [];
     const activeGroupId = isGroupAdmin && userScope.groupId ? userScope.groupId : selectedGroupFilter;
@@ -200,6 +226,22 @@ export const DirectoryView: React.FC = () => {
         if (activeGroupId !== 'all' && r.groupId !== activeGroupId) return false;
         if (activeChurchId !== 'all' && r.churchId !== activeChurchId) return false;
 
+        // PCF Filter
+        if (selectedPcfFilter !== 'all' && r.pcfName?.toLowerCase() !== selectedPcfFilter.toLowerCase()) {
+          return false;
+        }
+
+        // Zonal Church Data Privacy Rule:
+        // Individual PCF representatives in Zonal Church can only see souls they uploaded or matching their PCF
+        if ((isZonalChurchMember || r.groupId === 'grp-zonal-church' || activeGroupId === 'grp-zonal-church') && !isMasterAdmin) {
+          const belongsToMe =
+            (r.uploadedByEmail && userProfile?.email && r.uploadedByEmail.toLowerCase() === userProfile.email.toLowerCase()) ||
+            (r.uploadedBy && userProfile?.id && r.uploadedBy === userProfile.id) ||
+            (r.soulWinnerId && userProfile?.id && r.soulWinnerId === userProfile.id) ||
+            (soulWinnerProfile?.pcfName && r.pcfName && r.pcfName.toLowerCase() === soulWinnerProfile.pcfName.toLowerCase());
+          if (!belongsToMe) return false;
+        }
+
         if (spiritualFilter === 'bornAgain' && !r.isBornAgain) return false;
         if (spiritualFilter === 'holySpirit' && !r.isFilledWithHolySpirit) return false;
 
@@ -207,6 +249,7 @@ export const DirectoryView: React.FC = () => {
           r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           r.phone.toLowerCase().includes(searchQuery.toLowerCase()) ||
           r.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (r.pcfName && r.pcfName.toLowerCase().includes(searchQuery.toLowerCase())) ||
           (r.churchName && r.churchName.toLowerCase().includes(searchQuery.toLowerCase())) ||
           (r.groupName && r.groupName.toLowerCase().includes(searchQuery.toLowerCase())) ||
           (r.soulWinnerName && r.soulWinnerName.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -227,10 +270,15 @@ export const DirectoryView: React.FC = () => {
     data,
     isGroupAdmin,
     isChurchAdmin,
+    isZonalChurchMember,
+    isMasterAdmin,
+    userProfile,
+    soulWinnerProfile,
     userScope.groupId,
     userScope.churchId,
     selectedGroupFilter,
     selectedChurchFilter,
+    selectedPcfFilter,
     spiritualFilter,
     searchQuery,
     sortKey,
@@ -639,6 +687,34 @@ export const DirectoryView: React.FC = () => {
           </div>
         )}
 
+        {/* PCF / Fellowship Filter (When on Souls tab) */}
+        {activeTab === 'souls' && availablePcfs.length > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontSize: '0.76rem', color: '#94a3b8', fontWeight: 700 }}>PCF:</span>
+            <select
+              value={selectedPcfFilter}
+              onChange={(e) => setSelectedPcfFilter(e.target.value)}
+              style={{
+                background: 'rgba(0, 0, 0, 0.4)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '8px',
+                padding: '8px 12px',
+                color: '#ffffff',
+                fontSize: '0.82rem',
+                outline: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              <option value="all">All PCFs / Fellowships ({availablePcfs.length})</option>
+              {availablePcfs.map((pcf) => (
+                <option key={pcf} value={pcf}>
+                  {pcf}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         {/* Achievement Filter (For Groups & Churches) */}
         {['groups', 'churches'].includes(activeTab) && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -942,6 +1018,15 @@ export const DirectoryView: React.FC = () => {
                       </div>
                     </th>
                     <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800 }}>PHONE / LOCATION</th>
+                    <th
+                      onClick={() => handleSort('pcfName')}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span>PCF / FELLOWSHIP</span>
+                        {renderSortIcon('pcfName')}
+                      </div>
+                    </th>
                     {!isChurchAdmin && (
                       <th
                         onClick={() => handleSort('churchName')}
@@ -1003,6 +1088,9 @@ export const DirectoryView: React.FC = () => {
                             <span>{r.location}</span>
                           </div>
                         )}
+                      </td>
+                      <td style={{ padding: '12px 16px', fontSize: '0.82rem', color: '#38bdf8', fontWeight: 700 }}>
+                        {r.pcfName || '—'}
                       </td>
                       {!isChurchAdmin && (
                         <td style={{ padding: '12px 16px', fontSize: '0.82rem', color: '#ffffff' }}>

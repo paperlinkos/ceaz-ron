@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Upload,
   Download,
@@ -9,6 +9,7 @@ import {
   Building2,
   Church,
   User,
+  Users,
   Phone,
   FileText,
   Sparkles,
@@ -38,6 +39,7 @@ interface ParsedSoulRow {
   groupId?: string;
   churchName?: string;
   churchId?: string;
+  pcfName?: string;
   name: string;
   phone: string;
   location: string;
@@ -65,6 +67,7 @@ export const LeaderSoulEntryView: React.FC = () => {
   // Single Entry Form State
   const [selectedGroupId, setSelectedGroupId] = useState<string>(soulWinnerProfile?.groupId || 'grp-gwarinpa');
   const [selectedChurchId, setSelectedChurchId] = useState<string>(soulWinnerProfile?.churchId || 'ch-ce-gwarinpa-1');
+  const [singlePcf, setSinglePcf] = useState<string>('');
   const [singleName, setSingleName] = useState<string>('');
   const [singlePhone, setSinglePhone] = useState<string>('');
   const [singleIsBornAgain, setSingleIsBornAgain] = useState<boolean>(true);
@@ -169,6 +172,9 @@ export const LeaderSoulEntryView: React.FC = () => {
         isBornAgain: singleIsBornAgain,
         isFilledWithHolySpirit: singleIsFilledWithHolySpirit,
         notes: singleNotes.trim() || undefined,
+        pcfName: singlePcf.trim() || undefined,
+        uploadedBy: currentUser?.uid || userProfile?.id || 'leader',
+        uploadedByEmail: currentUser?.email || userProfile?.email,
         createdAt: nowIso,
         clientCreatedAt: nowIso,
         syncStatus: 'pending',
@@ -189,6 +195,7 @@ export const LeaderSoulEntryView: React.FC = () => {
       setSingleSuccess(`Successfully recorded ${singleName} for ${churchObj?.name || 'Church'}!`);
       setSingleName('');
       setSinglePhone('');
+      setSinglePcf('');
       setSingleIsBornAgain(true);
       setSingleIsFilledWithHolySpirit(true);
       setSingleNotes('');
@@ -242,6 +249,7 @@ export const LeaderSoulEntryView: React.FC = () => {
     const notesIdx = header.findIndex((h) => h.includes('note') || h.includes('comment'));
     const churchIdx = header.findIndex((h) => h.includes('church'));
     const groupIdx = header.findIndex((h) => h.includes('group'));
+    const pcfIdx = header.findIndex((h) => h.includes('pcf') || h.includes('fellowship') || h.includes('cell'));
 
     const parsedList: ParsedSoulRow[] = [];
 
@@ -258,6 +266,7 @@ export const LeaderSoulEntryView: React.FC = () => {
       const notesVal = notesIdx >= 0 ? row[notesIdx] || '' : '';
       const churchNameVal = churchIdx >= 0 ? row[churchIdx] || '' : '';
       const groupNameVal = groupIdx >= 0 ? row[groupIdx] || '' : '';
+      const pcfNameVal = pcfIdx >= 0 ? row[pcfIdx] || '' : '';
 
       const isBornAgain = ['yes', 'y', 'true', '1'].includes(bornVal.trim());
       const isFilledWithHolySpirit = ['yes', 'y', 'true', '1'].includes(filledVal.trim());
@@ -320,6 +329,7 @@ export const LeaderSoulEntryView: React.FC = () => {
         churchId: matchedChurchId,
         groupName: matchedGroupName || groupNameVal,
         groupId: matchedGroupId,
+        pcfName: pcfNameVal.trim() || undefined,
         isValid,
         error: errorMsg || undefined,
       });
@@ -393,6 +403,9 @@ export const LeaderSoulEntryView: React.FC = () => {
           isBornAgain: row.isBornAgain ?? true,
           isFilledWithHolySpirit: row.isFilledWithHolySpirit ?? true,
           notes: row.notes,
+          pcfName: row.pcfName || undefined,
+          uploadedBy: currentUser?.uid || userProfile?.id || 'leader',
+          uploadedByEmail: currentUser?.email || userProfile?.email,
           createdAt: nowIso,
           clientCreatedAt: nowIso,
           syncStatus: 'pending',
@@ -427,6 +440,33 @@ export const LeaderSoulEntryView: React.FC = () => {
   const isChurchAdmin = role === 'churchManager';
   const isGroupAdmin = role === 'groupManager';
   const isZonalAdmin = role === 'zoneManager' || role === 'superAdmin';
+
+  const isZonalChurchMember =
+    soulWinnerProfile?.groupId === 'grp-zonal-church' ||
+    soulWinnerProfile?.churchId === 'ch-zonal-church-1' ||
+    soulWinnerProfile?.churchId === 'ch-zonal-church-2' ||
+    selectedGroupId === 'grp-zonal-church';
+
+  const isMasterAdmin =
+    currentUser?.email === 'zonal-church-admin@ron.org' ||
+    currentUser?.email === 'ch-znc-admin@ron.org' ||
+    userProfile?.role === 'superAdmin' ||
+    userProfile?.role === 'zoneManager' ||
+    currentUser?.email === 'grp-zcg-admin@ron.org';
+
+  const displayedRecords = useMemo(() => {
+    if (isZonalChurchMember && !isMasterAdmin) {
+      // Scoped: only show records this user/PCF uploaded
+      return records.filter((r) => {
+        if (r.uploadedByEmail && currentUser?.email && r.uploadedByEmail.toLowerCase() === currentUser.email.toLowerCase()) return true;
+        if (r.uploadedBy && currentUser?.uid && r.uploadedBy === currentUser.uid) return true;
+        if (r.soulWinnerId && currentUser?.uid && r.soulWinnerId === currentUser.uid) return true;
+        if (soulWinnerProfile?.pcfName && r.pcfName && r.pcfName.toLowerCase() === soulWinnerProfile.pcfName.toLowerCase()) return true;
+        return false;
+      });
+    }
+    return records;
+  }, [records, isZonalChurchMember, isMasterAdmin, currentUser, soulWinnerProfile]);
 
   const validRowsCount = parsedRows.filter((r) => r.isValid).length;
   const invalidRowsCount = parsedRows.filter((r) => !r.isValid).length;
@@ -530,7 +570,7 @@ export const LeaderSoulEntryView: React.FC = () => {
           className={`subtab-btn ${activeTab === 'history' ? 'subtab-active' : ''}`}
         >
           <FileText size={16} />
-          <span>SUBMISSIONS HISTORY ({records.length})</span>
+          <span>SUBMISSIONS HISTORY ({displayedRecords.length})</span>
         </button>
       </div>
 
@@ -645,6 +685,24 @@ export const LeaderSoulEntryView: React.FC = () => {
                   value={singlePhone}
                   onChange={(e) => setSinglePhone(e.target.value)}
                   placeholder="e.g. 08012345678"
+                  className="form-input"
+                />
+              </div>
+            </div>
+
+            {/* PCF / FELLOWSHIP FIELD */}
+            <div className="form-group">
+              <label htmlFor="single-pcf" className="form-label">
+                PCF / FELLOWSHIP (OPTIONAL - E.G. DYNAMIC PCF, HUIOS)
+              </label>
+              <div className="input-wrapper">
+                <Users size={18} className="input-icon" />
+                <input
+                  id="single-pcf"
+                  type="text"
+                  value={singlePcf}
+                  onChange={(e) => setSinglePcf(e.target.value)}
+                  placeholder="e.g. Dynamic PCF, Huios PCF, Grace Fellowship..."
                   className="form-input"
                 />
               </div>
@@ -1155,11 +1213,11 @@ export const LeaderSoulEntryView: React.FC = () => {
               <span>RECORDED SOULS HISTORY</span>
             </h3>
             <span style={{ fontSize: '0.85rem', color: '#008751', fontWeight: 800 }}>
-              TOTAL RECORDED: {records.length} SOULS
+              TOTAL RECORDED: {displayedRecords.length} SOULS
             </span>
           </div>
 
-          {records.length === 0 ? (
+          {displayedRecords.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '40px 20px', color: '#94a3b8' }}>
               <User size={32} style={{ opacity: 0.5, marginBottom: '8px' }} />
               <p>No souls recorded yet in this session.</p>
@@ -1171,16 +1229,18 @@ export const LeaderSoulEntryView: React.FC = () => {
                   <tr style={{ background: '#008751', color: '#ffffff' }}>
                     <th style={{ padding: '10px 14px' }}>NAME</th>
                     <th style={{ padding: '10px 14px' }}>PHONE</th>
+                    <th style={{ padding: '10px 14px' }}>PCF / FELLOWSHIP</th>
                     <th style={{ padding: '10px 14px' }}>LOCATION</th>
                     <th style={{ padding: '10px 14px' }}>CHURCH</th>
                     <th style={{ padding: '10px 14px' }}>DATE</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {records.map((r) => (
+                  {displayedRecords.map((r) => (
                     <tr key={r.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
                       <td style={{ padding: '10px 14px', color: '#0f172a', fontWeight: 'bold' }}>{r.name}</td>
                       <td style={{ padding: '10px 14px', color: '#334155' }}>{r.phone}</td>
+                      <td style={{ padding: '10px 14px', color: '#0284c7', fontWeight: 600 }}>{r.pcfName || '—'}</td>
                       <td style={{ padding: '10px 14px', color: '#334155' }}>{r.location}</td>
                       <td style={{ padding: '10px 14px', color: '#059669', fontWeight: 600 }}>{r.churchName || 'Church'}</td>
                       <td style={{ padding: '10px 14px', color: '#64748b' }}>

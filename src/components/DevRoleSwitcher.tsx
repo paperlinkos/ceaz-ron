@@ -46,6 +46,7 @@ export const DevRoleSwitcher: React.FC = () => {
       : 'Observer (Logged Out)';
 
   const popularChurches = [
+    { id: 'ch-zonal-church-1', name: 'Zonal Church 1', code: 'CH-ZNC1' },
     { id: 'ch-ce-kbs', name: 'CE KBS', code: 'CH-KBS' },
     { id: 'ch-ce-gwarinpa-1', name: 'CE Gwarinpa 1', code: 'CH-GWARINPA1' },
     { id: 'ch-ce-kubwa', name: 'CE Kubwa', code: 'CH-KBW1' },

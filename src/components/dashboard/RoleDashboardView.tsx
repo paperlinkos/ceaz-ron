@@ -7,6 +7,7 @@ import {
   ShieldAlert,
   Flame,
   Upload,
+  Download,
   User,
   Phone,
   Search,
@@ -16,6 +17,7 @@ import { useAuth } from '../../context/AuthContext';
 import { getDashboardViewData, type DashboardViewData, type BreadcrumbItem } from '../../services/dashboardService';
 import { getAllLocalRecords } from '../../services/indexedDbService';
 import { subscribeToSyncStatus } from '../../services/syncService';
+import { generateCSV, downloadCSVFile } from '../../utils/csv';
 import type { TargetLevel } from '../../types/target';
 import type { SoulWinningRecord } from '../../types/record';
 import { MilestoneCelebrationManager } from '../admin/MilestoneCelebrationManager';
@@ -122,14 +124,41 @@ export const RoleDashboardView: React.FC<RoleDashboardViewProps> = ({ onNavigate
     );
   }
 
+  // Zonal Church privacy and master admin checks
+  const isZonalChurchContext =
+    soulWinnerProfile?.groupId === 'grp-zonal-church' ||
+    soulWinnerProfile?.churchId === 'ch-zonal-church-1' ||
+    soulWinnerProfile?.churchId === 'ch-zonal-church-2' ||
+    data.activeOrgId === 'ch-zonal-church-1' ||
+    data.activeOrgId === 'ch-zonal-church-2' ||
+    data.activeOrgId === 'grp-zonal-church';
+
+  const isMasterAdmin =
+    userProfile?.email === 'zonal-church-admin@ron.org' ||
+    userProfile?.email === 'ch-znc-admin@ron.org' ||
+    role === 'superAdmin' ||
+    role === 'zoneManager' ||
+    userProfile?.email === 'grp-zcg-admin@ron.org';
+
   // Filter records matching the active entity
   const relevantRecords = allRecords.filter((r) => {
     if (data.activeLevel === 'church') {
-      return r.churchId === data.activeOrgId;
+      if (r.churchId !== data.activeOrgId) return false;
+    } else if (data.activeLevel === 'group') {
+      if (r.groupId !== data.activeOrgId) return false;
     }
-    if (data.activeLevel === 'group') {
-      return r.groupId === data.activeOrgId;
+
+    // Zonal Church Data Privacy Rule:
+    // Individual PCF representatives in Zonal Church only see records they uploaded or matching their PCF
+    if (isZonalChurchContext && !isMasterAdmin) {
+      const belongsToMe =
+        (r.uploadedByEmail && userProfile?.email && r.uploadedByEmail.toLowerCase() === userProfile.email.toLowerCase()) ||
+        (r.uploadedBy && userProfile?.id && r.uploadedBy === userProfile.id) ||
+        (r.soulWinnerId && userProfile?.id && r.soulWinnerId === userProfile.id) ||
+        (soulWinnerProfile?.pcfName && r.pcfName && r.pcfName.toLowerCase() === soulWinnerProfile.pcfName.toLowerCase());
+      if (!belongsToMe) return false;
     }
+
     return true; // Zone level matches all
   });
 
@@ -139,12 +168,43 @@ export const RoleDashboardView: React.FC<RoleDashboardViewProps> = ({ onNavigate
   const bornAgainPct = relevantRecords.length > 0 ? Math.round((bornAgainCount / relevantRecords.length) * 100) : 100;
   const holySpiritPct = relevantRecords.length > 0 ? Math.round((holySpiritCount / relevantRecords.length) * 100) : 100;
 
-  // Filter for search inside church uploads
+  // Filter for search inside church uploads (supports name, phone, PCF)
   const filteredUploads = relevantRecords.filter((r) => {
     const q = searchQuery.toLowerCase().trim();
     if (!q) return true;
-    return r.name.toLowerCase().includes(q) || r.phone.includes(q);
+    return (
+      r.name.toLowerCase().includes(q) ||
+      r.phone.includes(q) ||
+      (r.pcfName && r.pcfName.toLowerCase().includes(q))
+    );
   });
+
+  const handleExportChurchCSV = () => {
+    const headers = [
+      'Soul Name',
+      'Phone Number',
+      'PCF / Fellowship',
+      'Location',
+      'Church',
+      'Group',
+      'Born Again',
+      'Filled with Holy Spirit',
+      'Recorded At',
+    ];
+    const rows = filteredUploads.map((r) => [
+      r.name,
+      r.phone,
+      r.pcfName || '',
+      r.location || '',
+      r.churchName || '',
+      r.groupName || '',
+      r.isBornAgain !== false ? 'Yes' : 'No',
+      r.isFilledWithHolySpirit !== false ? 'Yes' : 'No',
+      new Date(r.createdAt).toLocaleString(),
+    ]);
+    const csv = generateCSV(headers, rows);
+    downloadCSVFile(`${data.activeOrgName.replace(/[^a-zA-Z0-9_-]/g, '_')}_souls_report.csv`, csv);
+  };
 
   return (
     <div className="dashboard-container" style={{ maxWidth: '1080px', margin: '0 auto', padding: '16px' }}>
@@ -429,6 +489,28 @@ export const RoleDashboardView: React.FC<RoleDashboardViewProps> = ({ onNavigate
                 <Upload size={14} />
                 <span>Upload New Souls</span>
               </button>
+              {filteredUploads.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleExportChurchCSV}
+                  style={{
+                    background: '#ffffff',
+                    color: '#008751',
+                    border: '1.5px solid #008751',
+                    borderRadius: '10px',
+                    padding: '8px 14px',
+                    fontSize: '0.8rem',
+                    fontWeight: 800,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Download size={14} />
+                  <span>Download CSV</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -455,6 +537,7 @@ export const RoleDashboardView: React.FC<RoleDashboardViewProps> = ({ onNavigate
                     <th style={{ padding: '10px 14px' }}>#</th>
                     <th style={{ padding: '10px 14px' }}>Soul Name</th>
                     <th style={{ padding: '10px 14px' }}>Phone Number</th>
+                    <th style={{ padding: '10px 14px' }}>PCF / Fellowship</th>
                     <th style={{ padding: '10px 14px' }}>Born Again</th>
                     <th style={{ padding: '10px 14px' }}>Filled with Holy Spirit</th>
                     <th style={{ padding: '10px 14px' }}>Recorded At</th>
@@ -477,6 +560,9 @@ export const RoleDashboardView: React.FC<RoleDashboardViewProps> = ({ onNavigate
                           <Phone size={14} color="#64748b" />
                           <span>{record.phone}</span>
                         </div>
+                      </td>
+                      <td style={{ padding: '10px 14px', color: '#0284c7', fontWeight: 600 }}>
+                        {record.pcfName || '—'}
                       </td>
                       <td style={{ padding: '10px 14px' }}>
                         <span
