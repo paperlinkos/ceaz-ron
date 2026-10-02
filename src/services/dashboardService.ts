@@ -192,8 +192,11 @@ export async function getDashboardViewData(
     soulWinners.sort((a, b) => b.soulsWon - a.soulsWon);
   }
 
-  // Sort children by percentage / actual descending
-  children.sort((a, b) => b.percentage - a.percentage || b.actual - a.actual);
+  // Sort children by weighted score (fair relative ranking) then absolute souls as tiebreaker.
+  // weightedScore = (actual / target) × √target — rewards entities that have large mandates
+  // and meet them proportionally, rather than privileging those with tiny targets.
+  children.sort((a, b) => b.weightedScore - a.weightedScore || b.actual - a.actual);
+
 
   return {
     userScope,

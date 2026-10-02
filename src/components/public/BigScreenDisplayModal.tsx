@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Layers, BarChart2, Church, Trophy, Search, X, ChevronLeft, ChevronRight, LayoutList, CircleDot, Activity, MapPin } from 'lucide-react';
+import { Layers, BarChart2, Church, Trophy, Search, X, ChevronLeft, ChevronRight, LayoutList, CircleDot, Activity, MapPin, Swords } from 'lucide-react';
 import { AppleProgressRingsWidget } from './AppleProgressRingsWidget';
 import { UpwardRaceVisualization } from './UpwardRaceVisualization';
 import { LiveSurgeLineGraph } from './LiveSurgeLineGraph';
 import { AbujaHarvestMapView } from './AbujaHarvestMapView';
+import { PCFArenaView } from './PCFArenaView';
 import { DEFAULT_CHURCHES, DEFAULT_GROUPS } from '../../services/organizationService';
 import { getOfficialTarget } from '../../services/targetService';
 import type { ZonalCounterData } from '../../services/counterService';
@@ -16,7 +17,7 @@ interface BigScreenDisplayModalProps {
   onClose: () => void;
   counterData: ZonalCounterData;
   eventStatus: EventStatus;
-  initialPage?: 'counter' | 'groups' | 'churches' | 'timeline' | 'map';
+  initialPage?: 'counter' | 'groups' | 'churches' | 'pcfArena' | 'timeline' | 'map';
 }
 
 interface ChurchStandingItem {
@@ -58,7 +59,7 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
   eventStatus,
   initialPage = 'counter',
 }) => {
-  const [activePage, setActivePage] = useState<'counter' | 'groups' | 'churches' | 'timeline' | 'map'>(initialPage);
+  const [activePage, setActivePage] = useState<'counter' | 'groups' | 'churches' | 'pcfArena' | 'timeline' | 'map'>(initialPage);
 
   useEffect(() => {
     if (isOpen && initialPage) {
@@ -102,7 +103,7 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
     return buildInitialChurchStandings();
   }, [counterData.groupCompetitors]);
 
-  // Keyboard controls: 1 = Counter, 2 = Groups, 3 = Churches, 4 = Timeline, Esc = Exit
+  // Keyboard controls: 1 = Counter, 2 = Groups, 3 = Churches, 4 = PCF Arena, 5 = Timeline, 6 = Map, Esc = Exit
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isOpen) return;
@@ -115,8 +116,10 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
       } else if (e.key === '3') {
         setActivePage('churches');
       } else if (e.key === '4') {
-        setActivePage('timeline');
+        setActivePage('pcfArena');
       } else if (e.key === '5') {
+        setActivePage('timeline');
+      } else if (e.key === '6') {
         setActivePage('map');
       }
     };
@@ -180,11 +183,22 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
           {!isDockCollapsed && <span>CHURCHES STANDINGS</span>}
         </button>
 
+        {/* 4. PCF Arena Head-to-Head (Placed directly underneath church display icon) */}
+        <button
+          type="button"
+          onClick={() => setActivePage('pcfArena')}
+          className={`dock-btn ${activePage === 'pcfArena' ? 'dock-btn-active' : ''}`}
+          title="PCF Arena Head-to-Head (Press 4)"
+        >
+          <Swords size={18} style={{ color: activePage === 'pcfArena' ? '#ffd700' : 'inherit' }} />
+          {!isDockCollapsed && <span>PCF ARENA</span>}
+        </button>
+
         <button
           type="button"
           onClick={() => setActivePage('timeline')}
           className={`dock-btn ${activePage === 'timeline' ? 'dock-btn-active' : ''}`}
-          title="Live Surge Line Graph (Press 4)"
+          title="Live Surge Line Graph (Press 5)"
         >
           <Activity size={18} style={{ color: activePage === 'timeline' ? '#00ff87' : 'inherit' }} />
           {!isDockCollapsed && <span>SURGE LINE GRAPH</span>}
@@ -194,7 +208,7 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
           type="button"
           onClick={() => setActivePage('map')}
           className={`dock-btn ${activePage === 'map' ? 'dock-btn-active' : ''}`}
-          title="Abuja Harvest Map (Press 5)"
+          title="Abuja Harvest Map (Press 6)"
         >
           <MapPin size={18} style={{ color: activePage === 'map' ? '#00ff87' : 'inherit' }} />
           {!isDockCollapsed && <span>ABUJA HARVEST MAP</span>}
@@ -560,9 +574,13 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                           const originalIndex = churchStandings.findIndex((orig) => orig.id === c.id);
                           const isFirst = originalIndex === 0;
                           const isTop3 = originalIndex < 3;
-                          const progressFraction = Math.min(1, Math.max(0, c.percentage / 100));
+                          const progressFraction = Math.max(0.03, Math.min(1, c.percentage / 100));
                           const strokeOffset = circumference - progressFraction * circumference;
-                          const isOverTarget = c.percentage >= 100;
+
+                          const ringColor =
+                            c.percentage >= 100 || isFirst
+                              ? '#d97706'
+                              : '#008751';
 
                           return (
                             <div
@@ -574,7 +592,7 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                                 border: isFirst
                                   ? '2px solid #d97706'
                                   : isTop3
-                                  ? '1.5px solid rgba(217, 119, 6, 0.4)'
+                                  ? `1.5px solid ${ringColor}66`
                                   : '1px solid rgba(0, 135, 81, 0.12)',
                                 boxShadow: isFirst
                                   ? '0 8px 24px rgba(217, 119, 6, 0.18)'
@@ -602,23 +620,23 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                                     cy="44"
                                     r={radius}
                                     fill="none"
-                                    stroke="rgba(0, 135, 81, 0.14)"
+                                    stroke="rgba(0, 0, 0, 0.08)"
                                     strokeWidth="8"
                                     className="apple-ring-track"
                                   />
-                                  {/* Active Foreground Progress Circle */}
+                                  {/* Active Foreground Progress Circle with Level Color */}
                                   <circle
                                     cx="44"
                                     cy="44"
                                     r={radius}
                                     fill="none"
-                                    stroke={isFirst || isOverTarget ? '#d97706' : '#008751'}
+                                    stroke={ringColor}
                                     strokeWidth="8"
                                     strokeDasharray={circumference}
                                     strokeDashoffset={strokeOffset}
                                     strokeLinecap="round"
                                     transform="rotate(-90 44 44)"
-                                    className={`apple-ring-progress ${isFirst || isOverTarget ? 'ring-gold' : 'ring-green'}`}
+                                    className="apple-ring-progress"
                                   />
                                 </svg>
 
@@ -631,7 +649,8 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                                       className="apple-ring-rank-text"
                                       style={{
                                         fontSize: originalIndex >= 99 ? '0.82rem' : '0.98rem',
-                                        color: isTop3 ? '#b45309' : '#008751',
+                                        color: ringColor,
+                                        fontWeight: 800,
                                       }}
                                     >
                                       #{originalIndex + 1}
@@ -642,8 +661,8 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
 
                               {/* PERCENTAGE READOUT */}
                               <div
-                                className={`apple-ring-percentage ${isFirst || isOverTarget ? 'percent-gold' : 'percent-green'}`}
-                                style={{ marginTop: '10px', fontSize: '1.22rem' }}
+                                className="apple-ring-percentage"
+                                style={{ marginTop: '10px', fontSize: '1.22rem', color: ringColor, fontWeight: 900 }}
                               >
                                 {c.displayPercentage}
                               </div>
@@ -711,6 +730,16 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                         const cRank = originalIndex === 0 ? '🥇 1st' : originalIndex === 1 ? '🥈 2nd' : originalIndex === 2 ? '🥉 3rd' : `#${originalIndex + 1}`;
                         const rankColor = originalIndex === 0 ? '#d97706' : '#475569';
 
+                        const barGradient =
+                          c.percentage >= 100
+                            ? 'linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%)'
+                            : 'linear-gradient(90deg, #008751 0%, #00d68f 100%)';
+
+                        const pctTextColor =
+                          c.percentage >= 100
+                            ? '#d97706'
+                            : '#008751';
+
                         return (
                           <div
                             key={c.id}
@@ -748,17 +777,24 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                                 <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: '700' }}>
                                   {c.groupName}
                                 </span>
-                                <div className="child-progress-track" style={{ height: '5px', marginTop: '5px', width: '100%', maxWidth: '240px', background: 'rgba(0, 135, 81, 0.05)' }}>
+                                <div className="child-progress-track" style={{ height: '7px', marginTop: '6px', width: '100%', maxWidth: '240px', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden' }}>
                                   <div
                                     className="child-progress-fill"
-                                    style={{ width: `${Math.min(100, c.percentage)}%` }}
+                                    style={{
+                                      width: `${Math.max(3, Math.min(100, c.percentage))}%`,
+                                      background: barGradient,
+                                      borderRadius: '4px',
+                                      height: '100%',
+                                      boxShadow: c.percentage >= 100 ? '0 0 8px rgba(245, 158, 11, 0.5)' : 'none',
+                                      transition: 'width 0.4s ease',
+                                    }}
                                   />
                                 </div>
                               </div>
                             </div>
 
                             <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px', flexShrink: 0, minWidth: '75px' }}>
-                              <span style={{ fontWeight: '900', color: '#008751', fontSize: '0.90rem', fontFamily: "'Share Tech Mono', monospace", whiteSpace: 'nowrap' }}>
+                              <span style={{ fontWeight: '900', color: pctTextColor, fontSize: '0.90rem', fontFamily: "'Share Tech Mono', monospace", whiteSpace: 'nowrap' }}>
                                 {c.displayPercentage}
                               </span>
                               <span style={{ fontSize: '0.72rem', color: '#475569', fontWeight: '600', fontFamily: "'Share Tech Mono', monospace", whiteSpace: 'nowrap' }}>
@@ -773,16 +809,23 @@ export const BigScreenDisplayModal: React.FC<BigScreenDisplayModalProps> = ({
                 })()
               )}
             </div>
+          </div>
+        )}
 
-            {/* LIVE SOUL SURGE LINE GRAPH (DIRECTLY UNDER CHURCHES STANDINGS) */}
-            <div style={{ marginTop: '12px' }}>
-              <LiveSurgeLineGraph
-                records={counterData.allRecords}
-                isFullScreenMode={false}
-                singleCardMode={true}
-                defaultMode="velocity"
-              />
-            </div>
+        {/* PAGE 4: PCF ARENA (STANDALONE HEAD-TO-HEAD PAGE UNDER CHURCHES DISPLAY) */}
+        {activePage === 'pcfArena' && (
+          <div
+            className="big-screen-page-arena"
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              overflowY: 'auto',
+              padding: '10px 0',
+            }}
+          >
+            <PCFArenaView records={counterData?.allRecords} isBigScreen={true} />
           </div>
         )}
 

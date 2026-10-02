@@ -92,8 +92,10 @@ export const ChurchHomeView: React.FC<ChurchHomeViewProps> = ({ onNavigate }) =>
 
         // Calculate all churches progress
         const churchProgresses = calculateChurchRaceProgress(records, churches, targets, undefined, undefined);
+        // Sort by weighted score (fair relative ranking: (actual/target) × √target)
+        // This matches the engine and race chart order so zone rank is consistent.
         const sortedChurchesByZone = [...churchProgresses].sort(
-          (a, b) => b.percentage - a.percentage
+          (a, b) => b.weightedScore - a.weightedScore || b.actual - a.actual
         );
         const chProg =
           sortedChurchesByZone.find((c) => c.organizationId === targetChurchId) ||
@@ -106,7 +108,7 @@ export const ChurchHomeView: React.FC<ChurchHomeViewProps> = ({ onNavigate }) =>
         );
         setChurchZoneRank(zoneRankIndex >= 0 ? zoneRankIndex + 1 : 1);
 
-        // Sibling churches in same group
+        // Sibling churches in same group — already weighted-sorted in sortedChurchesByZone
         const groupChurches = sortedChurchesByZone.filter((c) => {
           const chDef = churches.find((ch) => ch.id === c.organizationId);
           return chDef?.groupId === targetGroupId;

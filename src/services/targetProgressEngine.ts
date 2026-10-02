@@ -33,6 +33,7 @@ export function calculateOrganizationProgress(input: CalculateProgressInput): Or
       isTargetExceeded: false,
       hasTarget: false,
       displayPercentage: 'TARGET NOT SET',
+      weightedScore: 0,
     };
   }
 
@@ -40,6 +41,13 @@ export function calculateOrganizationProgress(input: CalculateProgressInput): Or
   const percentage = Math.round(rawPercentage * 10) / 10;
   const normalizedProgress = Math.min(1.0, validActual / target);
   const isTargetExceeded = validActual > target;
+
+  // Option A — Weighted Target Score: (actual / target) × √target
+  // Rewards proportional attainment AND accounts for target magnitude.
+  // A church with target=3500 at 22% outranks one with target=100 at 25%
+  // because they won significantly more souls in absolute terms.
+  // Bar visual heights still reflect raw normalizedProgress (actual/target).
+  const weightedScore = (validActual / target) * Math.sqrt(target);
 
   return {
     organizationId,
@@ -53,6 +61,7 @@ export function calculateOrganizationProgress(input: CalculateProgressInput): Or
     isTargetExceeded,
     hasTarget: true,
     displayPercentage: `${percentage}%`,
+    weightedScore,
   };
 }
 
@@ -201,8 +210,9 @@ export function calculateGroupRaceProgress(
     });
   });
 
-  // Sort competitors by percentage / actual souls descending
-  results.sort((a, b) => b.percentage - a.percentage || b.actual - a.actual);
+  // Sort competitors by weighted score (fair relative ranking) then by absolute souls as tiebreaker.
+  // weightedScore = (actual / target) × √target — see OrganizationProgress type for rationale.
+  results.sort((a, b) => b.weightedScore - a.weightedScore || b.actual - a.actual);
 
   return results;
 }
@@ -255,7 +265,8 @@ export function calculateChurchRaceProgress(
     });
   });
 
-  results.sort((a, b) => b.percentage - a.percentage || b.actual - a.actual || a.organizationName.localeCompare(b.organizationName));
+  // Sort by weighted score (fair relative ranking), then absolute souls, then alphabetically.
+  results.sort((a, b) => b.weightedScore - a.weightedScore || b.actual - a.actual || a.organizationName.localeCompare(b.organizationName));
 
   return results;
 }

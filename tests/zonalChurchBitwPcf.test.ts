@@ -116,4 +116,16 @@ describe('Zonal Church PCF: BITW First Service & Scoped Access Rules', () => {
 
     expect(masterVisible.length).toBe(3);
   });
+
+  it('correctly formats and resolves real Firestore PCF IDs and slugs', async () => {
+    const { formatPCFName } = await import('../src/components/public/PCFArenaView');
+    expect(formatPCFName('pcf-zc2-huois')).toBe('Huios PCF');
+    expect(formatPCFName('pcf-zc2-bitw')).toBe('BITW PCF');
+    expect(formatPCFName('pcf-zc1-exclusive')).toBe('Exclusive PCF');
+    expect(formatPCFName('pcf-zc1-kinging')).toBe('Kinging PCF');
+    expect(formatPCFName('pcf-zc2-medical')).toBe('Medical PCF');
+    expect(formatPCFName('Phenomenal Grace')).toBe('Phenomenal Grace PCF');
+    expect(formatPCFName(undefined)).toBeNull();
+    expect(formatPCFName('—')).toBeNull();
+  });
 });

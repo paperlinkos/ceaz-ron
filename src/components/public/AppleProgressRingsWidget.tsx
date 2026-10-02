@@ -25,6 +25,7 @@ export const AppleProgressRingsWidget: React.FC<AppleProgressRingsWidgetProps> =
     percentage: number;
     actual: number;
     target: number;
+    weightedScore: number;
   }> = [];
 
   if (groups && groups.length > 0) {
@@ -34,6 +35,8 @@ export const AppleProgressRingsWidget: React.FC<AppleProgressRingsWidgetProps> =
       const pct = typeof g.percentage === 'number' && !isNaN(g.percentage) ? g.percentage : 0;
       const actual = ('actual' in g ? g.actual : g.soulsWon) || 0;
       const target = g.target || getOfficialTarget('group', id) || 1000;
+      // Pull weightedScore if available (from OrganizationProgress or GroupRaceCompetitor)
+      const weightedScore = ('weightedScore' in g && typeof g.weightedScore === 'number') ? g.weightedScore : (actual / (target || 1)) * Math.sqrt(target || 1);
 
       return {
         id,
@@ -41,6 +44,7 @@ export const AppleProgressRingsWidget: React.FC<AppleProgressRingsWidgetProps> =
         percentage: Math.round(pct * 10) / 10,
         actual,
         target,
+        weightedScore,
       };
     });
   } else {
@@ -51,14 +55,16 @@ export const AppleProgressRingsWidget: React.FC<AppleProgressRingsWidgetProps> =
       percentage: 0,
       actual: 0,
       target: getOfficialTarget('group', g.id) || 2000,
+      weightedScore: 0,
     }));
   }
 
-  // 2. Sort ALL groups strictly by percentage descending, then actual souls won descending
+  // Sort ALL groups by weighted score (Option A: (actual/target) × √target) for fair relative ranking,
+  // then absolute souls as tiebreaker, so large-target groups doing proportionally well rank above
+  // small-target groups with a slightly higher raw %.
   allGroups.sort((a, b) => {
-    if (b.percentage !== a.percentage) {
-      return b.percentage - a.percentage;
-    }
+    const ws = (b.weightedScore ?? 0) - (a.weightedScore ?? 0);
+    if (ws !== 0) return ws;
     return b.actual - a.actual;
   });
 
@@ -86,7 +92,7 @@ export const AppleProgressRingsWidget: React.FC<AppleProgressRingsWidgetProps> =
               borderRadius: '8px',
             }}
           >
-            BY % TARGET
+            WEIGHTED RANK
           </span>
         </div>
         {onViewAll && (
@@ -104,9 +110,14 @@ export const AppleProgressRingsWidget: React.FC<AppleProgressRingsWidgetProps> =
       {/* HORIZONTAL ROW OF APPLE CIRCULAR PROGRESS RINGS */}
       <div className="apple-rings-row">
         {topFive.map((group, index) => {
-          const progressFraction = Math.min(1, Math.max(0, group.percentage / 100));
+          const progressFraction = Math.max(0.03, Math.min(1, group.percentage / 100));
           const strokeOffset = circumference - progressFraction * circumference;
           const isFirst = index === 0 && group.percentage > 0;
+
+          const ringColor =
+            group.percentage >= 100 || isFirst
+              ? '#d97706'
+              : '#008751';
 
           return (
             <div key={group.id} className="apple-ring-item">
@@ -125,23 +136,23 @@ export const AppleProgressRingsWidget: React.FC<AppleProgressRingsWidgetProps> =
                     cy="44"
                     r={radius}
                     fill="none"
-                    stroke="rgba(0, 135, 81, 0.15)"
+                    stroke="rgba(0, 0, 0, 0.08)"
                     strokeWidth="8"
                     className="apple-ring-track"
                   />
-                  {/* Active Foreground Progress Circle Based Strictly on Percentage */}
+                  {/* Active Foreground Progress Circle with Level Color */}
                   <circle
                     cx="44"
                     cy="44"
                     r={radius}
                     fill="none"
-                    stroke={isFirst ? '#d97706' : '#008751'}
+                    stroke={ringColor}
                     strokeWidth="8"
                     strokeDasharray={circumference}
                     strokeDashoffset={strokeOffset}
                     strokeLinecap="round"
                     transform="rotate(-90 44 44)"
-                    className={`apple-ring-progress ${isFirst ? 'ring-gold' : 'ring-green'}`}
+                    className="apple-ring-progress"
                   />
                 </svg>
 
@@ -150,7 +161,7 @@ export const AppleProgressRingsWidget: React.FC<AppleProgressRingsWidgetProps> =
                   {isFirst ? (
                     <Trophy size={20} style={{ color: '#d97706' }} />
                   ) : (
-                    <span className="apple-ring-rank-text" style={{ color: isFirst ? '#d97706' : '#475569' }}>
+                    <span className="apple-ring-rank-text" style={{ color: ringColor, fontWeight: 800 }}>
                       #{index + 1}
                     </span>
                   )}
@@ -158,7 +169,7 @@ export const AppleProgressRingsWidget: React.FC<AppleProgressRingsWidgetProps> =
               </div>
 
               {/* PERCENTAGE READOUT DIRECTLY BENEATH CIRCLE */}
-              <div className={`apple-ring-percentage ${isFirst ? 'percent-gold' : 'percent-green'}`}>
+              <div className="apple-ring-percentage" style={{ color: ringColor, fontWeight: 900 }}>
                 {group.percentage}%
               </div>
 

@@ -1,7 +1,7 @@
 import { Home, HeartHandshake, User, Building, Trophy, Activity, LayoutDashboard, FolderTree, MapPin } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-export type TabType = 'home' | 'record' | 'account' | 'org' | 'race' | 'about' | 'dashboard' | 'eventControl' | 'importData' | 'directory' | 'map' | 'loginTracker';
+export type TabType = 'home' | 'record' | 'account' | 'org' | 'race' | 'pcfArena' | 'about' | 'dashboard' | 'eventControl' | 'importData' | 'directory' | 'map' | 'loginTracker';
 
 interface NavigationProps {
   activeTab: TabType;

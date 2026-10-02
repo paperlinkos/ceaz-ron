@@ -59,7 +59,9 @@ export const UpwardRaceVisualization: React.FC<UpwardRaceVisualizationProps> = (
     hasTarget: true,
     isTargetExceeded: false,
     displayPercentage: '0%',
+    weightedScore: 0,
   }));
+
 
   const activeCompetitors = competitors && competitors.length > 0 ? competitors : defaultCompetitors;
 
@@ -77,14 +79,14 @@ export const UpwardRaceVisualization: React.FC<UpwardRaceVisualizationProps> = (
               </h3>
             </div>
 
-            {/* Clean Monochrome + 2-Accent Legend Pill */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--color-legend-bg, rgba(0, 135, 81, 0.05))', padding: '5px 14px', borderRadius: '20px', border: '1px solid var(--color-legend-border, rgba(0, 135, 81, 0.15))', fontSize: '0.74rem' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: '#008751', fontWeight: '800' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#008751' }} /> In Progress
+            {/* 2-Tier Color Legend Pill */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--color-legend-bg, rgba(0, 135, 81, 0.05))', padding: '5px 12px', borderRadius: '20px', border: '1px solid var(--color-legend-border, rgba(0, 135, 81, 0.15))', fontSize: '0.70rem', flexWrap: 'wrap' }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#d97706', fontWeight: '800' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#d97706' }} /> 100%+ TARGET ACHIEVED
               </span>
-              <span style={{ color: '#cbd5e1' }}>|</span>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: '#d97706', fontWeight: '800' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#d97706' }} /> 100%+ Target Achieved
+              <span style={{ color: '#cbd5e1' }}>•</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#008751', fontWeight: '800' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#008751' }} /> IN PROGRESS
               </span>
             </div>
           </div>

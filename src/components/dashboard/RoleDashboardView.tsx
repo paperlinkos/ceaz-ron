@@ -420,10 +420,18 @@ export const RoleDashboardView: React.FC<RoleDashboardViewProps> = ({ onNavigate
                   </div>
 
                   <div className="child-card-middle" style={{ margin: '10px 0' }}>
-                    <div className="child-progress-track">
+                    <div className="child-progress-track" style={{ height: '7px', background: '#e2e8f0', borderRadius: '4px', overflow: 'hidden' }}>
                       <div
                         className="child-progress-fill"
-                        style={{ width: `${Math.min(100, (child.normalizedProgress || 0) * 100)}%` }}
+                        style={{
+                          width: `${Math.max(3, Math.min(100, (child.normalizedProgress || 0) * 100))}%`,
+                          background:
+                            (child.normalizedProgress || 0) >= 1
+                              ? 'linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%)'
+                              : 'linear-gradient(90deg, #008751 0%, #00d68f 100%)',
+                          borderRadius: '4px',
+                          height: '100%',
+                        }}
                       />
                     </div>
                   </div>

@@ -285,7 +285,13 @@ export const UpwardRaceView: React.FC = () => {
                           <div className="child-progress-track" style={{ marginTop: '6px' }}>
                             <div
                               className="child-progress-fill"
-                              style={{ width: `${Math.min(100, comp.percentage)}%` }}
+                              style={{
+                                width: `${Math.max(2, Math.min(100, comp.percentage))}%`,
+                                background:
+                                  comp.percentage >= 100
+                                    ? 'linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%)'
+                                    : 'linear-gradient(90deg, #008751 0%, #00d68f 100%)',
+                              }}
                             />
                           </div>
                         </div>
@@ -371,7 +377,13 @@ export const UpwardRaceView: React.FC = () => {
                                         <div className="child-progress-track" style={{ height: '6px', marginTop: '6px', width: '100%', maxWidth: '280px' }}>
                                           <div
                                             className="child-progress-fill"
-                                            style={{ width: `${Math.min(100, church.percentage)}%` }}
+                                            style={{
+                                              width: `${Math.max(2, Math.min(100, church.percentage))}%`,
+                                              background:
+                                                church.percentage >= 100
+                                                  ? 'linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%)'
+                                                  : 'linear-gradient(90deg, #008751 0%, #00d68f 100%)',
+                                            }}
                                           />
                                         </div>
                                       </div>

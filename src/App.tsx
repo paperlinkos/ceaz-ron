@@ -8,6 +8,7 @@ import { type TabType } from './components/Navigation';
 import { Sidebar } from './components/Sidebar';
 import { PublicHomeView } from './components/public/PublicHomeView';
 import { UpwardRaceView } from './components/public/UpwardRaceView';
+import { PCFArenaView } from './components/public/PCFArenaView';
 import { AccountView } from './components/auth/AccountView';
 import { AuthModal } from './components/auth/AuthModal';
 import { OrganizationManager } from './components/admin/OrganizationManager';
@@ -138,6 +139,10 @@ const MainContent: React.FC = () => {
 
           {activeTab === 'race' && role !== 'soulWinner' && (
             <UpwardRaceView />
+          )}
+
+          {activeTab === 'pcfArena' && role !== 'soulWinner' && (
+            <PCFArenaView />
           )}
 
           {activeTab === 'map' && isObserverMode && (

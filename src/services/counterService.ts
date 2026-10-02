@@ -18,6 +18,8 @@ export interface GroupRaceCompetitor {
   hasTarget: boolean;
   isTargetExceeded: boolean;
   displayPercentage: string;
+  /** Weighted Target Score for fair relative ranking: (actual / target) × √target */
+  weightedScore: number;
   churches?: GroupRaceCompetitor[];
 }
 
@@ -138,6 +140,7 @@ export function subscribeToZonalCounter(
           hasTarget: cp.hasTarget,
           isTargetExceeded: cp.isTargetExceeded,
           displayPercentage: cp.displayPercentage,
+          weightedScore: cp.weightedScore,
         }));
 
         return {
@@ -151,6 +154,7 @@ export function subscribeToZonalCounter(
           hasTarget: p.hasTarget,
           isTargetExceeded: p.isTargetExceeded,
           displayPercentage: p.displayPercentage,
+          weightedScore: p.weightedScore,
           churches: churchCompetitors,
         };
       });

@@ -16,6 +16,7 @@ import {
   X,
   MapPin,
   ShieldCheck,
+  Swords,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNetworkStatus } from '../hooks/useNetworkStatus';
@@ -163,6 +164,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
           >
             <Trophy size={20} />
             {(!isCollapsed || isMobileOpen) && <span>UPWARD RACE</span>}
+          </button>
+        )}
+
+        {/* 3. PCF Arena Head-to-Head (Dedicated Standalone Page) */}
+        {(isObserverMode || role !== 'soulWinner') && (
+          <button
+            onClick={() => handleItemClick('pcfArena')}
+            className={`sidebar-link ${activeTab === 'pcfArena' ? 'sidebar-link-active' : ''}`}
+            title="PCF Arena Head-to-Head"
+          >
+            <Swords size={20} />
+            {(!isCollapsed || isMobileOpen) && <span>PCF ARENA</span>}
           </button>
         )}
 

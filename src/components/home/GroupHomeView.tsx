@@ -84,7 +84,11 @@ export const GroupHomeView: React.FC<GroupHomeViewProps> = ({ onNavigate }) => {
 
         // Calculate all group progresses
         const groupProgresses = calculateGroupRaceProgress(records, groups, targets, undefined, churches);
-        const sortedGroups = [...groupProgresses].sort((a, b) => b.percentage - a.percentage);
+        // Sort by weighted score (same as race chart) — engine already returns them sorted,
+        // but we re-sort here in case the state update races.
+        const sortedGroups = [...groupProgresses].sort(
+          (a, b) => b.weightedScore - a.weightedScore || b.actual - a.actual
+        );
         setAllGroupProgresses(sortedGroups);
 
         const currentProg =
@@ -102,8 +106,10 @@ export const GroupHomeView: React.FC<GroupHomeViewProps> = ({ onNavigate }) => {
           const churchDef = churches.find((ch) => ch.id === c.organizationId);
           return churchDef?.groupId === targetGroupId;
         });
-
-        const sortedChurches = [...filteredChurches].sort((a, b) => b.percentage - a.percentage);
+        // Sort churches in group by weighted score for fair relative ranking
+        const sortedChurches = [...filteredChurches].sort(
+          (a, b) => b.weightedScore - a.weightedScore || b.actual - a.actual
+        );
         setChurchesInGroup(sortedChurches);
       } catch (err) {
         console.error('Error loading group home data:', err);
