@@ -73,14 +73,7 @@ export const UpwardRaceView: React.FC<UpwardRaceViewProps> = ({ onNavigateTab })
                 type="button"
                 onClick={() => onNavigateTab('pcfArena')}
                 className="submit-button"
-                style={{
-                  padding: '10px 18px',
-                  fontSize: '0.85rem',
-                  background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
-                  borderColor: '#f59e0b',
-                  color: '#ffffff',
-                  boxShadow: '0 4px 12px rgba(217, 119, 6, 0.35)',
-                }}
+                style={{ padding: '10px 18px', fontSize: '0.85rem' }}
                 title="Open Standalone PCF Arena Head-to-Head Clash"
               >
                 <Swords size={16} />
@@ -93,7 +86,7 @@ export const UpwardRaceView: React.FC<UpwardRaceViewProps> = ({ onNavigateTab })
                 <button
                   type="button"
                   onClick={() => setIsCountdownFullScreenOpen(true)}
-                  className="submit-button countdown-mode-trigger-btn-dark"
+                  className="submit-button"
                   style={{ padding: '10px 18px', fontSize: '0.85rem' }}
                   title="Open Fullscreen Campaign Countdown Clock"
                 >

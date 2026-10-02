@@ -67,19 +67,13 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
           <span>CEAZ1 REACHOUT NIGERIA SOUL WINNING CAMPAIGN</span>
         </div>
 
-        {/* Action Buttons: PCF Arena, Countdown Screen & Big Screen TV Mode */}
+        {/* Action Buttons: PCF Arena, Countdown Screen & Big Screen TV Mode (Unified to Big Screen Button Style) */}
         <div className="event-date-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
           {onNavigate && (
             <button
               type="button"
               onClick={() => onNavigate('pcfArena')}
               className="display-mode-trigger-btn"
-              style={{
-                background: 'linear-gradient(135deg, rgba(217, 119, 6, 0.25) 0%, rgba(180, 83, 9, 0.25) 100%)',
-                borderColor: 'rgba(245, 158, 11, 0.5)',
-                color: '#f59e0b',
-                fontWeight: 700,
-              }}
               title="Open PCF Arena Head-to-Head Clash"
             >
               <Swords size={15} />
@@ -90,7 +84,7 @@ export const PublicHomeView: React.FC<PublicHomeViewProps> = ({ onNavigate, onOp
           <button
             type="button"
             onClick={() => setIsCountdownFullScreenOpen(true)}
-            className="display-mode-trigger-btn countdown-mode-trigger-btn"
+            className="display-mode-trigger-btn"
             title="Open Fullscreen Campaign Countdown Clock"
           >
             <Timer size={15} />
