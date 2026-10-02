@@ -412,6 +412,8 @@ export const PCFArenaView: React.FC<PCFArenaViewProps> = ({ isBigScreen = false,
 
   const maxPCF1Souls = Math.max(...service1PCFs.map((p) => p.soulsWon), 1);
   const maxPCF2Souls = Math.max(...service2PCFs.map((p) => p.soulsWon), 1);
+  const maxAllSouls = Math.max(...combinedPCFs.map((p) => p.soulsWon), 1);
+  const totalCombinedSouls = service1Souls + service2Souls;
 
   return (
     <div
@@ -801,8 +803,142 @@ export const PCFArenaView: React.FC<PCFArenaViewProps> = ({ isBigScreen = false,
         </div>
       </div>
 
-      {/* UNDERNEATH: WHAT EACH PCF HAS DONE FOR BOTH SERVICE 1 AND SERVICE 2 */}
-      {(activeTab === 'all' || activeTab === 'service-1') && (
+      {/* 1. ALL SERVICES TAB: COMBINED HIERARCHY OF ALL 42 PCFS */}
+      {activeTab === 'all' && (
+        <div style={{ marginBottom: '28px' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '14px',
+              borderBottom: '2px solid rgba(0, 135, 81, 0.25)',
+              paddingBottom: '8px',
+              flexWrap: 'wrap',
+              gap: '8px',
+            }}
+          >
+            <h2
+              style={{
+                margin: 0,
+                fontSize: '1.15rem',
+                fontWeight: '900',
+                color: '#0f172a',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontFamily: "'Orbitron', sans-serif",
+              }}
+            >
+              <Swords size={20} style={{ color: '#008751' }} />
+              COMBINED PCF HIERARCHY & STANDINGS
+              <span
+                style={{
+                  background: 'rgba(0, 135, 81, 0.1)',
+                  color: '#008751',
+                  borderRadius: '20px',
+                  padding: '2px 10px',
+                  fontSize: '0.74rem',
+                  fontWeight: '800',
+                  fontFamily: "'Share Tech Mono', monospace",
+                }}
+              >
+                {combinedPCFs.length} PCFs · {totalCombinedSouls.toLocaleString()} SOULS TOTAL
+              </span>
+            </h2>
+            <div style={{ fontSize: '0.74rem', color: '#64748b', fontWeight: '700' }}>
+              Unified ranking across Service 1 & Service 2
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px' }}>
+            {combinedPCFs.map((pcf, idx) => {
+              const medals = ['🥇', '🥈', '🥉'];
+              const medal = idx < 3 ? medals[idx] : `#${idx + 1}`;
+              const barWidth = Math.max(4, Math.round((pcf.soulsWon / maxAllSouls) * 100));
+              const isFirst = idx === 0 && pcf.soulsWon > 0;
+              const isService1 = pcf.service === 'service-1';
+              const shareOfAll = totalCombinedSouls > 0 ? Math.round((pcf.soulsWon / totalCombinedSouls) * 100) : 0;
+
+              return (
+                <div
+                  key={pcf.id}
+                  style={{
+                    background: '#ffffff',
+                    borderRadius: '14px',
+                    padding: '16px 18px',
+                    border: `1.5px solid ${isFirst ? '#d97706' : '#e2e8f0'}`,
+                    boxShadow: isFirst ? '0 4px 16px rgba(217, 119, 6, 0.14)' : '0 2px 8px rgba(0,0,0,0.03)',
+                    position: 'relative',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '1.2rem' }}>{medal}</span>
+                      <div>
+                        <div style={{ fontWeight: '800', fontSize: '0.92rem', color: '#0f172a' }}>
+                          {pcf.emoji} {pcf.name}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                          <span
+                            style={{
+                              fontSize: '0.64rem',
+                              fontWeight: '800',
+                              padding: '1px 6px',
+                              borderRadius: '4px',
+                              background: isService1 ? 'rgba(0, 135, 81, 0.1)' : 'rgba(217, 119, 6, 0.1)',
+                              color: isService1 ? '#008751' : '#d97706',
+                              border: `1px solid ${isService1 ? 'rgba(0, 135, 81, 0.25)' : 'rgba(217, 119, 6, 0.25)'}`,
+                              fontFamily: "'Orbitron', sans-serif",
+                            }}
+                          >
+                            {isService1 ? 'SERVICE 1' : 'SERVICE 2'}
+                          </span>
+                          <span style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: '700' }}>
+                            {isService1 ? 'Zonal Church 1' : 'Zonal Church 2'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '1.25rem', fontWeight: '900', color: '#0f172a', fontFamily: "'Orbitron', sans-serif" }}>
+                        {pcf.soulsWon.toLocaleString()}
+                      </div>
+                      <div style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: '700' }}>
+                        {shareOfAll}% of Total
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* PROPORTIONAL PROGRESS TRACK */}
+                  <div style={{ height: '8px', background: '#f1f5f9', borderRadius: '4px', overflow: 'hidden', marginTop: '10px' }}>
+                    <div
+                      style={{
+                        height: '100%',
+                        width: `${barWidth}%`,
+                        background: pcf.color,
+                        borderRadius: '4px',
+                        transition: 'width 0.6s ease',
+                        boxShadow: `0 0 8px ${pcf.glowColor}`,
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {(service1Unassigned > 0 || service2Unassigned > 0) && (
+            <div style={{ marginTop: '10px', fontSize: '0.76rem', color: '#64748b', fontStyle: 'italic', textAlign: 'right' }}>
+              * {(service1Unassigned + service2Unassigned).toLocaleString()} additional souls contributed without a specific PCF tag across services
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 2. SERVICE 1 ONLY TAB (SEPARATED) */}
+      {activeTab === 'service-1' && (
         <div style={{ marginBottom: '28px' }}>
           <div
             style={{
@@ -912,8 +1048,8 @@ export const PCFArenaView: React.FC<PCFArenaViewProps> = ({ isBigScreen = false,
         </div>
       )}
 
-      {/* SERVICE 2 PCF BREAKDOWN */}
-      {(activeTab === 'all' || activeTab === 'service-2') && (
+      {/* 3. SERVICE 2 ONLY TAB (SEPARATED) */}
+      {activeTab === 'service-2' && (
         <div style={{ marginBottom: '28px' }}>
           <div
             style={{
