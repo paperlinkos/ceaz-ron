@@ -322,11 +322,11 @@ export const DirectoryView: React.FC = () => {
   };
 
   const renderSortIcon = (columnKey: string) => {
-    if (sortKey !== columnKey) return <ArrowUpDown size={13} style={{ opacity: 0.4 }} />;
+    if (sortKey !== columnKey) return <ArrowUpDown size={13} style={{ color: '#94a3b8' }} />;
     return sortDirection === 'asc' ? (
-      <ArrowUp size={13} style={{ color: '#00ff87' }} />
+      <ArrowUp size={13} style={{ color: '#008751' }} />
     ) : (
-      <ArrowDown size={13} style={{ color: '#00ff87' }} />
+      <ArrowDown size={13} style={{ color: '#008751' }} />
     );
   };
 
@@ -510,11 +510,11 @@ export const DirectoryView: React.FC = () => {
         <div
           style={{
             display: 'flex',
-            gap: '8px',
+            gap: '10px',
             flexWrap: 'wrap',
-            marginBottom: '16px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-            paddingBottom: '12px',
+            marginBottom: '20px',
+            borderBottom: '2px solid #e2e8f0',
+            paddingBottom: '14px',
           }}
         >
           {availableTabs.map((tab) => {
@@ -536,23 +536,38 @@ export const DirectoryView: React.FC = () => {
                   setSortKey(tab.id === 'souls' ? 'createdAt' : 'soulsWon');
                 }}
                 style={{
-                  background: isActive ? '#008751' : 'rgba(255, 255, 255, 0.05)',
-                  border: isActive ? '1.5px solid #00ff87' : '1px solid rgba(255, 255, 255, 0.1)',
-                  color: isActive ? '#ffffff' : '#cbd5e1',
-                  borderRadius: '10px',
+                  background: isActive ? '#008751' : '#ffffff',
+                  border: isActive ? '1.5px solid #008751' : '1.5px solid #cbd5e1',
+                  color: isActive ? '#ffffff' : '#1e293b',
+                  borderRadius: '12px',
                   padding: '10px 18px',
-                  fontSize: '0.85rem',
+                  fontSize: '0.86rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
+                  boxShadow: isActive ? '0 4px 14px rgba(0, 135, 81, 0.25)' : '0 2px 6px rgba(0, 0, 0, 0.04)',
                   transition: 'all 0.15s ease',
                 }}
               >
-                <Icon size={16} />
+                <Icon size={17} style={{ color: isActive ? '#ffffff' : '#008751' }} />
                 <span>
-                  {tab.label} ({count})
+                  {tab.label}
+                </span>
+                <span
+                  style={{
+                    background: isActive ? 'rgba(255, 255, 255, 0.25)' : '#f1f5f9',
+                    color: isActive ? '#ffffff' : '#0f172a',
+                    padding: '2px 8px',
+                    borderRadius: '12px',
+                    fontSize: '0.74rem',
+                    fontWeight: 800,
+                    border: isActive ? 'none' : '1px solid #e2e8f0',
+                    fontFamily: "'Share Tech Mono', monospace",
+                  }}
+                >
+                  {count.toLocaleString()}
                 </span>
               </button>
             );
@@ -563,19 +578,20 @@ export const DirectoryView: React.FC = () => {
       {/* 3. SEARCH & DYNAMIC FILTER BAR */}
       <div
         style={{
-          background: 'rgba(15, 23, 42, 0.6)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: '12px',
-          padding: '16px',
+          background: '#ffffff',
+          border: '1px solid #e2e8f0',
+          borderRadius: '14px',
+          padding: '18px 20px',
           marginBottom: '20px',
           display: 'flex',
           alignItems: 'center',
-          gap: '12px',
+          gap: '14px',
           flexWrap: 'wrap',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
         }}
       >
         {/* Universal Search Input */}
-        <div style={{ position: 'relative', flex: '1 1 260px', minWidth: '220px' }}>
+        <div style={{ position: 'relative', flex: '1 1 280px', minWidth: '220px' }}>
           <Search
             size={18}
             style={{
@@ -583,7 +599,7 @@ export const DirectoryView: React.FC = () => {
               left: '12px',
               top: '50%',
               transform: 'translateY(-50%)',
-              color: '#94a3b8',
+              color: '#008751',
             }}
           />
           <input
@@ -599,13 +615,15 @@ export const DirectoryView: React.FC = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{
               width: '100%',
-              background: 'rgba(0, 0, 0, 0.4)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
+              background: '#f8fafc',
+              border: '1.5px solid #cbd5e1',
               borderRadius: '8px',
               padding: '9px 36px 9px 38px',
-              color: '#ffffff',
+              color: '#0f172a',
               fontSize: '0.88rem',
+              fontWeight: 600,
               outline: 'none',
+              boxSizing: 'border-box',
             }}
           />
           {searchQuery && (
@@ -619,7 +637,7 @@ export const DirectoryView: React.FC = () => {
                 transform: 'translateY(-50%)',
                 background: 'transparent',
                 border: 'none',
-                color: '#94a3b8',
+                color: '#64748b',
                 cursor: 'pointer',
               }}
             >
@@ -631,7 +649,7 @@ export const DirectoryView: React.FC = () => {
         {/* Group Filter (Only for Super Admin & Zonal Admin) */}
         {(isSuperAdmin || isZoneAdmin) && ['churches', 'souls'].includes(activeTab) && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.76rem', color: '#94a3b8', fontWeight: 700 }}>Group:</span>
+            <span style={{ fontSize: '0.78rem', color: '#0f172a', fontWeight: 800 }}>Group:</span>
             <select
               value={selectedGroupFilter}
               onChange={(e) => {
@@ -639,12 +657,13 @@ export const DirectoryView: React.FC = () => {
                 setSelectedChurchFilter('all');
               }}
               style={{
-                background: 'rgba(0, 0, 0, 0.4)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
+                background: '#ffffff',
+                border: '1.5px solid #cbd5e1',
                 borderRadius: '8px',
                 padding: '8px 12px',
-                color: '#ffffff',
+                color: '#0f172a',
                 fontSize: '0.82rem',
+                fontWeight: 700,
                 outline: 'none',
                 cursor: 'pointer',
               }}
@@ -662,17 +681,18 @@ export const DirectoryView: React.FC = () => {
         {/* Church Filter (For Super Admin, Zonal Admin, Group Admin when on Souls tab) */}
         {!isChurchAdmin && activeTab === 'souls' && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.76rem', color: '#94a3b8', fontWeight: 700 }}>Church:</span>
+            <span style={{ fontSize: '0.78rem', color: '#0f172a', fontWeight: 800 }}>Church:</span>
             <select
               value={selectedChurchFilter}
               onChange={(e) => setSelectedChurchFilter(e.target.value)}
               style={{
-                background: 'rgba(0, 0, 0, 0.4)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
+                background: '#ffffff',
+                border: '1.5px solid #cbd5e1',
                 borderRadius: '8px',
                 padding: '8px 12px',
-                color: '#ffffff',
+                color: '#0f172a',
                 fontSize: '0.82rem',
+                fontWeight: 700,
                 outline: 'none',
                 cursor: 'pointer',
               }}
@@ -690,17 +710,18 @@ export const DirectoryView: React.FC = () => {
         {/* PCF / Fellowship Filter (When on Souls tab) */}
         {activeTab === 'souls' && availablePcfs.length > 0 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.76rem', color: '#94a3b8', fontWeight: 700 }}>PCF:</span>
+            <span style={{ fontSize: '0.78rem', color: '#0f172a', fontWeight: 800 }}>PCF:</span>
             <select
               value={selectedPcfFilter}
               onChange={(e) => setSelectedPcfFilter(e.target.value)}
               style={{
-                background: 'rgba(0, 0, 0, 0.4)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
+                background: '#ffffff',
+                border: '1.5px solid #cbd5e1',
                 borderRadius: '8px',
                 padding: '8px 12px',
-                color: '#ffffff',
+                color: '#0f172a',
                 fontSize: '0.82rem',
+                fontWeight: 700,
                 outline: 'none',
                 cursor: 'pointer',
               }}
@@ -718,17 +739,18 @@ export const DirectoryView: React.FC = () => {
         {/* Achievement Filter (For Groups & Churches) */}
         {['groups', 'churches'].includes(activeTab) && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.76rem', color: '#94a3b8', fontWeight: 700 }}>Target:</span>
+            <span style={{ fontSize: '0.78rem', color: '#0f172a', fontWeight: 800 }}>Target:</span>
             <select
               value={achievementFilter}
               onChange={(e) => setAchievementFilter(e.target.value as any)}
               style={{
-                background: 'rgba(0, 0, 0, 0.4)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
+                background: '#ffffff',
+                border: '1.5px solid #cbd5e1',
                 borderRadius: '8px',
                 padding: '8px 12px',
-                color: '#ffffff',
+                color: '#0f172a',
                 fontSize: '0.82rem',
+                fontWeight: 700,
                 outline: 'none',
                 cursor: 'pointer',
               }}
@@ -743,17 +765,18 @@ export const DirectoryView: React.FC = () => {
         {/* Spiritual Filter (For Souls) */}
         {activeTab === 'souls' && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ fontSize: '0.76rem', color: '#94a3b8', fontWeight: 700 }}>Faith:</span>
+            <span style={{ fontSize: '0.78rem', color: '#0f172a', fontWeight: 800 }}>Faith:</span>
             <select
               value={spiritualFilter}
               onChange={(e) => setSpiritualFilter(e.target.value as any)}
               style={{
-                background: 'rgba(0, 0, 0, 0.4)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
+                background: '#ffffff',
+                border: '1.5px solid #cbd5e1',
                 borderRadius: '8px',
                 padding: '8px 12px',
-                color: '#ffffff',
+                color: '#0f172a',
                 fontSize: '0.82rem',
+                fontWeight: 700,
                 outline: 'none',
                 cursor: 'pointer',
               }}
@@ -766,14 +789,14 @@ export const DirectoryView: React.FC = () => {
         )}
 
         {/* Result Counter */}
-        <div style={{ marginLeft: 'auto', fontSize: '0.78rem', color: '#94a3b8' }}>
+        <div style={{ marginLeft: 'auto', fontSize: '0.82rem', color: '#475569', fontWeight: 600 }}>
           Showing{' '}
-          <strong style={{ color: '#00ff87' }}>
+          <strong style={{ color: '#008751', fontWeight: 900 }}>
             {activeTab === 'groups'
-              ? filteredGroups.length
+              ? filteredGroups.length.toLocaleString()
               : activeTab === 'churches'
-              ? filteredChurches.length
-              : filteredSouls.length}
+              ? filteredChurches.length.toLocaleString()
+              : filteredSouls.length.toLocaleString()}
           </strong>{' '}
           entries
         </div>
@@ -781,32 +804,50 @@ export const DirectoryView: React.FC = () => {
 
       {/* 4. DATA TABLES PER LEVEL */}
       {isLoading ? (
-        <div style={{ padding: '60px 20px', textAlign: 'center', color: '#94a3b8' }}>
-          <RefreshCw size={36} className="animate-spin" style={{ margin: '0 auto 12px auto', color: '#00ff87' }} />
-          <p style={{ margin: 0, fontWeight: 700 }}>Loading campaign directory data...</p>
+        <div
+          style={{
+            padding: '60px 20px',
+            textAlign: 'center',
+            background: '#ffffff',
+            borderRadius: '14px',
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+            color: '#334155',
+          }}
+        >
+          <RefreshCw size={36} className="animate-spin" style={{ margin: '0 auto 12px auto', color: '#008751' }} />
+          <p style={{ margin: 0, fontWeight: 700, fontSize: '0.95rem' }}>Loading campaign directory data...</p>
         </div>
       ) : (
         <>
           {/* TAB 1: DIRECTORY OF GROUPS */}
           {activeTab === 'groups' && (
-            <div style={{ overflowX: 'auto', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', background: 'rgba(15, 23, 42, 0.5)' }}>
+            <div
+              style={{
+                overflowX: 'auto',
+                borderRadius: '14px',
+                border: '1px solid #e2e8f0',
+                background: '#ffffff',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+              }}
+            >
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', background: '#ffffff' }}>
                 <thead>
-                  <tr style={{ background: 'rgba(0, 0, 0, 0.5)', borderBottom: '1px solid rgba(255, 255, 255, 0.15)' }}>
-                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#94a3b8', fontWeight: 800 }}>#</th>
+                  <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800 }}>#</th>
                     <th
                       onClick={() => handleSort('name')}
-                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>GROUP NAME</span>
                         {renderSortIcon('name')}
                       </div>
                     </th>
-                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800 }}>CODE</th>
+                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800 }}>CODE</th>
                     <th
                       onClick={() => handleSort('target')}
-                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>TARGET</span>
@@ -815,7 +856,7 @@ export const DirectoryView: React.FC = () => {
                     </th>
                     <th
                       onClick={() => handleSort('soulsWon')}
-                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>SOULS WON</span>
@@ -824,7 +865,7 @@ export const DirectoryView: React.FC = () => {
                     </th>
                     <th
                       onClick={() => handleSort('percentage')}
-                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>% PROGRESS</span>
@@ -833,7 +874,7 @@ export const DirectoryView: React.FC = () => {
                     </th>
                     <th
                       onClick={() => handleSort('churchesCount')}
-                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>CHURCHES</span>
@@ -843,52 +884,76 @@ export const DirectoryView: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredGroups.map((g, idx) => {
-                    const isMet = g.percentage >= 100;
-                    return (
-                      <tr
-                        key={g.id}
-                        style={{
-                          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                          background: idx % 2 === 0 ? 'rgba(0, 0, 0, 0.15)' : 'transparent',
-                        }}
-                      >
-                        <td style={{ padding: '12px 16px', fontSize: '0.82rem', color: '#94a3b8', fontWeight: 700 }}>
-                          #{idx + 1}
-                        </td>
-                        <td style={{ padding: '12px 16px', fontSize: '0.88rem', fontWeight: 800, color: '#ffffff' }}>
-                          {g.name}
-                        </td>
-                        <td style={{ padding: '12px 16px', fontSize: '0.76rem', color: '#94a3b8', fontFamily: 'monospace' }}>
-                          {g.code}
-                        </td>
-                        <td style={{ padding: '12px 16px', fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 700 }}>
-                          {g.target.toLocaleString()}
-                        </td>
-                        <td style={{ padding: '12px 16px', fontSize: '0.92rem', fontWeight: 900, color: '#00ff87' }}>
-                          {g.soulsWon.toLocaleString()}
-                        </td>
-                        <td style={{ padding: '12px 16px', fontSize: '0.85rem' }}>
-                          <span
-                            style={{
-                              background: isMet ? 'rgba(0, 255, 135, 0.15)' : 'rgba(255, 215, 0, 0.15)',
-                              color: isMet ? '#00ff87' : '#FFD700',
-                              border: isMet ? '1px solid rgba(0, 255, 135, 0.3)' : '1px solid rgba(255, 215, 0, 0.3)',
-                              borderRadius: '6px',
-                              padding: '3px 8px',
-                              fontWeight: 800,
-                              fontSize: '0.78rem',
-                            }}
-                          >
-                            {g.percentage}% {isMet ? '🏆' : ''}
-                          </span>
-                        </td>
-                        <td style={{ padding: '12px 16px', fontSize: '0.85rem', color: '#cbd5e1' }}>
-                          {g.churchesCount} churches
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {filteredGroups.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} style={{ padding: '48px 20px', textAlign: 'center', color: '#64748b', fontSize: '0.9rem', fontWeight: 600 }}>
+                        No groups found matching the current search & filter criteria.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredGroups.map((g, idx) => {
+                      const isMet = g.percentage >= 100;
+                      return (
+                        <tr
+                          key={g.id}
+                          style={{
+                            borderBottom: '1px solid #f1f5f9',
+                            background: idx % 2 === 0 ? '#ffffff' : '#f8fafc',
+                          }}
+                        >
+                          <td style={{ padding: '14px 16px', fontSize: '0.82rem', color: '#64748b', fontWeight: 700 }}>
+                            #{idx + 1}
+                          </td>
+                          <td style={{ padding: '14px 16px', fontSize: '0.92rem', fontWeight: 800, color: '#0f172a' }}>
+                            {g.name}
+                          </td>
+                          <td style={{ padding: '14px 16px' }}>
+                            <span
+                              style={{
+                                background: '#f1f5f9',
+                                border: '1px solid #e2e8f0',
+                                padding: '3px 8px',
+                                borderRadius: '6px',
+                                fontSize: '0.78rem',
+                                color: '#334155',
+                                fontFamily: 'monospace',
+                                fontWeight: 700,
+                              }}
+                            >
+                              {g.code}
+                            </span>
+                          </td>
+                          <td style={{ padding: '14px 16px', fontSize: '0.88rem', color: '#334155', fontWeight: 700 }}>
+                            {g.target.toLocaleString()}
+                          </td>
+                          <td style={{ padding: '14px 16px', fontSize: '0.96rem', fontWeight: 900, color: '#008751' }}>
+                            {g.soulsWon.toLocaleString()}
+                          </td>
+                          <td style={{ padding: '14px 16px', fontSize: '0.85rem' }}>
+                            <span
+                              style={{
+                                background: isMet ? '#ecfdf5' : '#fffbeb',
+                                color: isMet ? '#047857' : '#b45309',
+                                border: isMet ? '1px solid #a7f3d0' : '1px solid #fde68a',
+                                borderRadius: '6px',
+                                padding: '4px 10px',
+                                fontWeight: 800,
+                                fontSize: '0.78rem',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                              }}
+                            >
+                              {g.percentage}% {isMet ? '🏆' : ''}
+                            </span>
+                          </td>
+                          <td style={{ padding: '14px 16px', fontSize: '0.86rem', color: '#475569', fontWeight: 600 }}>
+                            {g.churchesCount} churches
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>
@@ -896,14 +961,22 @@ export const DirectoryView: React.FC = () => {
 
           {/* TAB 2: DIRECTORY OF CHURCHES */}
           {activeTab === 'churches' && (
-            <div style={{ overflowX: 'auto', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', background: 'rgba(15, 23, 42, 0.5)' }}>
+            <div
+              style={{
+                overflowX: 'auto',
+                borderRadius: '14px',
+                border: '1px solid #e2e8f0',
+                background: '#ffffff',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+              }}
+            >
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', background: '#ffffff' }}>
                 <thead>
-                  <tr style={{ background: 'rgba(0, 0, 0, 0.5)', borderBottom: '1px solid rgba(255, 255, 255, 0.15)' }}>
-                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#94a3b8', fontWeight: 800 }}>#</th>
+                  <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800 }}>#</th>
                     <th
                       onClick={() => handleSort('name')}
-                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>CHURCH NAME</span>
@@ -912,17 +985,17 @@ export const DirectoryView: React.FC = () => {
                     </th>
                     <th
                       onClick={() => handleSort('groupName')}
-                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>PARENT GROUP</span>
                         {renderSortIcon('groupName')}
                       </div>
                     </th>
-                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800 }}>CODE</th>
+                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800 }}>CODE</th>
                     <th
                       onClick={() => handleSort('target')}
-                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>TARGET</span>
@@ -931,7 +1004,7 @@ export const DirectoryView: React.FC = () => {
                     </th>
                     <th
                       onClick={() => handleSort('soulsWon')}
-                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>SOULS WON</span>
@@ -940,7 +1013,7 @@ export const DirectoryView: React.FC = () => {
                     </th>
                     <th
                       onClick={() => handleSort('percentage')}
-                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>% PROGRESS</span>
@@ -950,52 +1023,76 @@ export const DirectoryView: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredChurches.map((c, idx) => {
-                    const isMet = c.percentage >= 100;
-                    return (
-                      <tr
-                        key={c.id}
-                        style={{
-                          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                          background: idx % 2 === 0 ? 'rgba(0, 0, 0, 0.15)' : 'transparent',
-                        }}
-                      >
-                        <td style={{ padding: '12px 16px', fontSize: '0.82rem', color: '#94a3b8', fontWeight: 700 }}>
-                          #{idx + 1}
-                        </td>
-                        <td style={{ padding: '12px 16px', fontSize: '0.88rem', fontWeight: 800, color: '#ffffff' }}>
-                          {c.name}
-                        </td>
-                        <td style={{ padding: '12px 16px', fontSize: '0.82rem', color: '#94a3b8' }}>
-                          {c.groupName}
-                        </td>
-                        <td style={{ padding: '12px 16px', fontSize: '0.76rem', color: '#94a3b8', fontFamily: 'monospace' }}>
-                          {c.code}
-                        </td>
-                        <td style={{ padding: '12px 16px', fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 700 }}>
-                          {c.target.toLocaleString()}
-                        </td>
-                        <td style={{ padding: '12px 16px', fontSize: '0.92rem', fontWeight: 900, color: '#00ff87' }}>
-                          {c.soulsWon.toLocaleString()}
-                        </td>
-                        <td style={{ padding: '12px 16px', fontSize: '0.85rem' }}>
-                          <span
-                            style={{
-                              background: isMet ? 'rgba(0, 255, 135, 0.15)' : 'rgba(255, 215, 0, 0.15)',
-                              color: isMet ? '#00ff87' : '#FFD700',
-                              border: isMet ? '1px solid rgba(0, 255, 135, 0.3)' : '1px solid rgba(255, 215, 0, 0.3)',
-                              borderRadius: '6px',
-                              padding: '3px 8px',
-                              fontWeight: 800,
-                              fontSize: '0.78rem',
-                            }}
-                          >
-                            {c.percentage}% {isMet ? '🏆' : ''}
-                          </span>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {filteredChurches.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} style={{ padding: '48px 20px', textAlign: 'center', color: '#64748b', fontSize: '0.9rem', fontWeight: 600 }}>
+                        No churches found matching the current search & filter criteria.
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredChurches.map((c, idx) => {
+                      const isMet = c.percentage >= 100;
+                      return (
+                        <tr
+                          key={c.id}
+                          style={{
+                            borderBottom: '1px solid #f1f5f9',
+                            background: idx % 2 === 0 ? '#ffffff' : '#f8fafc',
+                          }}
+                        >
+                          <td style={{ padding: '14px 16px', fontSize: '0.82rem', color: '#64748b', fontWeight: 700 }}>
+                            #{idx + 1}
+                          </td>
+                          <td style={{ padding: '14px 16px', fontSize: '0.92rem', fontWeight: 800, color: '#0f172a' }}>
+                            {c.name}
+                          </td>
+                          <td style={{ padding: '14px 16px', fontSize: '0.86rem', color: '#475569', fontWeight: 700 }}>
+                            {c.groupName}
+                          </td>
+                          <td style={{ padding: '14px 16px' }}>
+                            <span
+                              style={{
+                                background: '#f1f5f9',
+                                border: '1px solid #e2e8f0',
+                                padding: '3px 8px',
+                                borderRadius: '6px',
+                                fontSize: '0.78rem',
+                                color: '#334155',
+                                fontFamily: 'monospace',
+                                fontWeight: 700,
+                              }}
+                            >
+                              {c.code}
+                            </span>
+                          </td>
+                          <td style={{ padding: '14px 16px', fontSize: '0.88rem', color: '#334155', fontWeight: 700 }}>
+                            {c.target.toLocaleString()}
+                          </td>
+                          <td style={{ padding: '14px 16px', fontSize: '0.96rem', fontWeight: 900, color: '#008751' }}>
+                            {c.soulsWon.toLocaleString()}
+                          </td>
+                          <td style={{ padding: '14px 16px', fontSize: '0.85rem' }}>
+                            <span
+                              style={{
+                                background: isMet ? '#ecfdf5' : '#fffbeb',
+                                color: isMet ? '#047857' : '#b45309',
+                                border: isMet ? '1px solid #a7f3d0' : '1px solid #fde68a',
+                                borderRadius: '6px',
+                                padding: '4px 10px',
+                                fontWeight: 800,
+                                fontSize: '0.78rem',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                              }}
+                            >
+                              {c.percentage}% {isMet ? '🏆' : ''}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
                 </tbody>
               </table>
             </div>
@@ -1003,24 +1100,32 @@ export const DirectoryView: React.FC = () => {
 
           {/* TAB 3: DIRECTORY OF SOULS */}
           {activeTab === 'souls' && (
-            <div style={{ overflowX: 'auto', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', background: 'rgba(15, 23, 42, 0.5)' }}>
+            <div
+              style={{
+                overflowX: 'auto',
+                borderRadius: '14px',
+                border: '1px solid #e2e8f0',
+                background: '#ffffff',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+              }}
+            >
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', background: '#ffffff' }}>
                 <thead>
-                  <tr style={{ background: 'rgba(0, 0, 0, 0.5)', borderBottom: '1px solid rgba(255, 255, 255, 0.15)' }}>
-                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#94a3b8', fontWeight: 800 }}>#</th>
+                  <tr style={{ background: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
+                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800 }}>#</th>
                     <th
                       onClick={() => handleSort('name')}
-                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>CONVERT NAME</span>
                         {renderSortIcon('name')}
                       </div>
                     </th>
-                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800 }}>PHONE / LOCATION</th>
+                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800 }}>PHONE / LOCATION</th>
                     <th
                       onClick={() => handleSort('pcfName')}
-                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>PCF / FELLOWSHIP</span>
@@ -1030,7 +1135,7 @@ export const DirectoryView: React.FC = () => {
                     {!isChurchAdmin && (
                       <th
                         onClick={() => handleSort('churchName')}
-                        style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                        style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span>CHURCH</span>
@@ -1041,7 +1146,7 @@ export const DirectoryView: React.FC = () => {
                     {!isChurchAdmin && !isGroupAdmin && (
                       <th
                         onClick={() => handleSort('groupName')}
-                        style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                        style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                           <span>GROUP</span>
@@ -1049,11 +1154,11 @@ export const DirectoryView: React.FC = () => {
                         </div>
                       </th>
                     )}
-                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800 }}>FAITH STATUS</th>
-                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800 }}>RECORDED BY</th>
+                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800 }}>FAITH STATUS</th>
+                    <th style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800 }}>RECORDED BY</th>
                     <th
                       onClick={() => handleSort('createdAt')}
-                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 800, cursor: 'pointer' }}
+                      style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#1e293b', fontWeight: 800, cursor: 'pointer' }}
                     >
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>DATE RECORDED</span>
@@ -1063,87 +1168,111 @@ export const DirectoryView: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredSouls.map((r, idx) => (
-                    <tr
-                      key={r.id}
-                      style={{
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-                        background: idx % 2 === 0 ? 'rgba(0, 0, 0, 0.15)' : 'transparent',
-                      }}
-                    >
-                      <td style={{ padding: '12px 16px', fontSize: '0.82rem', color: '#94a3b8', fontWeight: 700 }}>
-                        #{idx + 1}
-                      </td>
-                      <td style={{ padding: '12px 16px', fontSize: '0.88rem', fontWeight: 800, color: '#ffffff' }}>
-                        {r.name}
-                      </td>
-                      <td style={{ padding: '12px 16px', fontSize: '0.8rem', color: '#cbd5e1' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                          <Phone size={13} style={{ color: '#00ff87' }} />
-                          <span>{r.phone}</span>
-                        </div>
-                        {r.location && r.location !== '—' && (
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px', color: '#94a3b8', fontSize: '0.74rem' }}>
-                            <MapPin size={12} />
-                            <span>{r.location}</span>
-                          </div>
-                        )}
-                      </td>
-                      <td style={{ padding: '12px 16px', fontSize: '0.82rem', color: '#38bdf8', fontWeight: 700 }}>
-                        {r.pcfName || '—'}
-                      </td>
-                      {!isChurchAdmin && (
-                        <td style={{ padding: '12px 16px', fontSize: '0.82rem', color: '#ffffff' }}>
-                          {r.churchName}
-                        </td>
-                      )}
-                      {!isChurchAdmin && !isGroupAdmin && (
-                        <td style={{ padding: '12px 16px', fontSize: '0.82rem', color: '#94a3b8' }}>
-                          {r.groupName}
-                        </td>
-                      )}
-                      <td style={{ padding: '12px 16px', fontSize: '0.78rem' }}>
-                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                          {r.isBornAgain && (
-                            <span
-                              style={{
-                                background: 'rgba(0, 255, 135, 0.12)',
-                                border: '1px solid rgba(0, 255, 135, 0.3)',
-                                color: '#00ff87',
-                                padding: '2px 6px',
-                                borderRadius: '4px',
-                                fontSize: '0.72rem',
-                                fontWeight: 800,
-                              }}
-                            >
-                              Born Again ✓
-                            </span>
-                          )}
-                          {r.isFilledWithHolySpirit && (
-                            <span
-                              style={{
-                                background: 'rgba(255, 215, 0, 0.12)',
-                                border: '1px solid rgba(255, 215, 0, 0.3)',
-                                color: '#FFD700',
-                                padding: '2px 6px',
-                                borderRadius: '4px',
-                                fontSize: '0.72rem',
-                                fontWeight: 800,
-                              }}
-                            >
-                              Holy Spirit 🔥
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td style={{ padding: '12px 16px', fontSize: '0.82rem', color: '#cbd5e1' }}>
-                        {r.soulWinnerName}
-                      </td>
-                      <td style={{ padding: '12px 16px', fontSize: '0.76rem', color: '#94a3b8' }}>
-                        {new Date(r.createdAt).toLocaleString()}
+                  {filteredSouls.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={isChurchAdmin ? 7 : isGroupAdmin ? 8 : 9}
+                        style={{ padding: '48px 20px', textAlign: 'center', color: '#64748b', fontSize: '0.9rem', fontWeight: 600 }}
+                      >
+                        No souls found matching the current search & filter criteria.
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    filteredSouls.map((r, idx) => (
+                      <tr
+                        key={r.id}
+                        style={{
+                          borderBottom: '1px solid #f1f5f9',
+                          background: idx % 2 === 0 ? '#ffffff' : '#f8fafc',
+                        }}
+                      >
+                        <td style={{ padding: '14px 16px', fontSize: '0.82rem', color: '#64748b', fontWeight: 700 }}>
+                          #{idx + 1}
+                        </td>
+                        <td style={{ padding: '14px 16px', fontSize: '0.92rem', fontWeight: 800, color: '#0f172a' }}>
+                          {r.name}
+                        </td>
+                        <td style={{ padding: '14px 16px', fontSize: '0.82rem' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <Phone size={13} style={{ color: '#008751' }} />
+                            <span style={{ color: '#008751', fontWeight: 700, fontFamily: 'monospace' }}>{r.phone}</span>
+                          </div>
+                          {r.location && r.location !== '—' && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px', color: '#64748b', fontSize: '0.76rem', fontWeight: 600 }}>
+                              <MapPin size={12} style={{ color: '#94a3b8' }} />
+                              <span>{r.location}</span>
+                            </div>
+                          )}
+                        </td>
+                        <td style={{ padding: '14px 16px' }}>
+                          <span
+                            style={{
+                              background: '#f0f9ff',
+                              border: '1px solid #bae6fd',
+                              color: '#0369a1',
+                              padding: '4px 9px',
+                              borderRadius: '6px',
+                              fontSize: '0.8rem',
+                              fontWeight: 700,
+                              display: 'inline-block',
+                            }}
+                          >
+                            {r.pcfName || '—'}
+                          </span>
+                        </td>
+                        {!isChurchAdmin && (
+                          <td style={{ padding: '14px 16px', fontSize: '0.86rem', color: '#0f172a', fontWeight: 700 }}>
+                            {r.churchName}
+                          </td>
+                        )}
+                        {!isChurchAdmin && !isGroupAdmin && (
+                          <td style={{ padding: '14px 16px', fontSize: '0.84rem', color: '#475569', fontWeight: 600 }}>
+                            {r.groupName}
+                          </td>
+                        )}
+                        <td style={{ padding: '14px 16px' }}>
+                          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                            {r.isBornAgain && (
+                              <span
+                                style={{
+                                  background: '#ecfdf5',
+                                  border: '1px solid #a7f3d0',
+                                  color: '#047857',
+                                  padding: '3px 8px',
+                                  borderRadius: '6px',
+                                  fontSize: '0.74rem',
+                                  fontWeight: 800,
+                                }}
+                              >
+                                Born Again ✓
+                              </span>
+                            )}
+                            {r.isFilledWithHolySpirit && (
+                              <span
+                                style={{
+                                  background: '#fff7ed',
+                                  border: '1px solid #fed7aa',
+                                  color: '#c2410c',
+                                  padding: '3px 8px',
+                                  borderRadius: '6px',
+                                  fontSize: '0.74rem',
+                                  fontWeight: 800,
+                                }}
+                              >
+                                Holy Spirit 🔥
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td style={{ padding: '14px 16px', fontSize: '0.84rem', color: '#334155', fontWeight: 600 }}>
+                          {r.soulWinnerName}
+                        </td>
+                        <td style={{ padding: '14px 16px', fontSize: '0.78rem', color: '#64748b', fontWeight: 600 }}>
+                          {new Date(r.createdAt).toLocaleString()}
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
