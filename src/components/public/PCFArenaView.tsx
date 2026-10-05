@@ -52,16 +52,16 @@ export function formatPCFName(rawIdOrName?: string): string | null {
   if (lower === 'pre-eminent' || lower === 'preeminent') {
     return 'Pre-eminent PCF';
   }
-  if (lower === 'men-of-valor' || lower === 'men of valor') {
+  if (lower === 'men-of-valor' || lower === 'men of valor' || lower === 'men of valour' || lower.includes('men of valo')) {
     return 'Men of Valor PCF';
   }
-  if (lower === 'city-of-light' || lower === 'city of light') {
+  if (lower === 'city-of-light' || lower === 'city of light' || lower.includes('city of light')) {
     return 'City of Light PCF';
   }
   if (lower === 'phenomenal' || lower.includes('phenomenal')) {
     return 'Phenomenal Grace PCF';
   }
-  if (lower === 'exclusive' || lower === 'exclusive pcf') {
+  if (lower === 'exclusive' || lower === 'exclusive pcf' || lower.includes('exclusive')) {
     return 'Exclusive PCF';
   }
   if (lower === 'virtuous-pillars' || lower.includes('virtuous pillars')) {
@@ -91,7 +91,7 @@ export function formatPCFName(rawIdOrName?: string): string | null {
   if (lower === 'elite-haven' || lower.includes('elite haven')) {
     return 'Elite Haven PCF';
   }
-  if (lower === 'anointed-champions' || lower.includes('anointed champions')) {
+  if (lower === 'anointed-champions' || lower.includes('anointed champions') || lower.includes('anointed champion')) {
     return 'Anointed Champions PCF';
   }
   if (lower === 'radiant-ladies' || lower.includes('radiant ladies')) {
@@ -109,6 +109,90 @@ export function formatPCFName(rawIdOrName?: string): string | null {
   if (lower === 'luxuriant-growth' || lower.includes('luxuriant growth')) {
     return 'Luxuriant Growth PCF';
   }
+  if (lower === 'medical' || lower.includes('medical')) {
+    return 'Medical PCF';
+  }
+  if (lower === 'kinging' || lower.includes('kinging')) {
+    return 'Kinging PCF';
+  }
+  if (lower === 'supernatural' || lower.includes('supernatural')) {
+    return 'Supernatural PCF';
+  }
+  if (lower === 'favour' || lower === 'favor' || lower.includes('favour') || lower.includes('favor')) {
+    return 'Favour PCF';
+  }
+  if (lower === 'exousia' || lower.includes('exousia')) {
+    return 'Exousia PCF';
+  }
+  if (lower === 'makarios' || lower.includes('makarios')) {
+    return 'Makarios PCF';
+  }
+  if (lower === 'oasis' || lower.includes('oasis')) {
+    return 'Oasis PCF';
+  }
+  if (lower === 'executives' || lower.includes('executives')) {
+    return 'Executives PCF';
+  }
+  if (lower === 'relevant' || lower.includes('relevant')) {
+    return 'Relevant PCF';
+  }
+  if (lower === 'chesed' || lower.includes('chesed')) {
+    return 'Chesed PCF';
+  }
+  if (lower === 'rhema' || lower.includes('rhema')) {
+    return 'Rhema PCF';
+  }
+  if (lower === 'insight' || lower.includes('insight')) {
+    return 'Insight PCF';
+  }
+  if (lower === 'gracious' || lower === 'gracious pcf' || lower.includes('gracious pcf')) {
+    return 'Gracious PCF';
+  }
+  if (lower === 'royalties' || lower.includes('royalties')) {
+    return 'Royalties PCF';
+  }
+  if (lower === 'harvesters' || lower.includes('harvesters')) {
+    return 'Harvesters PCF';
+  }
+  if (lower === 'legal' || lower.includes('legal')) {
+    return 'Legal PCF';
+  }
+  if (lower === 'stars' || lower.includes('stars')) {
+    return 'Stars PCF';
+  }
+  if (lower === 'banah' || lower.includes('banah')) {
+    return 'Banah PCF';
+  }
+  if (lower === 'iconic' || lower.includes('iconic')) {
+    return 'Iconic PCF';
+  }
+  if (lower === 'boundless' || lower.includes('boundless')) {
+    return 'Boundless PCF';
+  }
+  if (lower.includes('pearl')) {
+    return 'Pearl PCF';
+  }
+  if (lower.includes('brook')) {
+    return 'Brook Cell';
+  }
+  if (lower.includes('dunamis')) {
+    return 'Dunamis Cell';
+  }
+  if (lower.includes('excellent')) {
+    return 'Excellent Cell';
+  }
+  if (lower.includes('excel') && !lower.includes('exclusive') && !lower.includes('exousia')) {
+    return 'Excel PCF';
+  }
+  if (lower.includes('lokogoma')) {
+    return 'CE Lokogoma PCF';
+  }
+  if (lower.includes('lord')) {
+    return 'Lords & Kings PCF';
+  }
+  if (lower.includes('fullness')) {
+    return 'CE Fullness PCF';
+  }
 
   // Already ends with PCF
   if (lower.endsWith('pcf')) {
@@ -119,7 +203,58 @@ export function formatPCFName(rawIdOrName?: string): string | null {
   return `${title} PCF`;
 }
 
-function classifyRecordService(r: SoulWinningRecord): 'service-1' | 'service-2' | null {
+// Canonical Service 1 PCFs (Zonal Church 1)
+export const SERVICE_1_PCFS = new Set([
+  'Exclusive PCF',
+  'Kinging PCF',
+  'Virtuous Pillars PCF',
+  'Amazing Women PCF',
+  'Limitless Grace PCF',
+  'Makarios PCF',
+  'Prime Haven PCF',
+  'Executives PCF',
+  'Gracious Haven PCF',
+  'Chesed PCF',
+  'Rhema PCF',
+  'Great Grace PCF',
+  'Insight PCF',
+  'Extravagant Grace PCF',
+  'Gracious PCF',
+  'Legal PCF',
+  'Creative Outreach PCF',
+  'Elite Haven PCF',
+  'Gracious Pcf First Service PCF',
+]);
+
+// Canonical Service 2 PCFs (Zonal Church 2)
+export const SERVICE_2_PCFS = new Set([
+  'BITW PCF',
+  'Huios PCF',
+  'Anointed Champions PCF',
+  'Medical PCF',
+  'City of Light PCF',
+  'Pre-eminent PCF',
+  'Supernatural PCF',
+  'Favour PCF',
+  'Men of Valor PCF',
+  'Exousia PCF',
+  'Phenomenal Grace PCF',
+  'Light Bearers PCF',
+  'Oasis PCF',
+  'Relevant PCF',
+  'Radiant Ladies PCF',
+  'Royalties PCF',
+  'Vibrant Generation PCF',
+  'Luxuriant Growth PCF',
+  'Business Strategic PCF',
+  'Harvesters PCF',
+  'Boundless PCF',
+  'Stars PCF',
+  'Iconic PCF',
+  'Banah PCF',
+]);
+
+function classifyRecordService(r: SoulWinningRecord, resolvedPCF?: string | null): 'service-1' | 'service-2' | null {
   const pid = (r.pcfId || '').toLowerCase();
   const cid = (r.churchId || '').toLowerCase();
   const cname = (r.churchName || '').toLowerCase();
@@ -157,6 +292,13 @@ function classifyRecordService(r: SoulWinningRecord): 'service-1' | 'service-2' 
     email.includes('znc2')
   ) {
     return 'service-2';
+  }
+
+  // 4. Fallback to canonical PCF membership
+  const pcf = resolvedPCF !== undefined ? resolvedPCF : extractRecordPCF(r);
+  if (pcf) {
+    if (SERVICE_1_PCFS.has(pcf)) return 'service-1';
+    if (SERVICE_2_PCFS.has(pcf)) return 'service-2';
   }
 
   return null;
