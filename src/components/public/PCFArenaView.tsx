@@ -515,8 +515,29 @@ export const PCFArenaView: React.FC<PCFArenaViewProps> = ({ isBigScreen = false,
       })
       .sort((a, b) => b.soulsWon - a.soulsWon || a.name.localeCompare(b.name));
 
-    // Combined all real PCFs across both services
-    const allPcfs = [...s1PcfList, ...s2PcfList].sort((a, b) => b.soulsWon - a.soulsWon);
+    // Combined all real PCFs across both services, merging multi-service PCFs (e.g. BITW PCF with 340 + 28 = 368)
+    const combinedPcfMap = new Map<string, PCFStat>();
+    const totalZonal = (s1Souls + s2Souls) || 1;
+
+    [...s1PcfList, ...s2PcfList].forEach((p) => {
+      const existing = combinedPcfMap.get(p.name);
+      if (!existing) {
+        combinedPcfMap.set(p.name, {
+          ...p,
+          id: `comb-${p.name}`,
+          serviceLabel: p.serviceLabel,
+          percentageOfService: Math.round((p.soulsWon / totalZonal) * 100),
+        });
+      } else {
+        existing.soulsWon += p.soulsWon;
+        existing.serviceLabel = 'Combined Services';
+        existing.percentageOfService = Math.round((existing.soulsWon / totalZonal) * 100);
+      }
+    });
+
+    const allPcfs = Array.from(combinedPcfMap.values()).sort(
+      (a, b) => b.soulsWon - a.soulsWon || a.name.localeCompare(b.name)
+    );
 
     // Leader & battle clash percentages
     const totalClash = s1Souls + s2Souls;
@@ -1028,16 +1049,16 @@ export const PCFArenaView: React.FC<PCFArenaViewProps> = ({ isBigScreen = false,
                               fontWeight: '800',
                               padding: '1px 6px',
                               borderRadius: '4px',
-                              background: isService1 ? 'rgba(0, 135, 81, 0.1)' : 'rgba(217, 119, 6, 0.1)',
-                              color: isService1 ? '#008751' : '#d97706',
-                              border: `1px solid ${isService1 ? 'rgba(0, 135, 81, 0.25)' : 'rgba(217, 119, 6, 0.25)'}`,
+                              background: pcf.serviceLabel === 'Combined Services' ? 'rgba(124, 58, 237, 0.1)' : isService1 ? 'rgba(0, 135, 81, 0.1)' : 'rgba(217, 119, 6, 0.1)',
+                              color: pcf.serviceLabel === 'Combined Services' ? '#7c3aed' : isService1 ? '#008751' : '#d97706',
+                              border: `1px solid ${pcf.serviceLabel === 'Combined Services' ? 'rgba(124, 58, 237, 0.25)' : isService1 ? 'rgba(0, 135, 81, 0.25)' : 'rgba(217, 119, 6, 0.25)'}`,
                               fontFamily: "'Orbitron', sans-serif",
                             }}
                           >
-                            {isService1 ? 'SERVICE 1' : 'SERVICE 2'}
+                            {pcf.serviceLabel === 'Combined Services' ? 'COMBINED' : isService1 ? 'SERVICE 1' : 'SERVICE 2'}
                           </span>
                           <span style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: '700' }}>
-                            {isService1 ? 'Zonal Church 1' : 'Zonal Church 2'}
+                            {pcf.serviceLabel === 'Combined Services' ? 'Zonal Church 1 & 2' : isService1 ? 'Zonal Church 1' : 'Zonal Church 2'}
                           </span>
                         </div>
                       </div>
