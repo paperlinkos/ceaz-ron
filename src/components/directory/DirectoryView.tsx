@@ -308,16 +308,54 @@ export const DirectoryView: React.FC = () => {
     return 'Leadership Directory';
   }, [isSuperAdmin, isZoneAdmin, isGroupAdmin, isChurchAdmin, data, userScope.groupId, userScope.churchId]);
 
-  // Export current view CSV
+  // Export current view CSV named by Church, Group, PCF, and Date for easy sorting
   const handleExportCSV = () => {
     if (!data) return;
-    const timestamp = Date.now();
+    const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const sanitize = (str: string) =>
+      str
+        .replace(/[^a-zA-Z0-9_\-]/g, '_')
+        .replace(/_+/g, '_')
+        .replace(/^_|_$/g, '');
+
+    // Active Church context
+    const activeChurchId = isChurchAdmin && userScope.churchId ? userScope.churchId : selectedChurchFilter;
+    const activeChurchObj = activeChurchId !== 'all' ? data.churches.find((c) => c.id === activeChurchId) : null;
+
+    // Active Group context
+    const activeGroupId = isGroupAdmin && userScope.groupId ? userScope.groupId : selectedGroupFilter;
+    const activeGroupObj = activeGroupId !== 'all' ? data.groups.find((g) => g.id === activeGroupId) : null;
+
+    // Active PCF context
+    const activePcf = selectedPcfFilter !== 'all' ? selectedPcfFilter : null;
+
     if (activeTab === 'groups') {
-      exportGroupsCSV(filteredGroups, `ceaz1_groups_directory_${timestamp}.csv`);
+      const groupPrefix = activeGroupObj ? `Group_${sanitize(activeGroupObj.name)}_` : 'CEAZ1_All_Groups_';
+      const filename = `${groupPrefix}Directory_${today}.csv`;
+      exportGroupsCSV(filteredGroups, filename);
     } else if (activeTab === 'churches') {
-      exportChurchesCSV(filteredChurches, `ceaz1_churches_directory_${timestamp}.csv`);
+      const groupPrefix = activeGroupObj ? `Group_${sanitize(activeGroupObj.name)}_` : 'CEAZ1_All_Churches_';
+      const filename = `${groupPrefix}Directory_${today}.csv`;
+      exportChurchesCSV(filteredChurches, filename);
     } else {
-      exportRecordsCSV(filteredSouls, `ceaz1_souls_directory_${timestamp}.csv`);
+      // activeTab === 'souls' (Directory of Souls / Names)
+      const nameParts: string[] = [];
+
+      if (activeChurchObj) {
+        nameParts.push(`Church_${sanitize(activeChurchObj.name)}`);
+      } else if (activeGroupObj) {
+        nameParts.push(`Group_${sanitize(activeGroupObj.name)}`);
+      } else {
+        nameParts.push('CEAZ1_Zonal');
+      }
+
+      if (activePcf) {
+        nameParts.push(`PCF_${sanitize(activePcf)}`);
+      }
+
+      nameParts.push(`Souls_Directory_${today}.csv`);
+      const filename = nameParts.join('_');
+      exportRecordsCSV(filteredSouls, filename);
     }
   };
 

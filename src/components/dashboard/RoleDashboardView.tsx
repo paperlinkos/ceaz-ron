@@ -202,8 +202,10 @@ export const RoleDashboardView: React.FC<RoleDashboardViewProps> = ({ onNavigate
       r.isFilledWithHolySpirit !== false ? 'Yes' : 'No',
       new Date(r.createdAt).toLocaleString(),
     ]);
+    const today = new Date().toISOString().slice(0, 10);
+    const sanitizedOrgName = data.activeOrgName.replace(/[^a-zA-Z0-9_\-]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
     const csv = generateCSV(headers, rows);
-    downloadCSVFile(`${data.activeOrgName.replace(/[^a-zA-Z0-9_-]/g, '_')}_souls_report.csv`, csv);
+    downloadCSVFile(`${sanitizedOrgName}_Souls_Report_${today}.csv`, csv);
   };
 
   return (

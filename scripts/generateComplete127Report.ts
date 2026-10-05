@@ -146,6 +146,13 @@ console.log(`Total church targets sum: ${totalChurchTarget} (should be 50,000)`)
 console.log(`Total group targets sum: ${totalGroupTarget} (should be 50,000)`);
 console.log(`Total groups in report: ${d.groups.length} (should be 24)`);
 
+const f = (n: number) => (n ?? 0).toLocaleString('en-US');
+const zcgSouls = d.groups.find((g: any) => g.id === 'grp-zonal-church')?.souls || 0;
+const zcgPct = d.total > 0 ? ((zcgSouls / d.total) * 100).toFixed(1) : '0';
+const zonalPct = ((d.total / 50000) * 100).toFixed(1);
+const baPct = d.total > 0 ? ((d.bornAgain / d.total) * 100).toFixed(1) : '0';
+const hsPct = d.total > 0 ? ((d.holySpirit / d.total) * 100).toFixed(1) : '0';
+
 const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -315,11 +322,11 @@ tr.r3 td{background:linear-gradient(90deg,#f0d8b5,#fdf5ec);font-weight:600}
   <div style="background:var(--d);color:#fff;border-radius:8px;padding:4.5mm 5.5mm;margin-top:3.5mm">
     <div style="font-size:8.5px;text-transform:uppercase;letter-spacing:.14em;color:#4ade80;font-weight:800;margin-bottom:5px">Leadership Perspective</div>
     <p style="font-size:10.5px;line-height:1.65;color:rgba(255,255,255,.85)">
-      With <strong style="color:#fff">18,802 souls recorded</strong> against a campaign goal of 50,000,
-      CEAZ1 has achieved <strong style="color:#4ade80">37.6%</strong> of its overall zonal target.
-      Zonal Church Group leads all groups with <strong style="color:#fff">6,473 souls (34.4% of the Zone)</strong>,
-      while CE Bwari Main (<strong>178.8%</strong>), CE Gwagwalada 2 (<strong>167.0%</strong>),
-      CE Gwarinpa 1 (<strong>124.9%</strong>), and CE Kubwa (<strong>109.4%</strong>)
+      With <strong style="color:#fff">${f(d.total)} souls recorded</strong> against a campaign goal of 50,000,
+      CEAZ1 has achieved <strong style="color:#4ade80">${zonalPct}%</strong> of its overall zonal target.
+      Zonal Church Group leads all groups with <strong style="color:#fff">${f(zcgSouls)} souls (${zcgPct}% of the Zone)</strong>,
+      while churches across the zone including Zonal Church 2 (<strong>${((3545 / 3500) * 100).toFixed(1)}%</strong>),
+      CE Kuduru (<strong>${((328 / 100) * 100).toFixed(1)}%</strong>), and CE KBS (<strong>${((437 / 400) * 100).toFixed(1)}%</strong>)
       have surpassed their assigned individual church targets. The harvest continues across all 127 churches.
     </p>
   </div>
@@ -446,8 +453,8 @@ tr.r3 td{background:linear-gradient(90deg,#f0d8b5,#fdf5ec);font-weight:600}
   </div>
   <div style="font-family:Orbitron;font-size:11.5px;margin:4.5mm 0 2mm;color:var(--g);font-weight:700">Zonal Church Service Breakdown</div>
   <div class="zon">
-    <div><b>1,741</b>Zonal Church 1<br><small style="color:#9fd8bd;font-size:8px">Souls recorded (Service 1)</small></div>
-    <div><b>3,545</b>Zonal Church 2<br><small style="color:#9fd8bd;font-size:8px">Souls recorded (Service 2)</small></div>
+    <div><b>${f(d.zonalFirst || 1747)}</b>Zonal Church 1<br><small style="color:#9fd8bd;font-size:8px">Souls recorded (Service 1)</small></div>
+    <div><b>${f(d.zonalSecond || 3545)}</b>Zonal Church 2<br><small style="color:#9fd8bd;font-size:8px">Souls recorded (Service 2)</small></div>
   </div>
   <div class="ft"><span>Reach Out Nigeria 2026 · CEAZ1</span><span>PCF &amp; Fellowships · Page 6</span></div>
 </section>
@@ -467,8 +474,8 @@ tr.r3 td{background:linear-gradient(90deg,#f0d8b5,#fdf5ec);font-weight:600}
   <div style="background:var(--d);color:#fff;border-radius:8px;padding:5mm 6mm;margin-top:6mm">
     <div style="font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:#4ade80;font-weight:800;margin-bottom:6px">Spiritual Measurement</div>
     <p style="font-size:11px;line-height:1.7;color:rgba(255,255,255,.82)">
-      Of 18,802 souls recorded, <strong style="color:#fff">16,229 (86.3%)</strong> were confirmed Born Again
-      and <strong style="color:#fff">12,396 (65.9%)</strong> were confirmed Filled with the Holy Spirit.
+      Of ${f(d.total)} souls recorded, <strong style="color:#fff">${f(d.bornAgain)} (${baPct}%)</strong> were confirmed Born Again
+      and <strong style="color:#fff">${f(d.holySpirit)} (${hsPct}%)</strong> were confirmed Filled with the Holy Spirit.
       These spiritual outcomes are tracked per soul record in the RON platform database.
     </p>
   </div>
@@ -491,7 +498,7 @@ tr.r3 td{background:linear-gradient(90deg,#f0d8b5,#fdf5ec);font-weight:600}
   <div style="font-size:40px;margin-bottom:5mm">✝</div>
   <q>"And they that be wise shall shine as the brightness of the firmament; and they that turn many to righteousness as the stars for ever and ever."</q>
   <cite>DANIEL 12:3</cite>
-  <div class="bignum">18,802</div>
+  <div class="bignum">${f(d.total)}</div>
   <div style="color:#9fd8bd;font-size:12px;margin-bottom:8mm">Souls recorded in the CEAZ1 RON Campaign</div>
   <p>With heartfelt thanks to every soul winner, group leader, pastor, PCF leader, fellowship head, church representative and the CEAZ1 campaign coordination team whose dedication made Reach Out Nigeria 2026 possible across Abuja FCT.</p>
   <div class="clfin">
@@ -541,8 +548,8 @@ document.getElementById('tag').textContent = f(D.total) + ' Souls Recorded';
 // ---- SUMMARY CARDS (Monochrome icons) ----
 document.getElementById('cards').innerHTML = [
   ['gold', ICONS.trophy, D.total, 'Total Souls Won'],
-  ['', ICONS.dove, D.bornAgain, 'Born Again (86.3%)'],
-  ['', ICONS.flame, D.holySpirit, 'Filled Holy Spirit (65.9%)'],
+  ['', ICONS.dove, D.bornAgain, 'Born Again (' + ((D.bornAgain/D.total)*100).toFixed(1) + '%)'],
+  ['', ICONS.flame, D.holySpirit, 'Filled Holy Spirit (' + ((D.holySpirit/D.total)*100).toFixed(1) + '%)'],
   ['', ICONS.users, D.groups.length, 'Participating Groups'],
   ['', ICONS.church, D.allChurches.length, 'Official Churches (127)'],
   ['', ICONS.chart, p1(coverPct), 'Overall Target Achievement'],
