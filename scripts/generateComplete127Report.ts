@@ -721,5 +721,6 @@ document.getElementById('wall').innerHTML = winners.map(c => \`
 </html>
 `;
 
-writeFileSync('/Users/christembassyabujazone1/projects/ceaz-ron/public/ron-report-2026.html', html);
-console.log('✅ Generated 10-page report with ALL 127 churches!');
+writeFileSync('/Users/christembassyabujazone1/projects/ceaz-ron/public/ron-report-2026-full.html', html);
+console.log('✅ Generated 10-page report with ALL 127 churches into ron-report-2026-full.html!');
+

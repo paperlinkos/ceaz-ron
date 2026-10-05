@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reach Out Nigeria 2026 — CEAZ1 Executive Report</title>
+<title>Reach Out Nigeria 2026 — Executive Summary Report</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;600;700;800;900&display=swap" rel="stylesheet">
@@ -17,118 +17,98 @@ body{font-family:Inter,Arial,sans-serif;background:#c8d0cc;color:var(--ink)}
 @media print{body{background:#fff}.page{margin:0;box-shadow:none}.no-print{display:none!important}}
 .dark{background:linear-gradient(160deg,var(--d) 0%,var(--d2) 100%);color:#fff}
 .o{font-family:Orbitron,Inter,sans-serif}
-h2{font-family:Orbitron,sans-serif;font-size:20px;font-weight:700;color:var(--d)}
+h2{font-family:Orbitron,sans-serif;font-size:19px;font-weight:700;color:var(--d)}
 .dark h2{color:#fff}
-.hd{border-bottom:3px solid var(--g);padding-bottom:5px;margin-bottom:5.5mm;position:relative}
+.hd{border-bottom:3px solid var(--g);padding-bottom:5px;margin-bottom:5mm;position:relative}
 .hd:after{content:"";position:absolute;left:0;bottom:-3px;width:70px;height:3px;background:var(--gold)}
-.hd p{font-size:10.5px;color:var(--mut);margin-top:2px}
-.ft{position:absolute;left:14mm;right:14mm;bottom:7.5mm;display:flex;justify-content:space-between;font-size:8.5px;color:var(--mut);border-top:1px solid #e2e8f0;padding-top:4px}
+.hd p{font-size:10px;color:var(--mut);margin-top:2px}
+.dark .hd p{color:rgba(255,255,255,.65)}
+.ft{position:absolute;bottom:8mm;left:14mm;right:14mm;display:flex;justify-content:space-between;font-size:8px;color:#8a9990;border-top:1px solid #eaefec;padding-top:6px}
+.dark .ft{color:rgba(255,255,255,.4);border-top-color:rgba(255,255,255,.1)}
 
 /* ---- COVER ---- */
-.cover{display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;gap:0}
-.cover:before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(0,135,81,.35),transparent 70%);top:50mm;left:50%;transform:translateX(-50%)}
-.cover>*{position:relative}
-.org{font-size:11px;letter-spacing:4px;color:#9fd8bd;font-weight:600;margin-bottom:6mm}
-.cover h1{font-family:Orbitron;font-weight:900;font-size:46px;line-height:1.1;color:#fff;text-shadow:0 0 18px #00c46a,0 0 42px #008751;margin-bottom:3mm}
+.cover{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 20mm}
+.org{font-size:13px;letter-spacing:.22em;color:var(--gold);margin-bottom:5mm;font-weight:700}
+.cover h1{font-family:Orbitron,sans-serif;font-size:44px;line-height:1.05;font-weight:900;letter-spacing:.02em;margin-bottom:3mm}
 .cover h1 span{color:var(--gold)}
-.cover .sub{font-size:14px;color:#cfe9dc;margin-bottom:0}
-.ring-wrap{margin:8mm 0 4mm;position:relative;width:250px;height:250px;filter:drop-shadow(0 0 14px rgba(0,200,110,.5))}
-.ring-wrap .rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.ring-wrap b{font-family:Orbitron;font-size:40px;font-weight:900;color:#fff}
-.ring-wrap small{font-size:11px;color:#9fd8bd;margin-top:2px}
-.tag{font-size:15px;font-weight:700;color:var(--gold);margin-top:2mm}
-.cmeta{margin-top:7mm;font-size:11px;color:rgba(255,255,255,.55);line-height:2}
-.cmeta strong{color:white}
+.sub{font-size:15px;color:#9fd8bd;margin-bottom:9mm;font-weight:500;letter-spacing:.04em}
+.ring-wrap{position:relative;width:250px;height:250px;margin:0 auto 7mm}
+.ring-wrap svg{transform:rotate(-90deg)}
+.rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.rc b{font-family:Orbitron;font-size:48px;font-weight:900;color:#fff;line-height:1}
+.rc small{font-size:11px;color:#9fd8bd;margin-top:4px;letter-spacing:.06em}
+.tag{display:inline-block;background:#008751;color:#fff;font-family:Orbitron;font-size:13px;font-weight:700;padding:7px 22px;border-radius:24px;letter-spacing:.08em;margin-bottom:8mm}
+.cmeta{font-size:10px;color:rgba(255,255,255,.7);line-height:1.7;margin-top:2mm}
+.cmeta strong{color:#fff}
 .cfoot{position:absolute;bottom:10mm;left:14mm;right:14mm;display:flex;justify-content:space-between;font-size:8px;color:rgba(255,255,255,.4);border-top:1px solid rgba(255,255,255,.12);padding-top:8px}
 
 /* ---- CARDS ---- */
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:4.5mm;margin-bottom:5mm}
-.card{display:flex;flex-direction:column;padding:5mm 5.5mm;border-radius:8px;background:var(--sl);border-left:5px solid var(--g);position:relative;overflow:hidden}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:4mm;margin-bottom:4mm}
+.card{display:flex;flex-direction:column;padding:4.5mm 5mm;border-radius:8px;background:var(--sl);border-left:5px solid var(--g);position:relative;overflow:hidden}
 .card.gold{border-left-color:var(--gold);background:linear-gradient(135deg,#fffdf0,#fff8dc)}
-.card .ic{margin-bottom:2.5mm;display:flex;align-items:center}
+.card .ic{margin-bottom:2mm;display:flex;align-items:center}
 .card .ic svg{display:block}
-.card b{font-family:Orbitron;font-size:26px;font-weight:900;color:var(--d);display:block;line-height:1.1}
-.card span{font-size:10.5px;color:var(--mut);margin-top:2px}
-.lead{font-size:11.5px;line-height:1.65;color:#334;margin-bottom:5mm}
+.card b{font-family:Orbitron;font-size:24px;font-weight:900;color:var(--d);display:block;line-height:1.1}
+.card span{font-size:10px;color:var(--mut);margin-top:2px}
+.lead{font-size:11px;line-height:1.6;color:#334;margin-bottom:4mm}
 
-/* ---- MONOCHROME BADGES & ICONS ---- */
-.rk-badge{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-family:Orbitron,sans-serif;font-size:8px;font-weight:700}
+/* ---- BADGES & ICONS ---- */
+.rk-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;font-family:Orbitron,sans-serif;font-size:8.5px;font-weight:700}
 .rk-1{background:var(--d);color:var(--gold);border:1.5px solid var(--gold)}
 .rk-2{background:#1b2e25;color:#e2e8f0;border:1.5px solid #cbd5e1}
 .rk-3{background:#233b30;color:#fbd38d;border:1.5px solid #cd7f32}
-.rk-norm{color:var(--mut);font-family:Orbitron;font-size:8.5px;font-weight:600}
+.rk-norm{color:var(--mut);font-family:Orbitron;font-size:9px;font-weight:600}
 .bd-mono{display:inline-flex;align-items:center;gap:2px;background:#0d2a1d;color:#4ade80;border:1px solid #166534;font-size:7.5px;font-weight:700;border-radius:3px;padding:1px 4px}
 .bd-mono svg{width:8px;height:8px}
 
 /* ---- TABLES ---- */
 table{width:100%;border-collapse:collapse;font-size:9.5px}
-th{background:var(--d);color:#fff;text-align:left;padding:5px 6px;font-weight:600;font-size:8.5px;letter-spacing:.02em}
-td{padding:2px 6px;border-bottom:1px solid #eaefec;vertical-align:middle}
+th{background:var(--d);color:#fff;text-align:left;padding:5.5px 7px;font-weight:600;font-size:8.5px;letter-spacing:.02em}
+td{padding:4.5px 7px;border-bottom:1px solid #eaefec;vertical-align:middle}
 .n{text-align:right;font-variant-numeric:tabular-nums}
-td.rk{width:9mm;text-align:center}
-.bar{height:5px;background:#e3eae6;border-radius:3px;overflow:hidden;width:45px;display:inline-block;vertical-align:middle;margin-right:4px}
+td.rk{width:10mm;text-align:center}
+.bar{height:5px;background:#e3eae6;border-radius:3px;overflow:hidden;width:48px;display:inline-block;vertical-align:middle;margin-right:4px}
 .bar i{display:block;height:100%;background:linear-gradient(90deg,#008751,#2fd18a);border-radius:3px}
-.pc{display:inline-block;width:30px;text-align:right;font-weight:700;font-size:8.5px;color:var(--g)}
+.pc{display:inline-block;width:32px;text-align:right;font-weight:700;font-size:8.5px;color:var(--g)}
 tr.r1 td{background:linear-gradient(90deg,#fff8c0,#fffef0);font-weight:600}
 tr.r2 td{background:linear-gradient(90deg,#e3e8ee,#f5f7f9);font-weight:600}
 tr.r3 td{background:linear-gradient(90deg,#f0d8b5,#fdf5ec);font-weight:600}
 .alt tbody tr:nth-child(even) td{background:#f9fbf9}
 
-/* Sub-churches under group */
-.sub-churches{font-size:7px;color:#5b6b62;margin-top:1px;line-height:1.2;font-weight:normal}
-.sub-ch-grp{font-size:6.8px;color:#5b6b62;margin-top:1px;line-height:1.15;font-weight:normal}
-.z-pct{font-weight:700;color:var(--g);font-size:8.5px}
+.sub-churches{font-size:7.5px;color:#5b6b62;margin-top:1.5px;line-height:1.25;font-weight:normal}
+.sub-ch-grp{font-size:7.5px;color:#5b6b62;margin-top:1px;font-weight:normal}
+.z-pct{font-weight:700;color:var(--g);font-size:9px}
 
-/* Church 2-column grid (32 rows per column, no overlap) */
-.church-grid{display:grid;grid-template-columns:1fr 1fr;gap:4.5mm}
-.church-grid table th{font-size:8px;padding:4px 5px}
-.church-grid table td{padding:1.8px 5px;height:4.6mm}
+/* DOUGHNUTS */
+.dn{display:grid;grid-template-columns:1fr 1fr;gap:4.5mm;margin-top:3.5mm}
+.dn>div{background:var(--sl);border-radius:8px;padding:3.5mm 4mm;text-align:center}
+.dn h3{font-family:Orbitron;font-size:11px;margin-bottom:2mm;color:var(--d)}
+.dn .w{position:relative;width:130px;height:130px;margin:0 auto 2mm}
+.dn .w svg{transform:rotate(-90deg)}
+.dn .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.dn .c b{font-family:Orbitron;font-size:24px;color:var(--d);line-height:1}
+.dn .c small{font-size:9px;color:var(--mut);margin-top:2px}
+.ms{display:flex;justify-content:center;gap:2mm;margin-top:2mm}
+.ms span{font-family:Orbitron;font-size:7.5px;padding:1px 5px;border-radius:3px;background:#e3eae6;color:var(--mut)}
+.ms span.on{background:var(--g);color:#fff;font-weight:700}
 
-/* PCF 2-column grid */
-.pcf-table-grid{display:grid;grid-template-columns:1fr 1fr;gap:4.5mm}
-.pcf-table-grid table th{font-size:8px;padding:4px 5px}
-.pcf-table-grid table td{padding:1.8px 5px;height:4.4mm}
-.pcf-sub{font-size:6.8px;color:#5b6b62}
+.zon{display:grid;grid-template-columns:1fr 1fr;gap:3.5mm;margin-top:3.5mm}
+.zon div{background:var(--d);color:#fff;border-radius:6px;padding:3.5mm 4mm;text-align:center}
+.zon b{font-family:Orbitron;font-size:20px;color:var(--gold);display:block;margin-bottom:1px}
 
-.zon{display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-top:4mm}
-.zon div{background:var(--d);color:#fff;border-radius:6px;padding:4mm;text-align:center}
-.zon b{font-family:Orbitron;font-size:24px;color:var(--gold);display:block;margin-bottom:2px}
+/* Side-by-side PCF Tables */
+.pcf-dual-grid{display:grid;grid-template-columns:1fr 1fr;gap:4.5mm;margin-top:3mm}
+.pcf-box{background:var(--sl);border-radius:8px;padding:3.5mm 4mm;border:1px solid #e2e8f0}
+.pcf-box-title{font-family:Orbitron;font-size:11px;font-weight:700;color:var(--d);margin-bottom:2.5mm;display:flex;justify-content:space-between;align-items:center}
+.pcf-box-title span{font-size:8px;color:var(--g);font-weight:600;font-family:Inter}
 
-/* ---- CHART ---- */
-.call{display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin-top:5mm}
-.call div{border:2px solid var(--gold);border-radius:6px;padding:4mm 5mm;background:#fffdf0}
-.call b{font-family:Orbitron;font-size:18px;display:block;color:var(--d)}
-.call span{font-size:10px;color:var(--mut)}
-
-/* ---- MILESTONES ---- */
-.dn{display:grid;grid-template-columns:1fr 1fr;gap:8mm;margin-top:6mm}
-.dn>div{text-align:center}
-.dn .w{position:relative;width:58mm;height:58mm;margin:0 auto 5mm}
-.dn .w .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.dn .w b{font-family:Orbitron;font-size:28px;font-weight:900;color:var(--g)}
-.dn .w small{font-size:10px;color:var(--mut)}
-.dn h3{font-size:14px;font-weight:700;margin-bottom:4mm;color:var(--d)}
-.ms{display:flex;gap:5px;justify-content:center}
-.ms span{width:13mm;height:13mm;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-size:9px;font-weight:700;background:#e8eeea;color:#9aa8a0;border:2px dashed #c3cfc8}
-.ms span.on{background:linear-gradient(135deg,#ffe766,#e0b400);color:#4a3a00;border:2px solid #b89500;box-shadow:0 2px 8px rgba(224,180,0,.45)}
-
-/* ---- TROPHY WALL ---- */
-.wall{display:grid;grid-template-columns:repeat(4,1fr);gap:3.5mm}
-.tr{text-align:center;border-radius:8px;padding:5mm 3mm;background:linear-gradient(160deg,var(--d),var(--d2));color:#fff;border:2px solid var(--gold)}
-.tr svg{margin:0 auto 2.5mm;display:block}
-.tr h4{font-size:11px;margin:2mm 0;font-weight:700}
-.tr b{font-family:Orbitron;font-size:19px;color:var(--gold);display:block}
-.tr small{font-size:9px;color:#9fd8bd}
-
-/* ---- CLOSING ---- */
-.close{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:0}
-.close:before{content:"";position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(0,135,81,.25),transparent 70%);bottom:-30mm;right:-20mm}
-.close>*{position:relative}
-.close q{font-family:Orbitron;font-size:18px;line-height:1.65;max-width:155mm;quotes:none;color:#fff;margin:10mm 0 4mm}
-.close cite{color:var(--gold);font-style:normal;font-weight:700;font-size:11px;letter-spacing:.1em;margin-bottom:14mm;display:block}
-.close p{font-size:11.5px;color:#cfe9dc;max-width:135mm;line-height:1.8}
-.close .bignum{font-family:Orbitron;font-size:48px;font-weight:900;color:#fff;text-shadow:0 0 20px #2fd18a;margin:8mm 0 3mm}
-.clfin{position:absolute;bottom:10mm;left:14mm;right:14mm;font-size:9px;color:rgba(255,255,255,.45);display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,.1);padding-top:6px}
+/* CLOSING */
+.close{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 24mm}
+.close q{font-size:16px;line-height:1.6;color:var(--gold);font-style:italic;margin-bottom:3mm;max-width:160mm}
+.close cite{font-family:Orbitron;font-size:10px;letter-spacing:.18em;color:#9fd8bd;margin-bottom:10mm;display:block}
+.bignum{font-family:Orbitron;font-size:68px;font-weight:900;color:#fff;line-height:1;margin-bottom:2mm}
+.close p{font-size:11px;line-height:1.75;color:rgba(255,255,255,.8);max-width:150mm;margin-bottom:8mm}
+.clfin{display:flex;justify-content:space-between;width:100%;max-width:160mm;font-size:8.5px;color:rgba(255,255,255,.4);border-top:1px solid rgba(255,255,255,.15);padding-top:8px}
 </style>
 </head>
 <body>
@@ -137,9 +117,9 @@ tr.r3 td{background:linear-gradient(90deg,#f0d8b5,#fdf5ec);font-weight:600}
 <section class="page dark cover">
   <div class="org o">CHRIST EMBASSY ABUJA ZONE 1 (CEAZ1)</div>
   <h1>REACH OUT<br><span>NIGERIA</span> 2026</h1>
-  <div class="sub">Soul Winning Campaign — Executive Report</div>
+  <div class="sub">Soul Winning Campaign — Executive Summary Report</div>
 
-  <div class="ring-wrap" id="ring"><!-- rendered by JS --></div>
+  <div class="ring-wrap" id="ring"></div>
   <div class="tag" id="tag"></div>
 
   <div class="cmeta">
@@ -155,193 +135,179 @@ tr.r3 td{background:linear-gradient(90deg,#f0d8b5,#fdf5ec);font-weight:600}
   </div>
 </section>
 
-<!-- ====== PAGE 2: EXECUTIVE SUMMARY ====== -->
+<!-- ====== PAGE 2: 1. GENERAL ====== -->
 <section class="page">
-  <div class="hd"><h2>Executive Summary</h2><p>Campaign results at a glance — 5 October 2026</p></div>
+  <div class="hd">
+    <h2>1. General Overview &amp; Headline Results</h2>
+    <p>Campaign performance at a glance — verified souls, targets, spiritual outcomes &amp; service distribution</p>
+  </div>
+
   <p class="lead">
-    Across Christ Embassy Abuja Zone 1, 24 groups and 127 churches mobilised their soul winners
-    to take the gospel to every corner of the FCT. This report captures the headline results as at
-    the latest data pull from the CEAZ1 RON tracker platform.
+    Across Christ Embassy Abuja Zone 1, 24 groups and 127 churches mobilised soul winners
+    to take the gospel to every corner of the FCT. This executive summary captures key results
+    from the CEAZ1 RON tracker platform.
   </p>
+
   <div class="cards" id="cards"></div>
-  <div style="background:var(--d);color:#fff;border-radius:8px;padding:4.5mm 5.5mm;margin-top:3.5mm">
-    <div style="font-size:8.5px;text-transform:uppercase;letter-spacing:.14em;color:#4ade80;font-weight:800;margin-bottom:5px">Leadership Perspective</div>
-    <p style="font-size:10.5px;line-height:1.65;color:rgba(255,255,255,.85)">
+
+  <div style="background:var(--d);color:#fff;border-radius:8px;padding:3.8mm 5mm;margin-top:2mm;margin-bottom:3.5mm">
+    <div style="font-size:8.5px;text-transform:uppercase;letter-spacing:.14em;color:#4ade80;font-weight:800;margin-bottom:3px">Leadership Perspective</div>
+    <p style="font-size:10px;line-height:1.6;color:rgba(255,255,255,.85)">
       With <strong style="color:#fff">18,961 souls recorded</strong> against a campaign goal of 50,000,
       CEAZ1 has achieved <strong style="color:#4ade80">37.9%</strong> of its overall zonal target.
       Zonal Church Group leads all groups with <strong style="color:#fff">6,479 souls (34.2% of the Zone)</strong>,
       while churches across the zone including Zonal Church 2 (<strong>101.3%</strong>),
       CE Kuduru (<strong>328.0%</strong>), and CE KBS (<strong>109.3%</strong>)
-      have surpassed their assigned individual church targets. The harvest continues across all 127 churches.
+      have surpassed their assigned individual church targets.
     </p>
   </div>
-  <div class="ft"><span>Reach Out Nigeria 2026 · CEAZ1</span><span>Executive Summary · Page 2</span></div>
-</section>
 
-<!-- ====== PAGE 3: GROUP RACE ====== -->
-<section class="page">
-  <div class="hd"><h2>Group Race Standings</h2><p>All 24 groups ranked by souls won — showing % of zone contributed, with member churches in smaller print underneath</p></div>
-  <table>
-    <thead>
-      <tr>
-        <th style="width:10mm">Rank</th>
-        <th>Group Name &amp; Member Churches</th>
-        <th class="n" style="width:18mm">Souls Won</th>
-        <th class="n" style="width:16mm">% of Zone</th>
-        <th class="n" style="width:16mm">Target</th>
-        <th style="width:26mm">% Achieved</th>
-      </tr>
-    </thead>
-    <tbody id="gt"></tbody>
-  </table>
-  <div class="ft"><span>Reach Out Nigeria 2026 · CEAZ1</span><span>Group Race · Page 3</span></div>
-</section>
-
-<!-- ====== PAGE 4: ALL 127 CHURCHES — PART 1 (RANKS 1-64) ====== -->
-<section class="page">
-  <div class="hd"><h2>All 127 Churches Standings — Part 1</h2><p>Official campaign standings (#1 to #64) — showing souls won, target achievement &amp; zone contribution</p></div>
-  <div class="church-grid">
-    <div>
-      <table class="alt">
-        <thead>
-          <tr>
-            <th style="width:7mm">#</th>
-            <th>Church &amp; Group Info</th>
-            <th class="n" style="width:14mm">Souls</th>
-            <th class="n" style="width:15mm">% Target</th>
-          </tr>
-        </thead>
-        <tbody id="ct1"></tbody>
-      </table>
-    </div>
-    <div>
-      <table class="alt">
-        <thead>
-          <tr>
-            <th style="width:7mm">#</th>
-            <th>Church &amp; Group Info</th>
-            <th class="n" style="width:14mm">Souls</th>
-            <th class="n" style="width:15mm">% Target</th>
-          </tr>
-        </thead>
-        <tbody id="ct2"></tbody>
-      </table>
-    </div>
+  <div class="hd" style="margin-top:2mm;margin-bottom:2.5mm;border-bottom-width:2px">
+    <h2 style="font-size:14px">Spiritual Milestones &amp; Service Units</h2>
+    <p>Confirmed spiritual impact and Zonal Church service split</p>
   </div>
-  <div class="ft"><span>Reach Out Nigeria 2026 · CEAZ1</span><span>Church Leaderboard (Part 1) · Page 4</span></div>
-</section>
 
-<!-- ====== PAGE 5: ALL 127 CHURCHES — PART 2 (RANKS 65-127) ====== -->
-<section class="page">
-  <div class="hd"><h2>All 127 Churches Standings — Part 2</h2><p>Official campaign standings (#65 to #127) — including active and pending mobilization units</p></div>
-  <div class="church-grid">
-    <div>
-      <table class="alt">
-        <thead>
-          <tr>
-            <th style="width:7mm">#</th>
-            <th>Church &amp; Group Info</th>
-            <th class="n" style="width:14mm">Souls</th>
-            <th class="n" style="width:15mm">% Target</th>
-          </tr>
-        </thead>
-        <tbody id="ct3"></tbody>
-      </table>
-    </div>
-    <div>
-      <table class="alt">
-        <thead>
-          <tr>
-            <th style="width:7mm">#</th>
-            <th>Church &amp; Group Info</th>
-            <th class="n" style="width:14mm">Souls</th>
-            <th class="n" style="width:15mm">% Target</th>
-          </tr>
-        </thead>
-        <tbody id="ct4"></tbody>
-      </table>
-    </div>
-  </div>
-  <div class="ft"><span>Reach Out Nigeria 2026 · CEAZ1</span><span>Church Leaderboard (Part 2) · Page 5</span></div>
-</section>
+  <div class="dn" id="dn"></div>
 
-<!-- ====== PAGE 6: PCF & FELLOWSHIP HIGHLIGHTS ====== -->
-<section class="page">
-  <div class="hd"><h2>PCF &amp; Fellowship Complete Roll Call</h2><p>All participating PCFs &amp; fellowships ranked by verified souls — including all service units</p></div>
-  <div class="pcf-table-grid">
-    <div>
-      <table class="alt">
-        <thead>
-          <tr>
-            <th style="width:7mm">#</th>
-            <th>PCF / Fellowship</th>
-            <th class="n" style="width:14mm">Souls</th>
-            <th class="n" style="width:16mm">% Service</th>
-          </tr>
-        </thead>
-        <tbody id="pcft1"></tbody>
-      </table>
-    </div>
-    <div>
-      <table class="alt">
-        <thead>
-          <tr>
-            <th style="width:7mm">#</th>
-            <th>PCF / Fellowship</th>
-            <th class="n" style="width:14mm">Souls</th>
-            <th class="n" style="width:16mm">% Service</th>
-          </tr>
-        </thead>
-        <tbody id="pcft2"></tbody>
-      </table>
-    </div>
-  </div>
-  <div style="font-family:Orbitron;font-size:11.5px;margin:4.5mm 0 2mm;color:var(--g);font-weight:700">Zonal Church Service Breakdown</div>
   <div class="zon">
     <div><b>1,747</b>Zonal Church 1<br><small style="color:#9fd8bd;font-size:8px">Souls recorded (Service 1)</small></div>
     <div><b>3,545</b>Zonal Church 2<br><small style="color:#9fd8bd;font-size:8px">Souls recorded (Service 2)</small></div>
   </div>
-  <div class="ft"><span>Reach Out Nigeria 2026 · CEAZ1</span><span>PCF &amp; Fellowships · Page 6</span></div>
+
+  <div class="ft"><span>Reach Out Nigeria 2026 · CEAZ1</span><span>1. General · Page 2</span></div>
 </section>
 
-<!-- ====== PAGE 7: DAILY ACTIVITY ====== -->
+<!-- ====== PAGE 3: 2. TOP 10 GROUPS ====== -->
 <section class="page">
-  <div class="hd"><h2>Daily Activity Surge</h2><p>Souls submitted per campaign day — Oct 1–5, 2026</p></div>
-  <div id="chart" style="margin-top:5mm"></div>
-  <div class="call" id="call"></div>
-  <div class="ft"><span>Reach Out Nigeria 2026 · CEAZ1</span><span>Activity Timeline · Page 7</span></div>
-</section>
-
-<!-- ====== PAGE 8: SPIRITUAL MILESTONES ====== -->
-<section class="page">
-  <div class="hd"><h2>Spiritual Milestones</h2><p>Born Again and Filled with the Holy Spirit — as recorded during soul winning</p></div>
-  <div class="dn" id="dn"></div>
-  <div style="background:var(--d);color:#fff;border-radius:8px;padding:5mm 6mm;margin-top:6mm">
-    <div style="font-size:9px;text-transform:uppercase;letter-spacing:.14em;color:#4ade80;font-weight:800;margin-bottom:6px">Spiritual Measurement</div>
-    <p style="font-size:11px;line-height:1.7;color:rgba(255,255,255,.82)">
-      Of 18,961 souls recorded, <strong style="color:#fff">16,387 (86.4%)</strong> were confirmed Born Again
-      and <strong style="color:#fff">12,456 (65.7%)</strong> were confirmed Filled with the Holy Spirit.
-      These spiritual outcomes are tracked per soul record in the RON platform database.
-    </p>
+  <div class="hd">
+    <h2>2. Top 10 Groups Standings</h2>
+    <p>The 10 leading groups ranked by verified souls won — including member churches and % of Zone contribution</p>
   </div>
-  <div class="ft"><span>Reach Out Nigeria 2026 · CEAZ1</span><span>Spiritual Milestones · Page 8</span></div>
-</section>
 
-<!-- ====== PAGE 9: 100% CLUB ====== -->
-<section class="page">
-  <div class="hd"><h2>100% Target Achievers</h2><p>Churches that reached or surpassed their assigned campaign soul-winning target</p></div>
-  <div class="wall" id="wall"></div>
-  <div style="margin-top:6mm;text-align:center;padding:5mm;border-radius:10px;background:var(--d);color:#fff">
-    <div style="font-family:Orbitron;font-size:24px;color:var(--gold);margin-bottom:4px">★ EVERY SOUL COUNTS ★</div>
-    <div style="font-size:10px;color:rgba(255,255,255,.65)">Recognition of excellence in the harvest — Christ Embassy Abuja Zone 1</div>
+  <table class="alt">
+    <thead>
+      <tr>
+        <th style="width:10mm">Rank</th>
+        <th>Group Name &amp; Member Churches</th>
+        <th class="n" style="width:20mm">Souls Won</th>
+        <th class="n" style="width:18mm">% of Zone</th>
+        <th class="n" style="width:18mm">Target</th>
+        <th style="width:30mm">% Achieved</th>
+      </tr>
+    </thead>
+    <tbody id="gt"></tbody>
+  </table>
+
+  <div style="background:#fffdf0;border:1.5px solid var(--gold);border-radius:7px;padding:3mm 4.5mm;margin-top:4mm;display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <b style="font-family:Orbitron;font-size:11px;color:var(--d);display:block">TOP 10 GROUPS HARVEST SHARE</b>
+      <span style="font-size:9.5px;color:var(--mut)">The top 10 groups account for the vast majority of all souls won in the campaign.</span>
+    </div>
+    <div style="text-align:right">
+      <b style="font-family:Orbitron;font-size:18px;color:var(--g)">85.0%</b>
+      <span style="font-size:8px;color:var(--mut);display:block">16,076 / 18,907 souls</span>
+    </div>
   </div>
-  <div class="ft"><span>Reach Out Nigeria 2026 · CEAZ1</span><span>Target Achievers · Page 9</span></div>
+
+  <div class="ft"><span>Reach Out Nigeria 2026 · CEAZ1</span><span>2. Top 10 Groups · Page 3</span></div>
 </section>
 
-<!-- ====== PAGE 10: CLOSING ====== -->
+<!-- ====== PAGE 4: 3. TOP 20 CHURCHES ====== -->
+<section class="page">
+  <div class="hd">
+    <h2>3. Top 20 Churches Standings</h2>
+    <p>The 20 leading churches across CEAZ1 ranked by souls won — showing group affiliation, targets &amp; % contribution</p>
+  </div>
+
+  <table class="alt">
+    <thead>
+      <tr>
+        <th style="width:9mm">#</th>
+        <th>Church &amp; Group Affiliation</th>
+        <th class="n" style="width:18mm">Souls Won</th>
+        <th class="n" style="width:18mm">Target</th>
+        <th class="n" style="width:22mm">% Target</th>
+        <th class="n" style="width:18mm">% of Zone</th>
+      </tr>
+    </thead>
+    <tbody id="ct"></tbody>
+  </table>
+
+  <div class="ft"><span>Reach Out Nigeria 2026 · CEAZ1</span><span>3. Top 20 Churches · Page 4</span></div>
+</section>
+
+<!-- ====== PAGE 5: 4 & 5. PCF STANDINGS ====== -->
+<section class="page">
+  <div class="hd">
+    <h2>4. Top 10 PCFs (Both Churches Combined)</h2>
+    <p>Unified ranking of the 10 leading PCFs / Fellowships across both Service 1 &amp; Service 2</p>
+  </div>
+
+  <table class="alt" style="margin-bottom:4mm">
+    <thead>
+      <tr>
+        <th style="width:9mm">#</th>
+        <th>PCF / Fellowship</th>
+        <th style="width:34mm">Church / Service Unit</th>
+        <th class="n" style="width:20mm">Souls Won</th>
+        <th class="n" style="width:24mm">% of Service</th>
+      </tr>
+    </thead>
+    <tbody id="pcft10"></tbody>
+  </table>
+
+  <div class="hd" style="border-bottom-width:2px;margin-bottom:3mm;padding-bottom:3px">
+    <h2 style="font-size:14px">5. Top 5 PCFs by Church (Service Breakdown)</h2>
+    <p>Top 5 ranking PCFs / Fellowships for Church 1 (Service 1) and Church 2 (Service 2)</p>
+  </div>
+
+  <div class="pcf-dual-grid">
+    <!-- Church 1 Top 5 -->
+    <div class="pcf-box">
+      <div class="pcf-box-title">
+        <span>• Church 1 (Zonal Church 1)</span>
+        <span>1,747 Total</span>
+      </div>
+      <table class="alt">
+        <thead>
+          <tr>
+            <th style="width:7mm">#</th>
+            <th>PCF Name</th>
+            <th class="n" style="width:15mm">Souls</th>
+            <th class="n" style="width:16mm">% Svc</th>
+          </tr>
+        </thead>
+        <tbody id="pcfc1"></tbody>
+      </table>
+    </div>
+
+    <!-- Church 2 Top 5 -->
+    <div class="pcf-box">
+      <div class="pcf-box-title">
+        <span>• Church 2 (Zonal Church 2)</span>
+        <span>3,545 Total</span>
+      </div>
+      <table class="alt">
+        <thead>
+          <tr>
+            <th style="width:7mm">#</th>
+            <th>PCF Name</th>
+            <th class="n" style="width:15mm">Souls</th>
+            <th class="n" style="width:16mm">% Svc</th>
+          </tr>
+        </thead>
+        <tbody id="pcfc2"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="ft"><span>Reach Out Nigeria 2026 · CEAZ1</span><span>4 &amp; 5. PCF Standings · Page 5</span></div>
+</section>
+
+<!-- ====== PAGE 6: CLOSING ====== -->
 <section class="page dark close">
   <div style="font-size:40px;margin-bottom:5mm">✝</div>
-  <q>"And they that be wise shall shine as the brightness of the firmament; and they that turn many to righteousness as the stars for ever and ever."</q>
+  <q>And they that be wise shall shine as the brightness of the firmament; and they that turn many to righteousness as the stars for ever and ever.</q>
   <cite>DANIEL 12:3</cite>
   <div class="bignum">18,961</div>
   <div style="color:#9fd8bd;font-size:12px;margin-bottom:8mm">Souls recorded in the CEAZ1 RON Campaign</div>
@@ -354,7 +320,6 @@ tr.r3 td{background:linear-gradient(90deg,#f0d8b5,#fdf5ec);font-weight:600}
 </section>
 
 <script>
-// ============ REAL DATA FROM FIREBASE (ALL 127 CHURCHES) ============
 const D = {
   "total": 18961,
   "target": 50000,
@@ -362,7 +327,7 @@ const D = {
   "holySpirit": 12456,
   "zonalFirst": 1747,
   "zonalSecond": 3545,
-  "groups": [
+  "top10Groups": [
     {
       "id": "grp-zonal-church",
       "name": "Zonal Church Group",
@@ -1080,570 +1045,9 @@ const D = {
           "pctOfTarget": 0
         }
       ]
-    },
-    {
-      "id": "grp-dei-dei",
-      "name": "Dei Dei Group",
-      "souls": 416,
-      "target": 2000,
-      "pctOfZone": 2.193977110911872,
-      "pctOfTarget": 20.8,
-      "churchCount": 1,
-      "churches": [
-        {
-          "id": "ch-ce-deidei-2",
-          "name": "CE Deidei 2",
-          "souls": 416,
-          "target": 2000,
-          "pctOfGroup": 100,
-          "pctOfTarget": 20.8
-        }
-      ]
-    },
-    {
-      "id": "grp-new-horizon",
-      "name": "New Horizon Group",
-      "souls": 394,
-      "target": 2000,
-      "pctOfZone": 2.077949475238648,
-      "pctOfTarget": 19.7,
-      "churchCount": 2,
-      "churches": [
-        {
-          "id": "ch-ce-dutse",
-          "name": "CE Dutse",
-          "souls": 207,
-          "target": 250,
-          "pctOfGroup": 52.53807106598985,
-          "pctOfTarget": 82.8
-        },
-        {
-          "id": "ch-ce-ushafa",
-          "name": "CE Ushafa",
-          "souls": 187,
-          "target": 1350,
-          "pctOfGroup": 47.46192893401015,
-          "pctOfTarget": 13.851851851851851
-        },
-        {
-          "id": "ch-ce-dutse-zone-3",
-          "name": "CE Dutse Zone 3",
-          "souls": 0,
-          "target": 150,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-guto",
-          "name": "CE Guto",
-          "souls": 0,
-          "target": 100,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-kogo-3",
-          "name": "CE Kogo 3",
-          "souls": 0,
-          "target": 150,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        }
-      ]
-    },
-    {
-      "id": "grp-wealthy-place",
-      "name": "Wealthy Place Church",
-      "souls": 376,
-      "target": 1000,
-      "pctOfZone": 1.9830177733241916,
-      "pctOfTarget": 37.6,
-      "churchCount": 1,
-      "churches": [
-        {
-          "id": "ch-ce-wealthy-place",
-          "name": "CE Wealthy Place",
-          "souls": 376,
-          "target": 1000,
-          "pctOfGroup": 100,
-          "pctOfTarget": 37.6
-        }
-      ]
-    },
-    {
-      "id": "grp-airport-road",
-      "name": "Airport Road Sub-Group",
-      "souls": 297,
-      "target": 2500,
-      "pctOfZone": 1.566373081588524,
-      "pctOfTarget": 11.88,
-      "churchCount": 3,
-      "churches": [
-        {
-          "id": "ch-ce-airport-road",
-          "name": "CE Airport Road",
-          "souls": 277,
-          "target": 1200,
-          "pctOfGroup": 93.26599326599326,
-          "pctOfTarget": 23.083333333333332
-        },
-        {
-          "id": "ch-ce-airport-road-2",
-          "name": "CE Airport Road 2",
-          "souls": 19,
-          "target": 500,
-          "pctOfGroup": 6.397306397306397,
-          "pctOfTarget": 3.8
-        },
-        {
-          "id": "ch-ce-kapwa",
-          "name": "CE Kapwa",
-          "souls": 1,
-          "target": 500,
-          "pctOfGroup": 0.33670033670033667,
-          "pctOfTarget": 0.2
-        },
-        {
-          "id": "ch-ce-airport-road-4",
-          "name": "CE Airport Road 4",
-          "souls": 0,
-          "target": 300,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        }
-      ]
-    },
-    {
-      "id": "grp-gwagwalada-1",
-      "name": "Gwagwalada 1 Group",
-      "souls": 259,
-      "target": 2000,
-      "pctOfZone": 1.3659617108802278,
-      "pctOfTarget": 12.950000000000001,
-      "churchCount": 4,
-      "churches": [
-        {
-          "id": "ch-ce-gwagwalada-1",
-          "name": "CE Gwagwalada 1",
-          "souls": 171,
-          "target": 1000,
-          "pctOfGroup": 66.02316602316603,
-          "pctOfTarget": 17.1
-        },
-        {
-          "id": "ch-ce-zuba",
-          "name": "CE Zuba",
-          "souls": 59,
-          "target": 100,
-          "pctOfGroup": 22.779922779922778,
-          "pctOfTarget": 59
-        },
-        {
-          "id": "ch-ce-tunga-maje",
-          "name": "CE Tunga Maje",
-          "souls": 23,
-          "target": 750,
-          "pctOfGroup": 8.880308880308881,
-          "pctOfTarget": 3.0666666666666664
-        },
-        {
-          "id": "ch-ce-kwali",
-          "name": "CE Kwali",
-          "souls": 6,
-          "target": 50,
-          "pctOfGroup": 2.3166023166023164,
-          "pctOfTarget": 12
-        },
-        {
-          "id": "ch-ce-gwagwalada-4",
-          "name": "CE Gwagwalada 4",
-          "souls": 0,
-          "target": 50,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-gwagwalada-7",
-          "name": "CE Gwagwalada 7",
-          "souls": 0,
-          "target": 50,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        }
-      ]
-    },
-    {
-      "id": "grp-dawaki",
-      "name": "Dawaki Sub-Group",
-      "souls": 231,
-      "target": 1000,
-      "pctOfZone": 1.218290174568852,
-      "pctOfTarget": 23.1,
-      "churchCount": 3,
-      "churches": [
-        {
-          "id": "ch-ce-dawaki",
-          "name": "CE Dawaki",
-          "souls": 188,
-          "target": 550,
-          "pctOfGroup": 81.38528138528139,
-          "pctOfTarget": 34.18181818181818
-        },
-        {
-          "id": "ch-ce-wisdom-mopol",
-          "name": "CE Wisdom Mopol Barracks",
-          "souls": 40,
-          "target": 150,
-          "pctOfGroup": 17.316017316017316,
-          "pctOfTarget": 26.666666666666668
-        },
-        {
-          "id": "ch-ce-dawaki-2",
-          "name": "CE Dawaki 2",
-          "souls": 3,
-          "target": 150,
-          "pctOfGroup": 1.2987012987012987,
-          "pctOfTarget": 2
-        },
-        {
-          "id": "ch-ce-dawaki-5",
-          "name": "CE Dawaki 5",
-          "souls": 0,
-          "target": 150,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        }
-      ]
-    },
-    {
-      "id": "grp-wuye-2",
-      "name": "Wuye Sub-Group 2",
-      "souls": 215,
-      "target": 1000,
-      "pctOfZone": 1.13390643953378,
-      "pctOfTarget": 21.5,
-      "churchCount": 3,
-      "churches": [
-        {
-          "id": "ch-ce-express",
-          "name": "CE Express",
-          "souls": 124,
-          "target": 530,
-          "pctOfGroup": 57.674418604651166,
-          "pctOfTarget": 23.39622641509434
-        },
-        {
-          "id": "ch-ce-livingspring",
-          "name": "CE Livingspring",
-          "souls": 58,
-          "target": 240,
-          "pctOfGroup": 26.976744186046513,
-          "pctOfTarget": 24.166666666666668
-        },
-        {
-          "id": "ch-ce-pacesetters",
-          "name": "CE Pacesetters",
-          "souls": 33,
-          "target": 230,
-          "pctOfGroup": 15.348837209302326,
-          "pctOfTarget": 14.347826086956522
-        }
-      ]
-    },
-    {
-      "id": "grp-dutse-makaranta",
-      "name": "Dutse Makaranta Sub-Group",
-      "souls": 203,
-      "target": 1000,
-      "pctOfZone": 1.070618638257476,
-      "pctOfTarget": 20.3,
-      "churchCount": 2,
-      "churches": [
-        {
-          "id": "ch-ce-springtime",
-          "name": "CE Springtime",
-          "souls": 107,
-          "target": 100,
-          "pctOfGroup": 52.70935960591133,
-          "pctOfTarget": 107
-        },
-        {
-          "id": "ch-ce-dutse-makaranta",
-          "name": "CE Dutse Makaranta",
-          "souls": 96,
-          "target": 700,
-          "pctOfGroup": 47.29064039408867,
-          "pctOfTarget": 13.714285714285715
-        },
-        {
-          "id": "ch-ce-garki-1",
-          "name": "CE Garki 1",
-          "souls": 0,
-          "target": 100,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-mbuko",
-          "name": "CE Mbuko",
-          "souls": 0,
-          "target": 50,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-new-jerusalem",
-          "name": "CE New Jerusalem",
-          "souls": 0,
-          "target": 50,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        }
-      ]
-    },
-    {
-      "id": "grp-kubwa-2",
-      "name": "Kubwa 2 Sub-Group",
-      "souls": 122,
-      "target": 1000,
-      "pctOfZone": 0.643425979642424,
-      "pctOfTarget": 12.2,
-      "churchCount": 4,
-      "churches": [
-        {
-          "id": "ch-ce-grace-and-glory",
-          "name": "CE Grace and Glory",
-          "souls": 57,
-          "target": 200,
-          "pctOfGroup": 46.72131147540984,
-          "pctOfTarget": 28.499999999999996
-        },
-        {
-          "id": "ch-ce-kubwa-ext",
-          "name": "CE Kubwa Extension",
-          "souls": 27,
-          "target": 200,
-          "pctOfGroup": 22.131147540983605,
-          "pctOfTarget": 13.5
-        },
-        {
-          "id": "ch-ce-guidna",
-          "name": "CE Guidna",
-          "souls": 21,
-          "target": 200,
-          "pctOfGroup": 17.21311475409836,
-          "pctOfTarget": 10.5
-        },
-        {
-          "id": "ch-ce-channel-8",
-          "name": "CE Channel 8",
-          "souls": 17,
-          "target": 200,
-          "pctOfGroup": 13.934426229508196,
-          "pctOfTarget": 8.5
-        },
-        {
-          "id": "ch-ce-obasanjo-road",
-          "name": "CE Obasanjo Road",
-          "souls": 0,
-          "target": 200,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        }
-      ]
-    },
-    {
-      "id": "grp-byazhin",
-      "name": "Byazhin Church",
-      "souls": 82,
-      "target": 1000,
-      "pctOfZone": 0.43246664205474394,
-      "pctOfTarget": 8.200000000000001,
-      "churchCount": 1,
-      "churches": [
-        {
-          "id": "ch-ce-byazhin",
-          "name": "CE Byazhin",
-          "souls": 82,
-          "target": 1000,
-          "pctOfGroup": 100,
-          "pctOfTarget": 8.200000000000001
-        }
-      ]
-    },
-    {
-      "id": "grp-lokogoma",
-      "name": "Lokogoma Group",
-      "souls": 56,
-      "target": 2500,
-      "pctOfZone": 0.29534307262275195,
-      "pctOfTarget": 2.2399999999999998,
-      "churchCount": 2,
-      "churches": [
-        {
-          "id": "ch-ce-lokogoma",
-          "name": "CE Lokogoma",
-          "souls": 54,
-          "target": 1200,
-          "pctOfGroup": 96.42857142857143,
-          "pctOfTarget": 4.5
-        },
-        {
-          "id": "ch-ce-durumi",
-          "name": "CE Durumi",
-          "souls": 2,
-          "target": 100,
-          "pctOfGroup": 3.571428571428571,
-          "pctOfTarget": 2
-        },
-        {
-          "id": "ch-ce-apo",
-          "name": "CE Apo",
-          "souls": 0,
-          "target": 150,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-apo-dutse",
-          "name": "CE Apo Dutse",
-          "souls": 0,
-          "target": 150,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-citadel-of-grace",
-          "name": "CE Citadel of Grace",
-          "souls": 0,
-          "target": 150,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-city-of-david",
-          "name": "CE City of David",
-          "souls": 0,
-          "target": 100,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-damagaza",
-          "name": "CE Damagaza",
-          "souls": 0,
-          "target": 150,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-gbuduwyi",
-          "name": "CE Gbuduwyi",
-          "souls": 0,
-          "target": 100,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-kabusa",
-          "name": "CE Kabusa",
-          "souls": 0,
-          "target": 150,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-pigbakasa",
-          "name": "CE Pigbakasa",
-          "souls": 0,
-          "target": 100,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-wumba",
-          "name": "CE Wumba",
-          "souls": 0,
-          "target": 150,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        }
-      ]
-    },
-    {
-      "id": "grp-teens-church",
-      "name": "Teens Church Group",
-      "souls": 35,
-      "target": 1500,
-      "pctOfZone": 0.18458942038922,
-      "pctOfTarget": 2.3333333333333335,
-      "churchCount": 1,
-      "churches": [
-        {
-          "id": "ch-teens-church",
-          "name": "Teens Church",
-          "souls": 35,
-          "target": 1500,
-          "pctOfGroup": 100,
-          "pctOfTarget": 2.3333333333333335
-        }
-      ]
-    },
-    {
-      "id": "grp-city-church",
-      "name": "CE Abuja City Church",
-      "souls": 18,
-      "target": 1500,
-      "pctOfZone": 0.09493170191445599,
-      "pctOfTarget": 1.2,
-      "churchCount": 1,
-      "churches": [
-        {
-          "id": "ch-ce-city-church",
-          "name": "CE City Church",
-          "souls": 18,
-          "target": 1500,
-          "pctOfGroup": 100,
-          "pctOfTarget": 1.2
-        }
-      ]
-    },
-    {
-      "id": "grp-fruitful-vine",
-      "name": "Fruitful Vine Sub-Group",
-      "souls": 0,
-      "target": 1000,
-      "pctOfTarget": 0,
-      "pctOfZone": 0,
-      "churches": [
-        {
-          "id": "ch-ce-jahi",
-          "name": "CE Jahi",
-          "souls": 0,
-          "target": 300,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-kado-2",
-          "name": "CE Kado 2",
-          "souls": 0,
-          "target": 300,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        },
-        {
-          "id": "ch-ce-solution-arena",
-          "name": "CE Solution Arena",
-          "souls": 0,
-          "target": 400,
-          "pctOfGroup": 0,
-          "pctOfTarget": 0
-        }
-      ]
     }
   ],
-  "allChurches": [
+  "top20Churches": [
     {
       "id": "ch-zonal-church-2",
       "name": "Zonal Church 2",
@@ -1863,1186 +1267,9 @@ const D = {
       "target": 250,
       "pctOfTarget": 82.8,
       "pctOfZone": 1.0917145720162438
-    },
-    {
-      "id": "ch-ce-dawaki",
-      "name": "CE Dawaki",
-      "code": "CH-DWK1",
-      "groupId": "grp-dawaki",
-      "groupName": "Dawaki Sub-Group",
-      "souls": 188,
-      "target": 550,
-      "pctOfTarget": 34.18181818181818,
-      "pctOfZone": 0.9915088866620958
-    },
-    {
-      "id": "ch-ce-ushafa",
-      "name": "CE Ushafa",
-      "code": "CH-USH",
-      "groupId": "grp-new-horizon",
-      "groupName": "New Horizon Group",
-      "souls": 187,
-      "target": 1350,
-      "pctOfTarget": 13.851851851851851,
-      "pctOfZone": 0.9862349032224039
-    },
-    {
-      "id": "ch-ce-model-church",
-      "name": "CE Model Church",
-      "code": "CH-MDC",
-      "groupId": "grp-heavenly-phantheon",
-      "groupName": "Heavenly Phantheon Group",
-      "souls": 173,
-      "target": 1350,
-      "pctOfTarget": 12.814814814814815,
-      "pctOfZone": 0.9123991350667158
-    },
-    {
-      "id": "ch-ce-gwagwalada-1",
-      "name": "CE Gwagwalada 1",
-      "code": "CH-GWG1",
-      "groupId": "grp-gwagwalada-1",
-      "groupName": "Gwagwalada 1 Group",
-      "souls": 171,
-      "target": 1000,
-      "pctOfTarget": 17.1,
-      "pctOfZone": 0.9018511681873318
-    },
-    {
-      "id": "ch-ce-kubwa-2",
-      "name": "CE Kubwa 2",
-      "code": "CH-KBW2",
-      "groupId": "grp-strategic-zonal",
-      "groupName": "Strategic Group Zonal",
-      "souls": 168,
-      "target": 400,
-      "pctOfTarget": 42,
-      "pctOfZone": 0.8860292178682558
-    },
-    {
-      "id": "ch-ce-chukunku",
-      "name": "CE Chukunku",
-      "code": "CH-CHK",
-      "groupId": "grp-gwagwalada-2",
-      "groupName": "Gwagwalada 2 Group",
-      "souls": 166,
-      "target": 100,
-      "pctOfTarget": 166,
-      "pctOfZone": 0.8754812509888719
-    },
-    {
-      "id": "ch-ce-gwagwalada-6",
-      "name": "CE Gwagwalada 6",
-      "code": "CH-GWG6",
-      "groupId": "grp-gwagwalada-2",
-      "groupName": "Gwagwalada 2 Group",
-      "souls": 157,
-      "target": 250,
-      "pctOfTarget": 62.8,
-      "pctOfZone": 0.828015400031644
-    },
-    {
-      "id": "ch-ce-kado",
-      "name": "CE Kado",
-      "code": "CH-KAD1",
-      "groupId": "grp-strategic-zonal",
-      "groupName": "Strategic Group Zonal",
-      "souls": 154,
-      "target": 150,
-      "pctOfTarget": 102.66666666666666,
-      "pctOfZone": 0.8121934497125678
-    },
-    {
-      "id": "ch-ce-kuje-6",
-      "name": "CE Kuje 6",
-      "code": "CH-KUJ6",
-      "groupId": "grp-kuje",
-      "groupName": "Kuje Group",
-      "souls": 147,
-      "target": 120,
-      "pctOfTarget": 122.50000000000001,
-      "pctOfZone": 0.7752755656347239
-    },
-    {
-      "id": "ch-ce-koinonia",
-      "name": "CE Koinonia",
-      "code": "CH-KOI",
-      "groupId": "grp-wuye-1",
-      "groupName": "Wuye Sub-Group 1",
-      "souls": 141,
-      "target": 260,
-      "pctOfTarget": 54.230769230769226,
-      "pctOfZone": 0.743631664996572
-    },
-    {
-      "id": "ch-ce-fullness",
-      "name": "CE Fullness",
-      "code": "CH-FLN",
-      "groupId": "grp-strategic-zonal",
-      "groupName": "Strategic Group Zonal",
-      "souls": 133,
-      "target": 150,
-      "pctOfTarget": 88.66666666666667,
-      "pctOfZone": 0.701439797479036
-    },
-    {
-      "id": "ch-ce-express",
-      "name": "CE Express",
-      "code": "CH-EXP",
-      "groupId": "grp-wuye-2",
-      "groupName": "Wuye Sub-Group 2",
-      "souls": 124,
-      "target": 530,
-      "pctOfTarget": 23.39622641509434,
-      "pctOfZone": 0.653973946521808
-    },
-    {
-      "id": "ch-ce-flourish",
-      "name": "CE Flourish",
-      "code": "CH-FLR",
-      "groupId": "grp-gwarinpa",
-      "groupName": "Gwarinpa Group",
-      "souls": 120,
-      "target": 150,
-      "pctOfTarget": 80,
-      "pctOfZone": 0.6328780127630399
-    },
-    {
-      "id": "ch-ce-tasha-2",
-      "name": "CE Tasha 2",
-      "code": "CH-TSH2",
-      "groupId": "grp-strategic-zonal",
-      "groupName": "Strategic Group Zonal",
-      "souls": 118,
-      "target": 350,
-      "pctOfTarget": 33.714285714285715,
-      "pctOfZone": 0.6223300458836559
-    },
-    {
-      "id": "ch-ce-kubwa-10",
-      "name": "CE Kubwa 10",
-      "code": "CH-KBW10",
-      "groupId": "grp-kubwa-1",
-      "groupName": "Kubwa 1 Group",
-      "souls": 116,
-      "target": 150,
-      "pctOfTarget": 77.33333333333333,
-      "pctOfZone": 0.611782079004272
-    },
-    {
-      "id": "ch-ce-kbs-3",
-      "name": "CE KBS 3",
-      "code": "CH-KB3",
-      "groupId": "grp-wuye-1",
-      "groupName": "Wuye Sub-Group 1",
-      "souls": 108,
-      "target": 30,
-      "pctOfTarget": 360,
-      "pctOfZone": 0.5695902114867359
-    },
-    {
-      "id": "ch-ce-kogo",
-      "name": "CE Kogo",
-      "code": "CH-KGO",
-      "groupId": "grp-bwari",
-      "groupName": "Bwari Group",
-      "souls": 108,
-      "target": 300,
-      "pctOfTarget": 36,
-      "pctOfZone": 0.5695902114867359
-    },
-    {
-      "id": "ch-ce-springtime",
-      "name": "CE Springtime",
-      "code": "CH-SPT",
-      "groupId": "grp-dutse-makaranta",
-      "groupName": "Dutse Makaranta Sub-Group",
-      "souls": 107,
-      "target": 100,
-      "pctOfTarget": 107,
-      "pctOfZone": 0.564316228047044
-    },
-    {
-      "id": "ch-ce-lighthouse",
-      "name": "CE Lighthouse",
-      "code": "CH-LTH",
-      "groupId": "grp-wuye-1",
-      "groupName": "Wuye Sub-Group 1",
-      "souls": 103,
-      "target": 280,
-      "pctOfTarget": 36.78571428571429,
-      "pctOfZone": 0.5432202942882759
-    },
-    {
-      "id": "ch-ce-excel",
-      "name": "CE Excel",
-      "code": "CH-EXC",
-      "groupId": "grp-heavenly-phantheon",
-      "groupName": "Heavenly Phantheon Group",
-      "souls": 101,
-      "target": 130,
-      "pctOfTarget": 77.6923076923077,
-      "pctOfZone": 0.5326723274088919
-    },
-    {
-      "id": "ch-ce-kubwa-9",
-      "name": "CE Kubwa 9",
-      "code": "CH-KBW9",
-      "groupId": "grp-kubwa-1",
-      "groupName": "Kubwa 1 Group",
-      "souls": 100,
-      "target": 100,
-      "pctOfTarget": 100,
-      "pctOfZone": 0.5273983439691999
-    },
-    {
-      "id": "ch-ce-kuje",
-      "name": "CE Kuje",
-      "code": "CH-KUJ1",
-      "groupId": "grp-kuje",
-      "groupName": "Kuje Group",
-      "souls": 100,
-      "target": 880,
-      "pctOfTarget": 11.363636363636363,
-      "pctOfZone": 0.5273983439691999
-    },
-    {
-      "id": "ch-ce-anagada",
-      "name": "CE Anangada",
-      "code": "CH-ANG",
-      "groupId": "grp-gwagwalada-2",
-      "groupName": "Gwagwalada 2 Group",
-      "souls": 96,
-      "target": 250,
-      "pctOfTarget": 38.4,
-      "pctOfZone": 0.5063024102104319
-    },
-    {
-      "id": "ch-ce-dutse-makaranta",
-      "name": "CE Dutse Makaranta",
-      "code": "CH-DMK1",
-      "groupId": "grp-dutse-makaranta",
-      "groupName": "Dutse Makaranta Sub-Group",
-      "souls": 96,
-      "target": 700,
-      "pctOfTarget": 13.714285714285715,
-      "pctOfZone": 0.5063024102104319
-    },
-    {
-      "id": "ch-ce-byazhin",
-      "name": "CE Byazhin",
-      "code": "CH-BYZ",
-      "groupId": "grp-byazhin",
-      "groupName": "Byazhin Church",
-      "souls": 82,
-      "target": 1000,
-      "pctOfTarget": 8.200000000000001,
-      "pctOfZone": 0.43246664205474394
-    },
-    {
-      "id": "ch-ce-gwagwalada-3",
-      "name": "CE Gwagwalada 3",
-      "code": "CH-GWG3",
-      "groupId": "grp-gwagwalada-2",
-      "groupName": "Gwagwalada 2 Group",
-      "souls": 82,
-      "target": 400,
-      "pctOfTarget": 20.5,
-      "pctOfZone": 0.43246664205474394
-    },
-    {
-      "id": "ch-ce-cbd-2",
-      "name": "CE CBD 2",
-      "code": "CH-CBD2",
-      "groupId": "grp-strategic-zonal",
-      "groupName": "Strategic Group Zonal",
-      "souls": 76,
-      "target": 150,
-      "pctOfTarget": 50.66666666666667,
-      "pctOfZone": 0.400822741416592
-    },
-    {
-      "id": "ch-ce-utako",
-      "name": "CE Utako",
-      "code": "CH-UTK1",
-      "groupId": "grp-heavenly-phantheon",
-      "groupName": "Heavenly Phantheon Group",
-      "souls": 68,
-      "target": 110,
-      "pctOfTarget": 61.81818181818181,
-      "pctOfZone": 0.35863087389905596
-    },
-    {
-      "id": "ch-ce-jiwa-3",
-      "name": "CE Jiwa 3",
-      "code": "CH-JW3",
-      "groupId": "grp-heavenly-phantheon",
-      "groupName": "Heavenly Phantheon Group",
-      "souls": 66,
-      "target": 50,
-      "pctOfTarget": 132,
-      "pctOfZone": 0.3480829070196719
-    },
-    {
-      "id": "ch-ce-kubwa-5",
-      "name": "CE Kubwa 5",
-      "code": "CH-KBW5",
-      "groupId": "grp-kubwa-1",
-      "groupName": "Kubwa 1 Group",
-      "souls": 61,
-      "target": 100,
-      "pctOfTarget": 61,
-      "pctOfZone": 0.321712989821212
-    },
-    {
-      "id": "ch-ce-zuba",
-      "name": "CE Zuba",
-      "code": "CH-ZUB",
-      "groupId": "grp-gwagwalada-1",
-      "groupName": "Gwagwalada 1 Group",
-      "souls": 59,
-      "target": 100,
-      "pctOfTarget": 59,
-      "pctOfZone": 0.31116502294182796
-    },
-    {
-      "id": "ch-ce-livingspring",
-      "name": "CE Livingspring",
-      "code": "CH-LVS",
-      "groupId": "grp-wuye-2",
-      "groupName": "Wuye Sub-Group 2",
-      "souls": 58,
-      "target": 240,
-      "pctOfTarget": 24.166666666666668,
-      "pctOfZone": 0.305891039502136
-    },
-    {
-      "id": "ch-ce-grace-and-glory",
-      "name": "CE Grace and Glory",
-      "code": "CH-GGG",
-      "groupId": "grp-kubwa-2",
-      "groupName": "Kubwa 2 Sub-Group",
-      "souls": 57,
-      "target": 200,
-      "pctOfTarget": 28.499999999999996,
-      "pctOfZone": 0.30061705606244393
-    },
-    {
-      "id": "ch-ce-karsana",
-      "name": "CE Karsana",
-      "code": "CH-KRS",
-      "groupId": "grp-gwarinpa",
-      "groupName": "Gwarinpa Group",
-      "souls": 57,
-      "target": 200,
-      "pctOfTarget": 28.499999999999996,
-      "pctOfZone": 0.30061705606244393
-    },
-    {
-      "id": "ch-ce-kbs-2",
-      "name": "CE KBS 2",
-      "code": "CH-KB2",
-      "groupId": "grp-wuye-1",
-      "groupName": "Wuye Sub-Group 1",
-      "souls": 54,
-      "target": 30,
-      "pctOfTarget": 180,
-      "pctOfZone": 0.28479510574336797
-    },
-    {
-      "id": "ch-ce-lokogoma",
-      "name": "CE Lokogoma",
-      "code": "CH-LKG1",
-      "groupId": "grp-lokogoma",
-      "groupName": "Lokogoma Group",
-      "souls": 54,
-      "target": 1200,
-      "pctOfTarget": 4.5,
-      "pctOfZone": 0.28479510574336797
-    },
-    {
-      "id": "ch-ce-piawe",
-      "name": "CE Piawe",
-      "code": "CH-PIW",
-      "groupId": "grp-bwari",
-      "groupName": "Bwari Group",
-      "souls": 53,
-      "target": 100,
-      "pctOfTarget": 53,
-      "pctOfZone": 0.279521122303676
-    },
-    {
-      "id": "ch-ce-garam",
-      "name": "CE Garam",
-      "code": "CH-GRM",
-      "groupId": "grp-bwari",
-      "groupName": "Bwari Group",
-      "souls": 50,
-      "target": 150,
-      "pctOfTarget": 33.33333333333333,
-      "pctOfZone": 0.26369917198459997
-    },
-    {
-      "id": "ch-ce-kuje-5",
-      "name": "CE Kuje 5",
-      "code": "CH-KUJ5",
-      "groupId": "grp-kuje",
-      "groupName": "Kuje Group",
-      "souls": 49,
-      "target": 130,
-      "pctOfTarget": 37.69230769230769,
-      "pctOfZone": 0.258425188544908
-    },
-    {
-      "id": "ch-ce-peyi",
-      "name": "CE Peyi",
-      "code": "CH-PEY",
-      "groupId": "grp-bwari",
-      "groupName": "Bwari Group",
-      "souls": 46,
-      "target": 250,
-      "pctOfTarget": 18.4,
-      "pctOfZone": 0.242603238225832
-    },
-    {
-      "id": "ch-ce-saburi",
-      "name": "CE Saburi",
-      "code": "CH-SBR",
-      "groupId": "grp-heavenly-phantheon",
-      "groupName": "Heavenly Phantheon Group",
-      "souls": 42,
-      "target": 50,
-      "pctOfTarget": 84,
-      "pctOfZone": 0.22150730446706396
-    },
-    {
-      "id": "ch-ce-mabuchi",
-      "name": "CE Mabuchi",
-      "code": "CH-MBC",
-      "groupId": "grp-kubwa-1",
-      "groupName": "Kubwa 1 Group",
-      "souls": 41,
-      "target": 100,
-      "pctOfTarget": 41,
-      "pctOfZone": 0.21623332102737197
-    },
-    {
-      "id": "ch-ce-wisdom-mopol",
-      "name": "CE Wisdom Mopol Barracks",
-      "code": "CH-WMP",
-      "groupId": "grp-dawaki",
-      "groupName": "Dawaki Sub-Group",
-      "souls": 40,
-      "target": 150,
-      "pctOfTarget": 26.666666666666668,
-      "pctOfZone": 0.21095933758767996
-    },
-    {
-      "id": "ch-teens-church",
-      "name": "Teens Church",
-      "code": "CH-TCG",
-      "groupId": "grp-teens-church",
-      "groupName": "Teens Church Group",
-      "souls": 35,
-      "target": 1500,
-      "pctOfTarget": 2.3333333333333335,
-      "pctOfZone": 0.18458942038922
-    },
-    {
-      "id": "ch-ce-pacesetters",
-      "name": "CE Pacesetters",
-      "code": "CH-PCS",
-      "groupId": "grp-wuye-2",
-      "groupName": "Wuye Sub-Group 2",
-      "souls": 33,
-      "target": 230,
-      "pctOfTarget": 14.347826086956522,
-      "pctOfZone": 0.17404145350983596
-    },
-    {
-      "id": "ch-ce-word-arena",
-      "name": "CE Word Arena",
-      "code": "CH-WAR",
-      "groupId": "grp-gwarinpa",
-      "groupName": "Gwarinpa Group",
-      "souls": 31,
-      "target": 150,
-      "pctOfTarget": 20.666666666666668,
-      "pctOfZone": 0.163493486630452
-    },
-    {
-      "id": "ch-ce-kubwa-ext",
-      "name": "CE Kubwa Extension",
-      "code": "CH-KBWX",
-      "groupId": "grp-kubwa-2",
-      "groupName": "Kubwa 2 Sub-Group",
-      "souls": 27,
-      "target": 200,
-      "pctOfTarget": 13.5,
-      "pctOfZone": 0.14239755287168399
-    },
-    {
-      "id": "ch-ce-paipe",
-      "name": "CE Paipe",
-      "code": "CH-PIP",
-      "groupId": "grp-strategic-zonal",
-      "groupName": "Strategic Group Zonal",
-      "souls": 23,
-      "target": 100,
-      "pctOfTarget": 23,
-      "pctOfZone": 0.121301619112916
-    },
-    {
-      "id": "ch-ce-tunga-maje",
-      "name": "CE Tunga Maje",
-      "code": "CH-TMJ",
-      "groupId": "grp-gwagwalada-1",
-      "groupName": "Gwagwalada 1 Group",
-      "souls": 23,
-      "target": 750,
-      "pctOfTarget": 3.0666666666666664,
-      "pctOfZone": 0.121301619112916
-    },
-    {
-      "id": "ch-ce-kaba",
-      "name": "CE Kaba",
-      "code": "CH-KAB",
-      "groupId": "grp-kubwa-1",
-      "groupName": "Kubwa 1 Group",
-      "souls": 22,
-      "target": 100,
-      "pctOfTarget": 22,
-      "pctOfZone": 0.116027635673224
-    },
-    {
-      "id": "ch-ce-guidna",
-      "name": "CE Guidna",
-      "code": "CH-GDN",
-      "groupId": "grp-kubwa-2",
-      "groupName": "Kubwa 2 Sub-Group",
-      "souls": 21,
-      "target": 200,
-      "pctOfTarget": 10.5,
-      "pctOfZone": 0.11075365223353198
-    },
-    {
-      "id": "ch-ce-airport-road-2",
-      "name": "CE Airport Road 2",
-      "code": "CH-APR2",
-      "groupId": "grp-airport-road",
-      "groupName": "Airport Road Sub-Group",
-      "souls": 19,
-      "target": 500,
-      "pctOfTarget": 3.8,
-      "pctOfZone": 0.100205685354148
-    },
-    {
-      "id": "ch-ce-city-church",
-      "name": "CE City Church",
-      "code": "CH-CCC",
-      "groupId": "grp-city-church",
-      "groupName": "CE Abuja City Church",
-      "souls": 18,
-      "target": 1500,
-      "pctOfTarget": 1.2,
-      "pctOfZone": 0.09493170191445599
-    },
-    {
-      "id": "ch-ce-channel-8",
-      "name": "CE Channel 8",
-      "code": "CH-CH8",
-      "groupId": "grp-kubwa-2",
-      "groupName": "Kubwa 2 Sub-Group",
-      "souls": 17,
-      "target": 200,
-      "pctOfTarget": 8.5,
-      "pctOfZone": 0.08965771847476399
-    },
-    {
-      "id": "ch-ce-kubwa-4",
-      "name": "CE Kubwa 4",
-      "code": "CH-KBW4",
-      "groupId": "grp-kubwa-1",
-      "groupName": "Kubwa 1 Group",
-      "souls": 14,
-      "target": 100,
-      "pctOfTarget": 14.000000000000002,
-      "pctOfZone": 0.07383576815568799
-    },
-    {
-      "id": "ch-ce-kubwa-3",
-      "name": "CE Kubwa 3",
-      "code": "CH-KBW3",
-      "groupId": "grp-kubwa-1",
-      "groupName": "Kubwa 1 Group",
-      "souls": 10,
-      "target": 100,
-      "pctOfTarget": 10,
-      "pctOfZone": 0.05273983439691999
-    },
-    {
-      "id": "ch-ce-kubwa-8",
-      "name": "CE Kubwa 8",
-      "code": "CH-KBW8",
-      "groupId": "grp-kubwa-1",
-      "groupName": "Kubwa 1 Group",
-      "souls": 10,
-      "target": 100,
-      "pctOfTarget": 10,
-      "pctOfZone": 0.05273983439691999
-    },
-    {
-      "id": "ch-ce-rabah-apo",
-      "name": "CE Rabah Apo",
-      "code": "CH-RBH",
-      "groupId": "grp-heavenly-phantheon",
-      "groupName": "Heavenly Phantheon Group",
-      "souls": 9,
-      "target": 100,
-      "pctOfTarget": 9,
-      "pctOfZone": 0.047465850957227995
-    },
-    {
-      "id": "ch-ce-kwali",
-      "name": "CE Kwali",
-      "code": "CH-KWL",
-      "groupId": "grp-gwagwalada-1",
-      "groupName": "Gwagwalada 1 Group",
-      "souls": 6,
-      "target": 50,
-      "pctOfTarget": 12,
-      "pctOfZone": 0.03164390063815199
-    },
-    {
-      "id": "ch-ce-kagini-2",
-      "name": "CE Kagini 2",
-      "code": "CH-KAG2",
-      "groupId": "grp-gwarinpa",
-      "groupName": "Gwarinpa Group",
-      "souls": 4,
-      "target": 150,
-      "pctOfTarget": 2.666666666666667,
-      "pctOfZone": 0.021095933758767997
-    },
-    {
-      "id": "ch-ce-dawaki-2",
-      "name": "CE Dawaki 2",
-      "code": "CH-DWK2",
-      "groupId": "grp-dawaki",
-      "groupName": "Dawaki Sub-Group",
-      "souls": 3,
-      "target": 150,
-      "pctOfTarget": 2,
-      "pctOfZone": 0.015821950319075996
-    },
-    {
-      "id": "ch-ce-kingship-centre",
-      "name": "CE Kingship Centre",
-      "code": "CH-KSC",
-      "groupId": "grp-heavenly-phantheon",
-      "groupName": "Heavenly Phantheon Group",
-      "souls": 3,
-      "target": 80,
-      "pctOfTarget": 3.75,
-      "pctOfZone": 0.015821950319075996
-    },
-    {
-      "id": "ch-ce-durumi",
-      "name": "CE Durumi",
-      "code": "CH-DRM",
-      "groupId": "grp-lokogoma",
-      "groupName": "Lokogoma Group",
-      "souls": 2,
-      "target": 100,
-      "pctOfTarget": 2,
-      "pctOfZone": 0.010547966879383999
-    },
-    {
-      "id": "ch-ce-kapwa",
-      "name": "CE Kapwa",
-      "code": "CH-KPW",
-      "groupId": "grp-airport-road",
-      "groupName": "Airport Road Sub-Group",
-      "souls": 1,
-      "target": 500,
-      "pctOfTarget": 0.2,
-      "pctOfZone": 0.005273983439691999
-    },
-    {
-      "id": "ch-ce-utako-2",
-      "name": "CE Utako 2",
-      "code": "CH-UTK2",
-      "groupId": "grp-heavenly-phantheon",
-      "groupName": "Heavenly Phantheon Group",
-      "souls": 1,
-      "target": 80,
-      "pctOfTarget": 1.25,
-      "pctOfZone": 0.005273983439691999
-    },
-    {
-      "id": "ch-ce-airport-road-4",
-      "name": "CE Airport Road 4",
-      "code": "CH-APR4",
-      "groupId": "grp-airport-road",
-      "groupName": "Airport Road Sub-Group",
-      "souls": 0,
-      "target": 300,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-apo",
-      "name": "CE Apo",
-      "code": "CH-APO1",
-      "groupId": "grp-lokogoma",
-      "groupName": "Lokogoma Group",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-apo-dutse",
-      "name": "CE Apo Dutse",
-      "code": "CH-APD",
-      "groupId": "grp-lokogoma",
-      "groupName": "Lokogoma Group",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-citadel-of-grace",
-      "name": "CE Citadel of Grace",
-      "code": "CH-COG",
-      "groupId": "grp-lokogoma",
-      "groupName": "Lokogoma Group",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-city-of-david",
-      "name": "CE City of David",
-      "code": "CH-COD",
-      "groupId": "grp-lokogoma",
-      "groupName": "Lokogoma Group",
-      "souls": 0,
-      "target": 100,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-damagaza",
-      "name": "CE Damagaza",
-      "code": "CH-DMG",
-      "groupId": "grp-lokogoma",
-      "groupName": "Lokogoma Group",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-dape",
-      "name": "CE Dape",
-      "code": "CH-DAP",
-      "groupId": "grp-karmo",
-      "groupName": "Karmo Group",
-      "souls": 0,
-      "target": 100,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-dawaki-3",
-      "name": "CE Dawaki 3",
-      "code": "CH-DWK3",
-      "groupId": "grp-strategic-zonal",
-      "groupName": "Strategic Group Zonal",
-      "souls": 0,
-      "target": 100,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-dawaki-5",
-      "name": "CE Dawaki 5",
-      "code": "CH-DWK5",
-      "groupId": "grp-dawaki",
-      "groupName": "Dawaki Sub-Group",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-dei-dei-3",
-      "name": "CE Dei Dei 3",
-      "code": "CH-DEI3",
-      "groupId": "grp-strategic-zonal",
-      "groupName": "Strategic Group Zonal",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-dutse-zone-3",
-      "name": "CE Dutse Zone 3",
-      "code": "CH-DTZ3",
-      "groupId": "grp-new-horizon",
-      "groupName": "New Horizon Group",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-garki-1",
-      "name": "CE Garki 1",
-      "code": "CH-GRK1",
-      "groupId": "grp-dutse-makaranta",
-      "groupName": "Dutse Makaranta Sub-Group",
-      "souls": 0,
-      "target": 100,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-gbuduwyi",
-      "name": "CE Gbuduwyi",
-      "code": "CH-GBD",
-      "groupId": "grp-lokogoma",
-      "groupName": "Lokogoma Group",
-      "souls": 0,
-      "target": 100,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-giri",
-      "name": "CE Giri",
-      "code": "CH-GRI",
-      "groupId": "grp-strategic-zonal",
-      "groupName": "Strategic Group Zonal",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-guto",
-      "name": "CE Guto",
-      "code": "CH-GTO",
-      "groupId": "grp-new-horizon",
-      "groupName": "New Horizon Group",
-      "souls": 0,
-      "target": 100,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-gwagwalada-4",
-      "name": "CE Gwagwalada 4",
-      "code": "CH-GWG4",
-      "groupId": "grp-gwagwalada-1",
-      "groupName": "Gwagwalada 1 Group",
-      "souls": 0,
-      "target": 50,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-gwagwalada-7",
-      "name": "CE Gwagwalada 7",
-      "code": "CH-GWG7",
-      "groupId": "grp-gwagwalada-1",
-      "groupName": "Gwagwalada 1 Group",
-      "souls": 0,
-      "target": 50,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-iddo-sarki",
-      "name": "CE Iddo Sarki",
-      "code": "CH-IDS",
-      "groupId": "grp-kuje",
-      "groupName": "Kuje Group",
-      "souls": 0,
-      "target": 110,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-jahi",
-      "name": "CE Jahi",
-      "code": "CH-JAH",
-      "groupId": "grp-fruitful-vine",
-      "groupName": "Fruitful Vine Sub-Group",
-      "souls": 0,
-      "target": 300,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-kabusa",
-      "name": "CE Kabusa",
-      "code": "CH-KABUSA",
-      "groupId": "grp-lokogoma",
-      "groupName": "Lokogoma Group",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-kado-2",
-      "name": "CE Kado 2",
-      "code": "CH-KAD2",
-      "groupId": "grp-fruitful-vine",
-      "groupName": "Fruitful Vine Sub-Group",
-      "souls": 0,
-      "target": 300,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-kagini",
-      "name": "CE Kagini",
-      "code": "CH-KAG1",
-      "groupId": "grp-karmo",
-      "groupName": "Karmo Group",
-      "souls": 0,
-      "target": 100,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-kagini-3",
-      "name": "CE Kagini 3",
-      "code": "CH-KAG3",
-      "groupId": "grp-strategic-zonal",
-      "groupName": "Strategic Group Zonal",
-      "souls": 0,
-      "target": 100,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-karmo-2",
-      "name": "CE Karmo 2",
-      "code": "CH-KRM2",
-      "groupId": "grp-karmo",
-      "groupName": "Karmo Group",
-      "souls": 0,
-      "target": 100,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-kogo-3",
-      "name": "CE Kogo 3",
-      "code": "CH-KGO3",
-      "groupId": "grp-new-horizon",
-      "groupName": "New Horizon Group",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-kubwa-6",
-      "name": "CE Kubwa 6",
-      "code": "CH-KBW6",
-      "groupId": "grp-kubwa-1",
-      "groupName": "Kubwa 1 Group",
-      "souls": 0,
-      "target": 100,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-kuje-3",
-      "name": "CE Kuje 3",
-      "code": "CH-KUJ3",
-      "groupId": "grp-kuje",
-      "groupName": "Kuje Group",
-      "souls": 0,
-      "target": 130,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-kuje-4",
-      "name": "CE Kuje 4",
-      "code": "CH-KUJ4",
-      "groupId": "grp-kuje",
-      "groupName": "Kuje Group",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-kuje-7",
-      "name": "CE Kuje 7",
-      "code": "CH-KUJ7",
-      "groupId": "grp-kuje",
-      "groupName": "Kuje Group",
-      "souls": 0,
-      "target": 50,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-kuje-8",
-      "name": "CE Kuje 8",
-      "code": "CH-KUJ8",
-      "groupId": "grp-kuje",
-      "groupName": "Kuje Group",
-      "souls": 0,
-      "target": 50,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-lambent",
-      "name": "CE Lambent",
-      "code": "CH-LMB",
-      "groupId": "grp-bwari",
-      "groupName": "Bwari Group",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-life-camp",
-      "name": "CE Life Camp",
-      "code": "CH-LFC",
-      "groupId": "grp-strategic-zonal",
-      "groupName": "Strategic Group Zonal",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-mbuko",
-      "name": "CE Mbuko",
-      "code": "CH-MBK",
-      "groupId": "grp-dutse-makaranta",
-      "groupName": "Dutse Makaranta Sub-Group",
-      "souls": 0,
-      "target": 50,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-mpape",
-      "name": "CE Mpape",
-      "code": "CH-MPP",
-      "groupId": "grp-kubwa-1",
-      "groupName": "Kubwa 1 Group",
-      "souls": 0,
-      "target": 50,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-new-jerusalem",
-      "name": "CE New Jerusalem",
-      "code": "CH-NJR",
-      "groupId": "grp-dutse-makaranta",
-      "groupName": "Dutse Makaranta Sub-Group",
-      "souls": 0,
-      "target": 50,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-obansajo",
-      "name": "CE Obansajo",
-      "code": "CH-OBS",
-      "groupId": "grp-heavenly-phantheon",
-      "groupName": "Heavenly Phantheon Group",
-      "souls": 0,
-      "target": 50,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-obasanjo-road",
-      "name": "CE Obasanjo Road",
-      "code": "CH-OBJ",
-      "groupId": "grp-kubwa-2",
-      "groupName": "Kubwa 2 Sub-Group",
-      "souls": 0,
-      "target": 200,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-pigbakasa",
-      "name": "CE Pigbakasa",
-      "code": "CH-PBK",
-      "groupId": "grp-lokogoma",
-      "groupName": "Lokogoma Group",
-      "souls": 0,
-      "target": 100,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-scc",
-      "name": "CE SCC",
-      "code": "CH-SCC",
-      "groupId": "grp-bwari",
-      "groupName": "Bwari Group",
-      "souls": 0,
-      "target": 100,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-solution-arena",
-      "name": "CE Solution Arena",
-      "code": "CH-SAR",
-      "groupId": "grp-fruitful-vine",
-      "groupName": "Fruitful Vine Sub-Group",
-      "souls": 0,
-      "target": 400,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-strategic-gudu",
-      "name": "CE Strategic Church Gudu",
-      "code": "CH-STG",
-      "groupId": "grp-strategic-zonal",
-      "groupName": "Strategic Group Zonal",
-      "souls": 0,
-      "target": 300,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
-    },
-    {
-      "id": "ch-ce-wumba",
-      "name": "CE Wumba",
-      "code": "CH-WMB",
-      "groupId": "grp-lokogoma",
-      "groupName": "Lokogoma Group",
-      "souls": 0,
-      "target": 150,
-      "pctOfTarget": 0,
-      "pctOfZone": 0
     }
   ],
-  "pcfs": [
+  "top10Pcfs": [
     {
       "name": "BITW PCF",
       "souls": 368,
@@ -3092,6 +1319,23 @@ const D = {
       "name": "Supernatural PCF",
       "souls": 144,
       "service": "Zonal Church 2"
+    }
+  ],
+  "top5PcfChurch1": [
+    {
+      "name": "Exclusive PCF",
+      "souls": 225,
+      "service": "Zonal Church 1"
+    },
+    {
+      "name": "Kinging PCF",
+      "souls": 208,
+      "service": "Zonal Church 1"
+    },
+    {
+      "name": "Virtuous Pillars PCF",
+      "souls": 178,
+      "service": "Zonal Church 1"
     },
     {
       "name": "Amazing Women PCF",
@@ -3099,261 +1343,41 @@ const D = {
       "service": "Zonal Church 1"
     },
     {
-      "name": "Favour PCF",
-      "souls": 129,
-      "service": "Zonal Church 2"
-    },
-    {
       "name": "Limitless Grace PCF",
       "souls": 128,
       "service": "Zonal Church 1"
-    },
-    {
-      "name": "Men of Valor PCF",
-      "souls": 128,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Exousia PCF",
-      "souls": 127,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Phenomenal Grace PCF",
-      "souls": 126,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Makarios PCF",
-      "souls": 124,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Light Bearers PCF",
-      "souls": 113,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Prime Haven PCF",
-      "souls": 106,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Oasis PCF",
-      "souls": 104,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Executives PCF",
-      "souls": 103,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Relevant PCF",
-      "souls": 103,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Gracious Haven PCF",
-      "souls": 76,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Chesed PCF",
-      "souls": 71,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Rhema PCF",
-      "souls": 67,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Radiant Ladies PCF",
-      "souls": 63,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Great Grace PCF",
-      "souls": 61,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Royalties PCF",
-      "souls": 60,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Vibrant Generation PCF",
-      "souls": 56,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Insight PCF",
-      "souls": 53,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Extravagant Grace PCF",
-      "souls": 50,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Luxuriant Growth PCF",
-      "souls": 39,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Business Strategic PCF",
-      "souls": 38,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Gracious PCF",
-      "souls": 37,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Pearl PCF",
-      "souls": 33,
-      "service": "General"
-    },
-    {
-      "name": "CE Lokogoma PCF",
-      "souls": 32,
-      "service": "General"
-    },
-    {
-      "name": "Excel PCF",
-      "souls": 27,
-      "service": "General"
-    },
-    {
-      "name": "Harvesters PCF",
-      "souls": 26,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Glory Cell PCF",
-      "souls": 21,
-      "service": "General"
-    },
-    {
-      "name": "Creative Outreach PCF",
-      "souls": 17,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Legal PCF",
-      "souls": 17,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Lords & Kings PCF",
-      "souls": 14,
-      "service": "General"
-    },
-    {
-      "name": "Boundless PCF",
-      "souls": 12,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Brook Cell",
-      "souls": 12,
-      "service": "General"
-    },
-    {
-      "name": "Elite Haven PCF",
-      "souls": 12,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Stars PCF",
-      "souls": 12,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Iconic PCF",
-      "souls": 9,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "Excellent Cell",
-      "souls": 8,
-      "service": "General"
-    },
-    {
-      "name": "Dunamis Cell",
-      "souls": 7,
-      "service": "General"
-    },
-    {
-      "name": "Sharon Cell PCF",
-      "souls": 4,
-      "service": "General"
-    },
-    {
-      "name": "Banah PCF",
-      "souls": 3,
-      "service": "Zonal Church 2"
-    },
-    {
-      "name": "CE Fullness PCF",
-      "souls": 2,
-      "service": "General"
-    },
-    {
-      "name": "Gracious Pcf First Service PCF",
-      "souls": 1,
-      "service": "Zonal Church 1"
-    },
-    {
-      "name": "Invited For Service And Program PCF",
-      "souls": 1,
-      "service": "General"
-    },
-    {
-      "name": "Jewel Cell PCF",
-      "souls": 1,
-      "service": "General"
-    },
-    {
-      "name": "Pear Pcf",
-      "souls": 1,
-      "service": "General"
-    },
-    {
-      "name": "Dynamic PCF",
-      "souls": 0,
-      "service": "Zonal Church 1"
     }
   ],
-  "daily": [
+  "top5PcfChurch2": [
     {
-      "date": "Oct 1",
-      "count": 17058
+      "name": "BITW PCF",
+      "souls": 368,
+      "service": "Zonal Church 2"
     },
     {
-      "date": "Oct 2",
-      "count": 1092
+      "name": "Huios PCF",
+      "souls": 350,
+      "service": "Zonal Church 2"
     },
     {
-      "date": "Oct 3",
-      "count": 286
+      "name": "Anointed Champions PCF",
+      "souls": 280,
+      "service": "Zonal Church 2"
     },
     {
-      "date": "Oct 4",
-      "count": 508
+      "name": "Medical PCF",
+      "souls": 272,
+      "service": "Zonal Church 2"
     },
     {
-      "date": "Oct 5",
-      "count": 17
+      "name": "City of Light PCF",
+      "souls": 214,
+      "service": "Zonal Church 2"
     }
   ]
 };
 
-// ============ MONOCHROME ICONS ============
+// ============ ICONS ============
 const ICONS = {
   trophy: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>`,
   dove: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`,
@@ -3364,7 +1388,6 @@ const ICONS = {
   check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
 };
 
-// ============ HELPERS ============
 const f = n => n.toLocaleString('en-US');
 const p1 = n => n.toFixed(1) + '%';
 const bar = p => `<span class="bar"><i style="width:${Math.min(p,100)}%"></i></span><span class="pc">${Math.round(p)}%</span>`;
@@ -3386,18 +1409,36 @@ document.getElementById('ring').innerHTML = svgRing(coverPct, 250, 18, ['rgba(25
   + `<div class="rc"><b>${p1(coverPct)}</b><small>of ${f(D.target)} target</small></div>`;
 document.getElementById('tag').textContent = f(D.total) + ' Souls Recorded';
 
-// ---- SUMMARY CARDS (Monochrome icons) ----
+// ---- SUMMARY CARDS ----
 document.getElementById('cards').innerHTML = [
   ['gold', ICONS.trophy, D.total, 'Total Souls Won'],
+  ['', ICONS.chart, p1(coverPct), 'Zonal Target Progress'],
   ['', ICONS.dove, D.bornAgain, 'Born Again (' + ((D.bornAgain/D.total)*100).toFixed(1) + '%)'],
   ['', ICONS.flame, D.holySpirit, 'Filled Holy Spirit (' + ((D.holySpirit/D.total)*100).toFixed(1) + '%)'],
-  ['', ICONS.users, D.groups.length, 'Participating Groups'],
-  ['', ICONS.church, D.allChurches.length, 'Official Churches (127)'],
-  ['', ICONS.chart, p1(coverPct), 'Overall Target Achievement'],
+  ['', ICONS.users, 24, 'Participating Groups'],
+  ['', ICONS.church, 127, 'Official Churches'],
 ].map(c => `<div class="card ${c[0]}"><div class="ic">${c[1]}</div><b>${typeof c[2]==='number'?f(c[2]):c[2]}</b><span>${c[3]}</span></div>`).join('');
 
-// ---- GROUP RACE TABLE ----
-document.getElementById('gt').innerHTML = D.groups.map((g, i) => {
+// ---- SPIRITUAL DOUGHNUTS ----
+const ba = D.bornAgain / D.total * 100;
+const hs = D.holySpirit / D.total * 100;
+document.getElementById('dn').innerHTML = [
+  ['Born Again', ba, D.bornAgain],
+  ['Filled with Holy Spirit', hs, D.holySpirit],
+].map(x => `
+  <div>
+    <h3>${x[0]}</h3>
+    <div class="w">
+      ${svgRing(x[1], 130, 14, ['#e3eae6','#008751'])}
+      <div class="c"><b>${p1(x[1])}</b><small>${f(x[2])} souls</small></div>
+    </div>
+    <div class="ms">
+      ${[25,50,75,100].map(t=>`<span class="${x[1]>=t?'on':''}">${t}%</span>`).join('')}
+    </div>
+  </div>`).join('');
+
+// ---- TOP 10 GROUPS TABLE ----
+document.getElementById('gt').innerHTML = D.top10Groups.map((g, i) => {
   const pct = g.pctOfTarget;
   const cls = i < 3 ? `class="r${i+1}"` : '';
   const rkHtml = i === 0 ? '<span class="rk-badge rk-1">1</span>' :
@@ -3405,8 +1446,8 @@ document.getElementById('gt').innerHTML = D.groups.map((g, i) => {
                  i === 2 ? '<span class="rk-badge rk-3">3</span>' :
                  `<span class="rk-norm">${i+1}</span>`;
   
-  const chStr = g.churches.map(c => `${c.name} (${f(c.souls)} &middot; ${c.pctOfGroup.toFixed(1)}%)`).join(' &bull; ');
-  const subHtml = `<div class="sub-churches"><strong>Churches:</strong> ${chStr}</div>`;
+  const chStr = g.churches.map(c => `${c.name} (${f(c.souls)})`).join(' &bull; ');
+  const subHtml = `<div class="sub-churches"><strong>Member Churches:</strong> ${chStr}</div>`;
 
   return `<tr ${cls}>
     <td class="rk">${rkHtml}</td>
@@ -3418,145 +1459,74 @@ document.getElementById('gt').innerHTML = D.groups.map((g, i) => {
   </tr>`;
 }).join('');
 
-// ---- ALL 127 CHURCHES SPLIT CLEANLY ACROSS PAGE 4 & PAGE 5 ----
-// Part 1: Churches 1-64 (32 in col 1, 32 in col 2)
-const chPart1_col1 = D.allChurches.slice(0, 32);
-const chPart1_col2 = D.allChurches.slice(32, 64);
+// ---- TOP 20 CHURCHES TABLE ----
+document.getElementById('ct').innerHTML = D.top20Churches.map((c, i) => {
+  const pct = c.pctOfTarget;
+  const cls = i < 3 ? `class="r${i+1}"` : '';
+  const rkHtml = i === 0 ? '<span class="rk-badge rk-1">1</span>' :
+                 i === 1 ? '<span class="rk-badge rk-2">2</span>' :
+                 i === 2 ? '<span class="rk-badge rk-3">3</span>' :
+                 `<span class="rk-norm">${i+1}</span>`;
+  
+  const checkBadge = pct >= 100 ? `<span class="bd-mono">${ICONS.check} ${Math.round(pct)}%</span>` :
+                     `<span class="pc">${Math.round(pct)}%</span>`;
 
-// Part 2: Churches 65-127 (32 in col 1, 31 in col 2)
-const chPart2_col1 = D.allChurches.slice(64, 96);
-const chPart2_col2 = D.allChurches.slice(96, 127);
+  return `<tr ${cls}>
+    <td class="rk">${rkHtml}</td>
+    <td>
+      <b>${c.name}</b>
+      <div class="sub-ch-grp">${c.groupName}</div>
+    </td>
+    <td class="n"><b>${f(c.souls)}</b></td>
+    <td class="n">${f(c.target)}</td>
+    <td class="n">${checkBadge}</td>
+    <td class="n z-pct">${c.pctOfZone.toFixed(1)}%</td>
+  </tr>`;
+}).join('');
 
-function renderChurchRows(list, startIdx) {
-  return list.map((c, i) => {
-    const idx = startIdx + i + 1;
-    const pct = c.pctOfTarget;
-    const rkHtml = idx === 1 ? '<span class="rk-badge rk-1">1</span>' :
-                   idx === 2 ? '<span class="rk-badge rk-2">2</span>' :
-                   idx === 3 ? '<span class="rk-badge rk-3">3</span>' :
-                   `<span class="rk-norm">${idx}</span>`;
-    const checkBadge = pct >= 100 ? `<span class="bd-mono">${ICONS.check} ${Math.round(pct)}%</span>` :
-                       c.souls === 0 ? `<span style="color:#94a3b8;font-size:7.5px">0%</span>` :
-                       `<span class="pc" style="font-size:7.5px">${Math.round(pct)}%</span>`;
-    return `<tr>
-      <td class="rk">${rkHtml}</td>
-      <td>
-        <b>${c.name}</b>
-        <div class="sub-ch-grp">${c.groupName} &middot; ${c.pctOfZone.toFixed(1)}% of Zone</div>
-      </td>
-      <td class="n"><b>${c.souls > 0 ? f(c.souls) : '<span style="color:#94a3b8">0</span>'}</b></td>
-      <td class="n">${checkBadge}</td>
-    </tr>`;
-  }).join('');
-}
+// ---- TOP 10 PCFS (COMBINED) ----
+document.getElementById('pcft10').innerHTML = D.top10Pcfs.map((p, i) => {
+  const cls = i < 3 ? `class="r${i+1}"` : '';
+  const rkHtml = i === 0 ? '<span class="rk-badge rk-1">1</span>' :
+                 i === 1 ? '<span class="rk-badge rk-2">2</span>' :
+                 i === 2 ? '<span class="rk-badge rk-3">3</span>' :
+                 `<span class="rk-norm">${i+1}</span>`;
+  
+  let pctOfSvc = 0;
+  if (p.service === 'Zonal Church 1') pctOfSvc = (p.souls / D.zonalFirst) * 100;
+  else if (p.service === 'Zonal Church 2') pctOfSvc = (p.souls / D.zonalSecond) * 100;
+  else pctOfSvc = (p.souls / D.total) * 100;
 
-document.getElementById('ct1').innerHTML = renderChurchRows(chPart1_col1, 0);
-document.getElementById('ct2').innerHTML = renderChurchRows(chPart1_col2, 32);
-document.getElementById('ct3').innerHTML = renderChurchRows(chPart2_col1, 64);
-document.getElementById('ct4').innerHTML = renderChurchRows(chPart2_col2, 96);
+  return `<tr ${cls}>
+    <td class="rk">${rkHtml}</td>
+    <td><b>${p.name}</b></td>
+    <td style="color:#5b6b62;font-size:8.5px">${p.service}</td>
+    <td class="n"><b>${f(p.souls)}</b></td>
+    <td class="n" style="font-weight:700;color:var(--g)">${pctOfSvc.toFixed(1)}%</td>
+  </tr>`;
+}).join('');
 
-// ---- PCF LEADERS TABLE (ALL PCFs including 0 souls, 2 columns) ----
-const pcfHalf = Math.ceil(D.pcfs.length / 2);
-const pcfCol1 = D.pcfs.slice(0, pcfHalf);
-const pcfCol2 = D.pcfs.slice(pcfHalf);
+// ---- TOP 5 PCFS CHURCH 1 ----
+document.getElementById('pcfc1').innerHTML = D.top5PcfChurch1.map((p, i) => {
+  const pct = (p.souls / D.zonalFirst) * 100;
+  return `<tr>
+    <td class="rk" style="font-family:Orbitron;font-size:8px;color:var(--mut)">${i+1}</td>
+    <td><b>${p.name}</b></td>
+    <td class="n"><b>${f(p.souls)}</b></td>
+    <td class="n" style="font-weight:700;color:var(--g);font-size:8px">${pct.toFixed(1)}%</td>
+  </tr>`;
+}).join('');
 
-const s1Total = D.zonalFirst || 1741;
-const s2Total = D.zonalSecond || 3545;
-
-function renderPcfRows(list, startIdx) {
-  return list.map((p, i) => {
-    const idx = startIdx + i + 1;
-    const rkHtml = idx === 1 ? '<span class="rk-badge rk-1">1</span>' :
-                   idx === 2 ? '<span class="rk-badge rk-2">2</span>' :
-                   idx === 3 ? '<span class="rk-badge rk-3">3</span>' :
-                   `<span class="rk-norm">${idx}</span>`;
-    
-    // Calculate % of corresponding service
-    let pctOfSvc = 0;
-    if (p.service === 'Zonal Church 1') pctOfSvc = (p.souls / s1Total) * 100;
-    else if (p.service === 'Zonal Church 2') pctOfSvc = (p.souls / s2Total) * 100;
-    else pctOfSvc = (p.souls / D.total) * 100;
-
-    return `<tr>
-      <td class="rk">${rkHtml}</td>
-      <td>
-        <b>${p.name}</b>
-        <div class="pcf-sub">${p.service}</div>
-      </td>
-      <td class="n"><b>${p.souls > 0 ? f(p.souls) : '<span style="color:#94a3b8">0</span>'}</b></td>
-      <td class="n" style="font-size:7.5px;font-weight:700;color:${p.souls > 0 ? 'var(--g)' : '#94a3b8'}">${pctOfSvc.toFixed(1)}%</td>
-    </tr>`;
-  }).join('');
-}
-
-document.getElementById('pcft1').innerHTML = renderPcfRows(pcfCol1, 0);
-document.getElementById('pcft2').innerHTML = renderPcfRows(pcfCol2, pcfHalf);
-
-// ---- DAILY CHART ----
-(function(){
-  const d = D.daily, W=640, H=280, m=40;
-  const M = Math.max(...d.map(x=>x.count));
-  const xi = i => m + i*(W-2*m)/(d.length-1);
-  const yi = v => H-m - v/M*(H-2*m-10);
-  const pk = d.indexOf(d.reduce((a,b)=>a.count>b.count?a:b));
-
-  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%">
-  <defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0" stop-color="#008751" stop-opacity=".3"/>
-    <stop offset="1" stop-color="#008751" stop-opacity="0"/>
-  </linearGradient></defs>`;
-
-  for(let k=0;k<=4;k++){
-    const v=M*k/4;
-    s+=`<line x1="${m}" x2="${W-m}" y1="${yi(v)}" y2="${yi(v)}" stroke="#e2e8f0"/>
-    <text x="${m-6}" y="${yi(v)+4}" font-size="9" fill="#5b6b62" text-anchor="end">${Math.round(v).toLocaleString()}</text>`;
-  }
-
-  const pts = d.map((v,i)=>xi(i)+','+yi(v.count)).join(' ');
-  s += `<polygon points="${xi(0)},${H-m} ${pts} ${xi(d.length-1)},${H-m}" fill="url(#lg)"/>
-  <polyline points="${pts}" fill="none" stroke="#008751" stroke-width="3" stroke-linejoin="round"/>`;
-
-  d.forEach((v,i)=>{
-    const isPeak = i===pk;
-    s+=`<circle cx="${xi(i)}" cy="${yi(v.count)}" r="${isPeak?7:4}" fill="${isPeak?'#FFD700':'#008751'}" stroke="#fff" stroke-width="2"/>
-    <text x="${xi(i)}" y="${H-m+16}" font-size="9" fill="#5b6b62" text-anchor="middle">${v.date}</text>
-    <text x="${xi(i)}" y="${yi(v.count)-11}" font-size="8" fill="${isPeak?'#806500':'#008751'}" text-anchor="middle" font-weight="700">${f(v.count)}</text>`;
-  });
-
-  document.getElementById('chart').innerHTML = s + '</svg>';
-  document.getElementById('call').innerHTML =
-    `<div><span>Peak Day</span><b>${d[pk].date} — ${f(d[pk].count)} souls</b></div>
-     <div><span>Campaign Period</span><b>Oct 1–5, 2026</b></div>`;
-})();
-
-// ---- MILESTONES ----
-const ba = D.bornAgain / D.total * 100;
-const hs = D.holySpirit / D.total * 100;
-document.getElementById('dn').innerHTML = [
-  ['Born Again', ba, D.bornAgain],
-  ['Filled with the Holy Spirit', hs, D.holySpirit],
-].map(x => `
-  <div>
-    <h3>${x[0]}</h3>
-    <div class="w">
-      ${svgRing(x[1], 220, 22, ['#e3eae6','#008751'])}
-      <div class="c"><b>${p1(x[1])}</b><small>${f(x[2])} souls</small></div>
-    </div>
-    <div class="ms">
-      ${[25,50,75,100].map(t=>`<span class="${x[1]>=t?'on':''}">${t}%</span>`).join('')}
-    </div>
-  </div>`).join('');
-
-// ---- 100% TROPHY WALL (Monochrome vector trophy & star) ----
-const winners = D.allChurches.filter(c => c.souls >= c.target);
-document.getElementById('wall').innerHTML = winners.map(c => `
-  <div class="tr">
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-    <h4>${c.name}</h4>
-    <b>${f(c.souls)}</b>
-    <small>${c.groupName}</small>
-    <div style="margin-top:2.5mm;font-size:9.5px;color:var(--gold);font-family:Orbitron;font-weight:700">${Math.round(c.pctOfTarget)}% &starf;</div>
-  </div>`).join('');
+// ---- TOP 5 PCFS CHURCH 2 ----
+document.getElementById('pcfc2').innerHTML = D.top5PcfChurch2.map((p, i) => {
+  const pct = (p.souls / D.zonalSecond) * 100;
+  return `<tr>
+    <td class="rk" style="font-family:Orbitron;font-size:8px;color:var(--mut)">${i+1}</td>
+    <td><b>${p.name}</b></td>
+    <td class="n"><b>${f(p.souls)}</b></td>
+    <td class="n" style="font-weight:700;color:var(--g);font-size:8px">${pct.toFixed(1)}%</td>
+  </tr>`;
+}).join('');
 </script>
 </body>
 </html>
