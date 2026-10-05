@@ -3,7 +3,13 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/report", "destination": "/ron-report-2026.html" },
+    { "source": "/summary-report", "destination": "/ron-summary-report-2026.html" },
+    { "source": "/full-report", "destination": "/ron-report-2026-full.html" },
+    { "source": "/ron-report-2026.html", "destination": "/ron-report-2026.html" },
+    { "source": "/ron-summary-report-2026.html", "destination": "/ron-summary-report-2026.html" },
+    { "source": "/ron-report-2026-full.html", "destination": "/ron-report-2026-full.html" },
+    { "source": "/((?!api/|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
